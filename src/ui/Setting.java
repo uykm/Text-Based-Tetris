@@ -1,9 +1,12 @@
+package ui;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Setting extends JFrame implements ActionListener {
+public class
+Setting extends JFrame implements ActionListener {
 
     static int _width = 400, _height = 400;
 
@@ -57,7 +60,7 @@ public class Setting extends JFrame implements ActionListener {
         colorBlindPanel.add(colorBlind3);
 
         JPanel initializePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton btnIntialize = createBtn("Initialize Setting", "initialize");
+        JButton btnIntialize = createBtn("Initialize ui.Setting", "initialize");
         initializePanel.add(btnIntialize);
 
         // Panel for "Back" button
@@ -106,7 +109,7 @@ public class Setting extends JFrame implements ActionListener {
             System.out.println("Big!!!");
         } else if (command.equals("back")) {
             // Here, you should handle what happens when the "Back" button is clicked
-            // For now, let's just close the Setting window
+            // For now, let's just close the ui.Setting window
             StartScreen startScreen = new StartScreen();
             startScreen.setWidthHeight(_width, _height);
             setVisible(false);
