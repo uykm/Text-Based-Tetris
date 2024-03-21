@@ -3,11 +3,20 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static java.lang.System.exit;
+
 public class StartScreen extends JFrame implements ActionListener {
 
+    static int _width = 500, _height = 600;
+
+    public void setWidthHeight(int width, int height) {
+        _width = width;
+        _height = height;
+        setSize(width, height);
+    }
     public StartScreen() {
         setTitle("Tetris");
-        setSize(200, 300); // Adjusted size for demonstration
+        setSize(_width, _height); // Adjusted size for demonstration
         setLocationRelativeTo(null); // Centered window
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -19,6 +28,7 @@ public class StartScreen extends JFrame implements ActionListener {
         JButton btnScoreBoard = createBtn("Score Board", "scoreboard");
         JButton btnExit = createBtn("Exit", "exit");
 
+        add(new JLabel("Tetris"));
         // Add buttons to the frame
         add(btnGameStart);
         add(btnOption);
@@ -33,7 +43,6 @@ public class StartScreen extends JFrame implements ActionListener {
         button.setAlignmentX(Component.CENTER_ALIGNMENT); // Center align button
         button.setActionCommand(command);
         button.addActionListener(this);
-
         return button;
     }
 
@@ -43,11 +52,12 @@ public class StartScreen extends JFrame implements ActionListener {
         if (command.equals("gameStart")) {
             System.out.println("Game Start!!!");
         } else if (command.equals("setting")) {
-            System.out.println("Setting!!!");
+            new Setting();
+            setVisible(false);
         } else if (command.equals("scoreboard")) {
             System.out.println("Score Board!!!");
         } else if (command.equals("exit")) {
-            System.out.println("Exit!!!");
+            System.exit(0);
         }
     }
 }
