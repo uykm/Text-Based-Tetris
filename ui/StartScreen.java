@@ -7,7 +7,7 @@ import static java.lang.System.exit;
 
 public class StartScreen extends JFrame implements ActionListener {
 
-    static int _width = 500, _height = 600;
+    static int _width = 500, _height = 500;
 
     public void setWidthHeight(int width, int height) {
         _width = width;
