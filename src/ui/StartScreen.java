@@ -1,9 +1,11 @@
+package ui;
+
+import ui.Setting;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import static java.lang.System.exit;
 
 public class StartScreen extends JFrame implements ActionListener {
 
