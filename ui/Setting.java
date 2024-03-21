@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 public class Setting extends JFrame implements ActionListener {
 
-    static int _width = 500, _height = 500;
+    static int _width = 400, _height = 400;
 
     public Setting() {
         setTitle("Tetris");
@@ -49,10 +49,12 @@ public class Setting extends JFrame implements ActionListener {
         // Panel for colorblind mode settings
         JPanel colorBlindPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         colorBlindPanel.add(new JLabel("Colorblind Mode"));
-        JButton colorYes = createBtn("Yes", "colorYes");
-        JButton colorNo = createBtn("No", "colorNo");
-        colorBlindPanel.add(colorYes);
-        colorBlindPanel.add(colorNo);
+        JButton colorBlind1 = createBtn("Colorblind1", "colorBLind1");
+        JButton colorBlind2 = createBtn("Colorblind2", "colorBLind2");
+        JButton colorBlind3 = createBtn("Colorblind3", "colorBLind3");
+        colorBlindPanel.add(colorBlind1);
+        colorBlindPanel.add(colorBlind2);
+        colorBlindPanel.add(colorBlind3);
 
         JPanel initializePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton btnIntialize = createBtn("Initialize Setting", "initialize");
