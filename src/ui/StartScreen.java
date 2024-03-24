@@ -38,12 +38,11 @@ public class StartScreen extends JFrame implements ActionListener {
         add(btnExit);
 
         setFocusable(true);
-        requestFocus();
 
         setVisible(true);
 
         // Set initial focus to the "Game Start" button after the GUI is fully initialized
-        SwingUtilities.invokeLater(() -> btnGameStart.requestFocusInWindow());
+        btnGameStart.requestFocusInWindow();
 
         // Attach a key listener to each button
         btnGameStart.addKeyListener(new MyKeyListener());
