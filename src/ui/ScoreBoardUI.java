@@ -1,6 +1,6 @@
 package ui;
 
-import score.Score;
+import logic.Score;
 
 import javax.swing.*;
 import java.awt.*;
