@@ -1,28 +1,35 @@
 package logic;
 
 public class Board {
-    private final int width = 20;
-    private final int height = 22;
-    private char[][] board;
+    private final int width = 10;
+    private final int height = 20;
+    private final int extendedWidth = 16;
+    private final int extendedHeight = 26;
 
+    final private int[][] board;
     public Board() {
-        board = new char[height][width];
+        board = new int[extendedHeight][extendedWidth];
         initBoard();
     }
 
     private void initBoard() {
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                if (i == 0 || i == height - 1 || j == 0 || j == width - 1) {
-                    board[i][j] = 'X'; // 테두리 생성
+        for(int i=0; i<extendedHeight; i++) {
+            for(int j=0; j<extendedWidth; j++) {
+                board[i][j] = -1;
+            }
+        }
+        for(int i=2; i<height+4; i++) {
+            for(int j=2; j<width+4; j++) {
+                if(i == 2 || i == height+3 || j == 2 || j == width+3) {
+                    board[i][j] = 10;
                 } else {
-                    board[i][j] = ' '; // 빈 공간
+                    board[i][j] = 0;
                 }
             }
         }
     }
 
-    public char[][] getBoard() {
+    public int[][] getBoard() {
         return board;
     }
 
