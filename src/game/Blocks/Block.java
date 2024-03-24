@@ -31,10 +31,10 @@ public abstract class Block {
         rotateArray(true);
     }
 
+
     public void rotateBack() {
         rotateArray(false);
     }
-
     // Rotate the block clockwise or counterclockwise
     private void rotateArray(boolean clockwise) {
         int n = shape.length;
