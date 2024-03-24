@@ -1,5 +1,7 @@
 package logic;
 
+import model.*;
+
 import java.awt.Color;
 
 public abstract class Block {
@@ -54,5 +56,17 @@ public abstract class Block {
                 }
             }
         }
+    }
+
+    public static Block getBlock(BlockType blockType) {
+        return switch (blockType) {
+            case IBlock -> new IBlock();
+            case JBlock -> new JBlock();
+            case LBlock -> new LBlock();
+            case OBlock -> new OBlock();
+            case SBlock -> new SBlock();
+            case TBlock -> new TBlock();
+            case ZBlock -> new ZBlock();
+        };
     }
 }
