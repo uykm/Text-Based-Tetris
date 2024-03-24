@@ -1,17 +1,19 @@
 package ui;
 
 import logic.Score;
+import logic.ScoreController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GameOverUI extends JFrame {
 
+    ScoreController manager = new ScoreController();
     static int WIDTH = 500, HEIGHT = 500;
+
 
     public GameOverUI() {
         setTitle("Tetris - GameOver"); // 창의 제목 설정
@@ -23,7 +25,7 @@ public class GameOverUI extends JFrame {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); // 수직으로 정렬
 
-        // 상단 : ScoreBoard 보여주기
+        // 상단 : ScoreBoard
         JPanel scorePanel = new JPanel();
         scorePanel.setLayout(new GridLayout(11, 1)); // 제목 행(1칸) + 10개의 스코어(10칸)
 
@@ -32,10 +34,8 @@ public class GameOverUI extends JFrame {
         scorePanel.add(title);
 
         // 예시 데이터 추가
-        List<Score> topScores = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            topScores.add(new Score("Player" + (i + 1), (10 - i) * 500));
-        }
+        List<Score> topScores = manager.getScores();
+
         // 상위 10개 스코어 표시
         for (int i = 0; i < topScores.size(); i++) {
             Score score = topScores.get(i);

@@ -1,0 +1,10 @@
+Player01:5000
+Player02:4500
+Player03:4000
+Player04:3500
+Player05:3000
+Player06:2500
+Player07:2000
+Player08:1500
+Player09:1000
+Player10:500

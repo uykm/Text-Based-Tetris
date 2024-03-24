@@ -1,13 +1,15 @@
 package ui;
 
 import logic.Score;
+import logic.ScoreController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ScoreBoardUI extends JFrame {
+
+    ScoreController manager = new ScoreController();
 
     static int WIDTH = 500, HEIGHT = 500;
 
@@ -26,10 +28,8 @@ public class ScoreBoardUI extends JFrame {
         panel.add(title);
 
         // 예시 데이터 추가
-        List<Score> topScores = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            topScores.add(new Score("Player" + (i + 1), (10 - i) * 500));
-        }
+        List<Score> topScores = manager.getScores();
+
         // 상위 10개 스코어 표시
         for (int i = 0; i < topScores.size(); i++) {
             Score score = topScores.get(i);
