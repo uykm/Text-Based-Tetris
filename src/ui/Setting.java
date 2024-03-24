@@ -159,10 +159,14 @@ Setting extends JFrame implements ActionListener {
             btnSize2.requestFocusInWindow();
         } else if (btnSize2.isFocusOwner()) {
             btnSize3.requestFocusInWindow();
+        } else if (btnSize3.isFocusOwner()) {
+            btnSize1.requestFocusInWindow();
         } else if (btnColorBlind1.isFocusOwner()) {
             btnColorBlind2.requestFocusInWindow();
         } else if (btnColorBlind2.isFocusOwner()) {
             btnColorBlind3.requestFocusInWindow();
+        } else if (btnColorBlind3.isFocusOwner()) {
+            btnColorBlind1.requestFocusInWindow();
         }
     }
 
@@ -171,10 +175,14 @@ Setting extends JFrame implements ActionListener {
             btnSize1.requestFocusInWindow();
         } else if (btnSize3.isFocusOwner()) {
             btnSize2.requestFocusInWindow();
+        } else if (btnSize1.isFocusOwner()) {
+            btnSize3.requestFocusInWindow();
         } else if (btnColorBlind3.isFocusOwner()) {
             btnColorBlind2.requestFocusInWindow();
         } else if (btnColorBlind2.isFocusOwner()) {
             btnColorBlind1.requestFocusInWindow();
+        } else if (btnColorBlind1.isFocusOwner()) {
+            btnColorBlind3.requestFocusInWindow();
         }
     }
 
