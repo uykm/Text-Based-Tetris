@@ -60,7 +60,6 @@ public class StartScreen extends JFrame implements ActionListener {
             } else if (keyCode == KeyEvent.VK_UP) {
                 focusPreviousButton();
             } else if (keyCode == KeyEvent.VK_ENTER) {
-                System.out.println("ENTER!!");
                 moveScreen();
             }
 
