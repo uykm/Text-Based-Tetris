@@ -7,17 +7,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 public class GameOverUI extends JFrame {
 
     ScoreController manager = new ScoreController();
-    static int WIDTH = 500, HEIGHT = 500;
-
-
+    JButton exitButton;
     public GameOverUI() {
         setTitle("Tetris - GameOver"); // 창의 제목 설정
-        setSize(WIDTH, HEIGHT); // 창 크기 : 600px x 600px
         setLocationRelativeTo(null); // 창을 화면 가운데에 위치시킴
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 창을 닫으면 프로그램 종료
 
@@ -57,19 +56,37 @@ public class GameOverUI extends JFrame {
 
         // 하단 : 종료 버튼
         JPanel exitPanel = new JPanel();
-        JButton exitButton = new JButton("Exit");
+        exitButton = new JButton("Exit");
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         });
+
+        exitButton.addKeyListener(new MyKeyListener());
+
         exitPanel.add(exitButton);
         mainPanel.add(exitPanel);
 
         // 설정이 끝난 패널을 JFrame에 추가
         add(mainPanel);
+
+        exitButton.requestFocusInWindow();
+        setFocusable(true);
         setVisible(true);
+    }
+
+    class MyKeyListener extends KeyAdapter {
+        public void keyPressed(KeyEvent e) {
+            int keyCode = e.getKeyCode();
+            System.out.println("Keycode: " + keyCode);
+            if (keyCode == KeyEvent.VK_ENTER) {
+                System.out.println("KEYCODE: ENTER");
+                new StartScreen();
+                setVisible(false);
+            }
+        }
     }
 
     public static void main(String[] args) {

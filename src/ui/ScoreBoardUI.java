@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 import static component.Button.createBtn;
@@ -17,13 +19,8 @@ import static component.ScreenSize.setWidthHeight;
 
 public class ScoreBoardUI extends JFrame implements ActionListener {
 
-
     ScoreController manager = new ScoreController();
-
-    static int WIDTH = 500, HEIGHT = 500;
-
-
-
+    JButton backButton;
     public ScoreBoardUI() {
 
         setTitle("Tetris - ScoreBoard"); // 창의 제목 설정
@@ -51,13 +48,24 @@ public class ScoreBoardUI extends JFrame implements ActionListener {
 
         // Back 버튼
         JPanel backPanel = new JPanel();
-        JButton backButton = createBtn("Back", "back",  this::actionPerformed);
+        backButton = createBtn("Back", "back",  this::actionPerformed);
         backPanel.add(backButton);
         panel.add(backPanel);
 
         // 설정이 끝난 패널을 JFrame에 추가
+        backButton.addKeyListener(new MyKeyListener());
         add(panel);
         setVisible(true);
+    }
+
+    class MyKeyListener extends KeyAdapter {
+        public void keyPressed(KeyEvent e) {
+            int keyCode = e.getKeyCode();
+            if (keyCode == KeyEvent.VK_ENTER) {
+                setVisible(false);
+                new StartScreen();
+            }
+        }
     }
 
     @Override
