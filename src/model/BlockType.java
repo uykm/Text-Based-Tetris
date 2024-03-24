@@ -1,4 +1,4 @@
-package game.Blocks;
+package model;
 
 public enum BlockType {
     IBlock,
