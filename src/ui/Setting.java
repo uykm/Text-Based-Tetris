@@ -16,7 +16,6 @@ Setting extends JFrame implements ActionListener {
     JButton btnInitializeScore;
     JButton btnColorBlind1, btnColorBlind2, btnColorBlind3;
     JButton btnInitializeSetting;
-
     JButton btnBack;
     public Setting() {
         setTitle("Tetris");
@@ -103,7 +102,6 @@ Setting extends JFrame implements ActionListener {
             } else if (keyCode == KeyEvent.VK_ENTER) {
                 applySetting();
             }
-            System.out.println("KeyPressed");
         }
     }
 
