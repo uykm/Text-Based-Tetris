@@ -1,8 +1,10 @@
-package game.Blocks;
+package model;
+
+import logic.Block;
 
 import java.awt.Color;
 
-public class SBlock extends Block{
+public class SBlock extends Block {
     public SBlock() {
         super(new int[][] {
                 {0, 0, 0, 0},

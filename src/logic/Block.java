@@ -1,4 +1,4 @@
-package game.Blocks;
+package logic;
 
 import java.awt.Color;
 
