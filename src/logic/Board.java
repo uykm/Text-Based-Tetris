@@ -12,6 +12,7 @@ public class Board {
         initBoard();
     }
 
+
     private void initBoard() {
         for(int i=0; i<extendedHeight; i++) {
             for(int j=0; j<extendedWidth; j++) {
