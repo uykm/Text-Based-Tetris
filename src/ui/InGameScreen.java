@@ -185,6 +185,7 @@ public class InGameScreen extends JPanel {
     }
 
     public static void main(String[] args) {
+
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Tetris Game");
             InGameScreen gameScreen = new InGameScreen();
@@ -192,7 +193,9 @@ public class InGameScreen extends JPanel {
             frame.add(gameScreen);
             frame.pack();
             frame.setLocationRelativeTo(null);
+
             frame.setVisible(true);
+
 
             // 콘솔에서 상태 확인을 위한 임시 코드
             // 실제 게임에서는 게임 로직에 따라 점수를 업데이트하게 됩니다.

@@ -2,15 +2,17 @@ package logic;
 
 import ui.InGameScreen;
 
+import java.awt.event.KeyListener;
+
 public class GameController {
     private BoardController boardController; // 게임 로직 관련
     private InGameScreen inGameScreen; // UI 관련
     private Board board;
 
-//    public GameController() {
-//        this.boardController = new BoardController();
-//        this.inGameScreen = new InGameScreen(board);
-//    }
+    public GameController() {
+        this.boardController = new BoardController();
+        // this.inGameScreen = new InGameScreen(board);
+    }
 
     // 사용자 입력을 처리하는 메서드
     public void processInput(String input) {
