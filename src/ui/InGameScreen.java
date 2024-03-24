@@ -1,106 +1,105 @@
 package ui;
 
 
+import logic.Block;
 import logic.Board;
+import logic.BoardController;
+import logic.GameController;
+import model.BlockType;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class InGameScreen extends JPanel {
-    private final int BOARD_WIDTH = 14;
-    private final int BOARD_HEIGHT = 24;
-    private final int CELL_SIZE = 15;
+
+    // 게임 보드의 가로, 세로 길이
+    private final int EXTEND_BOARD_WIDTH = 16;
+    private final int EXTEND_BOARD_HEIGHT = 26;
+
+    // 실제 게임 플레이 영역
+    private final int BOARD_WIDTH = 10;
+    private final int BOARD_HEIGHT = 20;
+
+    private final int CELL_SIZE = 15; // 셀의 크기
     private final int NEXT_BLOCK_BOARD_WIDTH = 8; // 다음 블록 표시 영역의 가로 길이
-    private final int NEXT_BLOCK_BOARD_HEIGHT = 7; // 다음 블록 표시 영역의 세로 길이
-    private char[][] board; // 게임 보드 상태
-    private char[][] nextBlockBoard; // 다음 블록 상태
+    private final int NEXT_BLOCK_BOARD_HEIGHT = 8; // 다음 블록 표시 영역의 세로 길이
+    private final int[][] board; // 게임 보드 상태
+    private int[][] nextBlockBoard; // 다음 블록 표시 영역
+    private final BoardController boardController; // 게임 보드 컨트롤러
     private int score; // 점수
 
-    public InGameScreen() {
+    public InGameScreen(BoardController boardController) {
         // 임시 데이터로 초기화
-        initBoard();
-        initNextBlockBoard();
-        this.score = 0; // 점수 초기화
+        board = boardController.getBoard();
+        this.boardController = boardController;
 
-        setPreferredSize(new Dimension((BOARD_WIDTH + NEXT_BLOCK_BOARD_WIDTH + 2) * CELL_SIZE, BOARD_HEIGHT * CELL_SIZE));
+        initNextBlockBoard();
+
+        // 화면 크기 설정
+        setPreferredSize(new Dimension((EXTEND_BOARD_WIDTH + NEXT_BLOCK_BOARD_WIDTH + 2) * CELL_SIZE, EXTEND_BOARD_HEIGHT * CELL_SIZE));
         setBackground(Color.LIGHT_GRAY);
     }
 
-    private void initBoard() {
-        // 임시 게임 보드 생성
-        board = new char[BOARD_HEIGHT][BOARD_WIDTH];
-        for (int i = 0; i < BOARD_HEIGHT; i++) {
-            for (int j = 0; j < BOARD_WIDTH; j++) {
-                if (i == 0 || i == BOARD_HEIGHT - 1 || j == 0 || j == BOARD_WIDTH - 1) {
-                    board[i][j] = 'G'; // 바깥쪽 테두리
-                }
-            }
-        }
-        for (int i = 1; i < BOARD_HEIGHT-1; i++) {
-            for (int j = 1; j < BOARD_WIDTH-1; j++) {
-                if (i == 1 || i == BOARD_HEIGHT - 2 || j == 1 || j == BOARD_WIDTH - 2) {
-                    board[i][j] = 'X'; // 안쪽 테두리
-                }
-            }
-        }
-    }
-
+    // 다음 블록 표시 영역 초기화
     private void initNextBlockBoard() {
+        Block nextBlock = boardController.getNextBlock();
         // 다음 블록 영역 초기화
-        nextBlockBoard = new char[NEXT_BLOCK_BOARD_HEIGHT][NEXT_BLOCK_BOARD_WIDTH];
+        nextBlockBoard = new int[NEXT_BLOCK_BOARD_HEIGHT][NEXT_BLOCK_BOARD_WIDTH];
         // 다음 블록 영역 테두리 그리기
         for (int i = 0; i < NEXT_BLOCK_BOARD_HEIGHT; i++) {
             for (int j = 0; j < NEXT_BLOCK_BOARD_WIDTH; j++) {
                 if (i == 0 || i == NEXT_BLOCK_BOARD_HEIGHT-1
                         || j == 0 || j == NEXT_BLOCK_BOARD_WIDTH-1) {
-                    nextBlockBoard[i][j] = 'G'; // 테두리
+                    nextBlockBoard[i][j] = -1; // 테두리
                 }
             }
         }
-
-        // 임시 블록
-        nextBlockBoard[2][2] = 'O';
-        nextBlockBoard[2][3] = 'O';
-        nextBlockBoard[3][2] = 'O';
-        nextBlockBoard[3][3] = 'O';
+        // 다음 블록 영역에 블록 그리기
+        // TODO: 3/24/24 : 블록이 정확히 가운데에 위치하면 좋을 것 같다
+        for(int i=2; i<6; i++){
+            for(int j=2; j<6; j++){
+                nextBlockBoard[i][j] = nextBlock.getShape(j-2, i-2);
+            }
+        }
     }
 
     @Override
+    // 화면을 그리는 메소드
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         // 전체 게임 보드의 배경을 검정색으로 설정
         g.setColor(Color.BLACK);
-        g.fillRect(0, 0, BOARD_WIDTH * CELL_SIZE, BOARD_HEIGHT * CELL_SIZE);
+        g.fillRect(0, 0, EXTEND_BOARD_WIDTH * CELL_SIZE, EXTEND_BOARD_HEIGHT * CELL_SIZE);
 
         // 다음 블록 영역의 배경도 검정색으로 설정
-        int nextBlockBoardX = (BOARD_WIDTH + 2) * CELL_SIZE; // 다음 블록 영역의 시작 x 좌표
+        int nextBlockBoardX = (EXTEND_BOARD_WIDTH + 2) * CELL_SIZE; // 다음 블록 영역의 시작 x 좌표
         int nextBlockBoardY = CELL_SIZE; // 다음 블록 영역의 시작 y 좌표
         int nextBlockInBoardWidth = (NEXT_BLOCK_BOARD_WIDTH - 2) * CELL_SIZE; // 다음 블록 영역의 너비
         int nextBlockInBoardHeight = (NEXT_BLOCK_BOARD_HEIGHT - 2) * CELL_SIZE; // 다음 블록 영역의 높이
         g.fillRect(nextBlockBoardX, nextBlockBoardY, nextBlockInBoardWidth, nextBlockInBoardHeight);
 
         // 게임 보드 그리기
-        for (int i = 0; i < BOARD_HEIGHT; i++) {
-            for (int j = 0; j < BOARD_WIDTH; j++) {
+        for (int i = 0; i < EXTEND_BOARD_HEIGHT; i++) {
+            for (int j = 0; j < EXTEND_BOARD_WIDTH; j++) {
                 drawCell(g, j * CELL_SIZE, i * CELL_SIZE, board[i][j]);
             }
         }
         // 어두운 회색 상단 선 그리기
         int borderWidth = CELL_SIZE / 3; // 테두리 선의 너비
-        drawBorderLine(g, CELL_SIZE - borderWidth, CELL_SIZE - borderWidth, (BOARD_WIDTH - 1) * CELL_SIZE - borderWidth, borderWidth);
+        drawBorderLine(g, CELL_SIZE - borderWidth, CELL_SIZE - borderWidth, (EXTEND_BOARD_WIDTH - 1) * CELL_SIZE - borderWidth, borderWidth);
         // 하단 선 그리기
-        drawBorderLine(g, CELL_SIZE - borderWidth, BOARD_HEIGHT * CELL_SIZE - CELL_SIZE, (BOARD_WIDTH - 1) * CELL_SIZE - borderWidth, borderWidth);
+        drawBorderLine(g, CELL_SIZE - borderWidth, EXTEND_BOARD_HEIGHT * CELL_SIZE - CELL_SIZE, (EXTEND_BOARD_WIDTH - 1) * CELL_SIZE - borderWidth, borderWidth);
         // 좌측 선 그리기
-        drawBorderLine(g, CELL_SIZE - borderWidth, CELL_SIZE, borderWidth, (BOARD_HEIGHT - 2) * CELL_SIZE);
+        drawBorderLine(g, CELL_SIZE - borderWidth, CELL_SIZE, borderWidth, (EXTEND_BOARD_HEIGHT - 2) * CELL_SIZE);
         // 우측 선 그리기
-        drawBorderLine(g, BOARD_WIDTH * CELL_SIZE - CELL_SIZE, CELL_SIZE, borderWidth, (BOARD_HEIGHT - 2) * CELL_SIZE);
+        drawBorderLine(g, EXTEND_BOARD_WIDTH * CELL_SIZE - CELL_SIZE, CELL_SIZE, borderWidth, (EXTEND_BOARD_HEIGHT - 2) * CELL_SIZE);
 
         // 다음 블록 영역 그리기
         for (int i = 0; i < NEXT_BLOCK_BOARD_HEIGHT; i++) {
             for (int j = 0; j < NEXT_BLOCK_BOARD_WIDTH; j++) {
                 if (nextBlockBoard[i][j] != ' ') {
-                    drawCell(g, (BOARD_WIDTH + 1 + j) * CELL_SIZE, i * CELL_SIZE, nextBlockBoard[i][j]);
+                    drawCell(g, (EXTEND_BOARD_WIDTH + 1 + j) * CELL_SIZE, i * CELL_SIZE, nextBlockBoard[i][j]);
                 }
             }
         }
@@ -115,7 +114,7 @@ public class InGameScreen extends JPanel {
 
 
         // 점수판 상자 그리기
-        int scoreboardX = BOARD_WIDTH * CELL_SIZE + CELL_SIZE; // 점수판 x 위치
+        int scoreboardX = EXTEND_BOARD_WIDTH * CELL_SIZE + CELL_SIZE; // 점수판 x 위치
         int scoreboardY = NEXT_BLOCK_BOARD_HEIGHT * CELL_SIZE + CELL_SIZE; // 점수판 y 위치
         int scoreboardWidth = NEXT_BLOCK_BOARD_WIDTH * CELL_SIZE; // 점수판 너비
         int scoreboardHeight = CELL_SIZE * 4; // 점수판 높이, 필요에 따라 조정
@@ -136,39 +135,32 @@ public class InGameScreen extends JPanel {
         g.drawString(scoreText, scoreboardX + (scoreboardWidth - metrics.stringWidth(scoreText)) / 2, scoreboardY + CELL_SIZE * 2 + metrics.getAscent());
     }
 
-    private void drawCell(Graphics g, int x, int y, char content) {
+    // 셀을 그리는 메소드
+    private void drawCell(Graphics g, int x, int y, int content) {
+        Font font = new Font("Serif", Font.BOLD, 24); // 폰트 설정
+        FontMetrics metrics = g.getFontMetrics(font);
+        g.setFont(font);
+        int charWidth = metrics.stringWidth("X");
+        int charHeight = metrics.getHeight();
+
         switch (content) {
-            case 'G':
-                g.setColor(Color.GRAY); // 회색으로 색상 변경
-                g.fillRect(x, y, CELL_SIZE, CELL_SIZE); // 셀 그리기
+            case 0:
+                g.setColor(Color.BLACK); // 검정색으로 배경을 채움
+                g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
                 break;
-            case 'X':
-                // 폰트를 굵게 설정
-                Font font = new Font("Serif", Font.BOLD, 24); // "Serif"를 예로 듭니다. 환경에 맞는 폰트로 변경 가능
-                g.setFont(font);
-                g.setColor(Color.WHITE); // 색상을 흰색으로 변경
-
-                // 문자를 셀 중앙에 배치하기 위해 캐릭터의 너비와 높이 계산
-                FontMetrics metrics = g.getFontMetrics(font);
-                int charWidth = metrics.stringWidth("X");
-                int charHeight = metrics.getHeight();
-
-                // 'X' 문자를 셀 중앙에 그리기
+            case -1:
+                g.setColor(Color.GRAY); // 회색으로 테두리를 그림
+                g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+                break;
+            case 10:
+                g.setColor(Color.WHITE); // 'X' 문자를 흰색으로 그림
                 g.drawString("X", x + (CELL_SIZE - charWidth) / 2, y + (CELL_SIZE - charHeight) / 3 + metrics.getAscent());
                 break;
-            case 'O':
-                g.setColor(Color.RED);
-                // 'O'를 중앙에 배치하는 비슷한 방법 사용
-                font = new Font("Gothic", Font.BOLD, 24);
-                g.setFont(font);
-                metrics = g.getFontMetrics(font);
-                charWidth = metrics.stringWidth("O");
-                charHeight = metrics.getHeight();
-
-                // 'O' 문자를 셀 중앙에 그리기
-                g.drawString("o", x + (CELL_SIZE - charWidth) / 2, y + (CELL_SIZE - charHeight) / 3 + metrics.getAscent());
-                break;
             default:
+                // 다른 블록 타입에 대한 처리
+                g.setColor(Block.getBlock(BlockType.getBlockTypeByIndex(content-1)).getColor());
+                charWidth = metrics.stringWidth("O");
+                g.drawString("O", x + (CELL_SIZE - charWidth) / 2, y+15);
                 break;
         }
     }
@@ -184,22 +176,10 @@ public class InGameScreen extends JPanel {
         repaint(); // 화면을 다시 그림
     }
 
-    public static void main(String[] args) {
-
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Tetris Game");
-            InGameScreen gameScreen = new InGameScreen();
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.add(gameScreen);
-            frame.pack();
-            frame.setLocationRelativeTo(null);
-
-            frame.setVisible(true);
-
-
-            // 콘솔에서 상태 확인을 위한 임시 코드
-            // 실제 게임에서는 게임 로직에 따라 점수를 업데이트하게 됩니다.
-            gameScreen.updateScore(0); // 점수를 임시로 0으로 설정
-        });
+    // 게임 보드 업데이트 메소드 nextBlockBoard를 업데이트 하기 위함
+    public void updateBoard(){
+        initNextBlockBoard();
+        repaint();
     }
+
 }
