@@ -93,13 +93,13 @@ Setting extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command.equals("small")) {
-            setWidthHeight(400, 400, this);
+            setWidthHeight(350, 500, this);
             System.out.println("Small!!!");
         } else if (command.equals("medium")) {
-            setWidthHeight(800, 800, this);
+            setWidthHeight(500, 650, this);
             System.out.println("Medium!!!");
         } else if (command.equals("big")) {
-            setWidthHeight(1200, 1200, this);
+            setWidthHeight(600, 750, this);
             System.out.println("Big!!!");
         } else if (command.equals("back")) {
             // Here, you should handle what happens when the "Back" button is clicked
