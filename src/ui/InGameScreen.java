@@ -85,15 +85,15 @@ public class InGameScreen extends JPanel {
                 drawCell(g, j * CELL_SIZE, i * CELL_SIZE, board[i][j]);
             }
         }
+        int borderWidth = CELL_SIZE / 3 * 2; // 테두리 선의 너비
         // 어두운 회색 상단 선 그리기
-        int borderWidth = CELL_SIZE / 3; // 테두리 선의 너비
-        drawBorderLine(g, CELL_SIZE - borderWidth, CELL_SIZE - borderWidth, (EXTEND_BOARD_WIDTH - 1) * CELL_SIZE - borderWidth, borderWidth);
+        drawBorderLine(g, CELL_SIZE * 2 - borderWidth, CELL_SIZE * 2 - borderWidth, (EXTEND_BOARD_WIDTH - 2) * CELL_SIZE - borderWidth, borderWidth);
         // 하단 선 그리기
-        drawBorderLine(g, CELL_SIZE - borderWidth, EXTEND_BOARD_HEIGHT * CELL_SIZE - CELL_SIZE, (EXTEND_BOARD_WIDTH - 1) * CELL_SIZE - borderWidth, borderWidth);
+        drawBorderLine(g, CELL_SIZE * 2 - borderWidth, EXTEND_BOARD_HEIGHT * CELL_SIZE - CELL_SIZE * 2, (EXTEND_BOARD_WIDTH - 2) * CELL_SIZE - borderWidth, borderWidth);
         // 좌측 선 그리기
-        drawBorderLine(g, CELL_SIZE - borderWidth, CELL_SIZE, borderWidth, (EXTEND_BOARD_HEIGHT - 2) * CELL_SIZE);
+        drawBorderLine(g, CELL_SIZE * 2 - borderWidth, CELL_SIZE * 2, borderWidth, (EXTEND_BOARD_HEIGHT - 4) * CELL_SIZE);
         // 우측 선 그리기
-        drawBorderLine(g, EXTEND_BOARD_WIDTH * CELL_SIZE - CELL_SIZE, CELL_SIZE, borderWidth, (EXTEND_BOARD_HEIGHT - 2) * CELL_SIZE);
+        drawBorderLine(g, EXTEND_BOARD_WIDTH * CELL_SIZE - CELL_SIZE * 2, CELL_SIZE * 2, borderWidth, (EXTEND_BOARD_HEIGHT - 4) * CELL_SIZE);
 
         // 다음 블록 영역 그리기
         for (int i = 0; i < NEXT_BLOCK_BOARD_HEIGHT; i++) {
@@ -103,6 +103,7 @@ public class InGameScreen extends JPanel {
                 }
             }
         }
+        borderWidth = CELL_SIZE / 3;
         // 어두운 회색 상단 선 그리기
         drawBorderLine(g, nextBlockBoardX - borderWidth, CELL_SIZE - borderWidth, nextBlockInBoardWidth + borderWidth * 2, borderWidth);
         // 하단 선 그리기
@@ -137,7 +138,7 @@ public class InGameScreen extends JPanel {
 
     // 셀을 그리는 메소드
     private void drawCell(Graphics g, int x, int y, int content) {
-        Font font = new Font("Serif", Font.BOLD, 24); // 폰트 설정
+        Font font = new Font("Arial", Font.BOLD, 24); // 폰트 설정
         FontMetrics metrics = g.getFontMetrics(font);
         g.setFont(font);
         int charWidth = metrics.stringWidth("X");
