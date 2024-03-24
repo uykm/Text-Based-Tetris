@@ -1,5 +1,7 @@
 package ui;
 
+import logic.GameController;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,7 +39,8 @@ public class StartScreen extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command.equals("gameStart")) {
-            new InGameScreen();
+            setVisible(false);
+            new GameController();
             setVisible(false);
         } else if (command.equals("setting")) {
             new Setting();

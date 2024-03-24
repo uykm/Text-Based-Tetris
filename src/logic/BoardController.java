@@ -24,6 +24,10 @@ public class BoardController {
         printBoard();
     }
 
+    public int[][] getBoard() {
+        return grid.getBoard();
+    }
+
     public void placeNewBlock() {
         this.currentBlock = this.nextBlock;
         this.nextBlock = Block.getBlock(BlockType.getRandomBlockType());
