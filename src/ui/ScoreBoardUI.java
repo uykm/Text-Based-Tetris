@@ -1,12 +1,13 @@
 package ui;
 
 import logic.Score;
+import logic.ScoreController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+
 import java.util.List;
 
 import static component.Button.createBtn;
@@ -15,6 +16,12 @@ import static component.ScreenSize._width;
 import static component.ScreenSize.setWidthHeight;
 
 public class ScoreBoardUI extends JFrame implements ActionListener {
+
+
+    ScoreController manager = new ScoreController();
+
+    static int WIDTH = 500, HEIGHT = 500;
+
 
 
     public ScoreBoardUI() {
@@ -33,10 +40,8 @@ public class ScoreBoardUI extends JFrame implements ActionListener {
         panel.add(title);
 
         // 예시 데이터 추가
-        List<Score> topScores = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            topScores.add(new Score("Player" + (i + 1), (10 - i) * 500));
-        }
+        List<Score> topScores = manager.getScores();
+
         // 상위 10개 스코어 표시
         for (int i = 0; i < topScores.size(); i++) {
             Score score = topScores.get(i);
