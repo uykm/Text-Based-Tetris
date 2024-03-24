@@ -28,54 +28,31 @@ public abstract class Block {
     }
 
     public void rotate() {
-        int n = shape.length;
-        for (int layer = 0; layer < n / 2; layer++) {
-            int first = layer;
-            int last = n - 1 - layer;
-            for (int i = first; i < last; i++) {
-                int offset = i - first;
-                // 상단 저장
-                int top = shape[first][i];
-                // 왼쪽 -> 상단
-                shape[first][i] = shape[last-offset][first];
-                // 하단 -> 왼쪽
-                shape[last-offset][first] = shape[last][last-offset];
-                // 오른쪽 -> 하단
-                shape[last][last-offset] = shape[i][last];
-                // 저장된 상단 -> 오른쪽
-                shape[i][last] = top;
-            }
-        }
+        rotateArray(true);
     }
 
     public void rotateBack() {
-        int n = shape.length;
-        for (int layer = 0; layer < n / 2; layer++) {
-            int first = layer;
-            int last = n - 1 - layer;
-            for (int i = first; i < last; i++) {
-                int offset = i - first;
-                // 상단 저장
-                int top = shape[first][i];
-                // 오른쪽 -> 상단
-                shape[first][i] = shape[i][last];
-                // 하단 -> 오른쪽
-                shape[i][last] = shape[last][last-offset];
-                // 왼쪽 -> 하단
-                shape[last][last-offset] = shape[last-offset][first];
-                // 저장된 상단 -> 왼쪽
-                shape[last-offset][first] = top;
-            }
-        }
+        rotateArray(false);
     }
 
-    public int[][] getRotatedShape() {
-        int[][] rotatedShape = new int[shape.length][shape[0].length];
-        for (int i = 0; i < shape.length; i++) {
-            for (int j = 0; j < shape[i].length; j++) {
-                rotatedShape[i][j] = shape[i][j];
+    // Rotate the block clockwise or counterclockwise
+    private void rotateArray(boolean clockwise) {
+        int n = shape.length;
+        for (int i = 0; i < n / 2; i++) {
+            for (int j = i; j < n - i - 1; j++) {
+                int temp = shape[i][j];
+                if (clockwise) {
+                    shape[i][j] = shape[n - j - 1][i];
+                    shape[n - j - 1][i] = shape[n - i - 1][n - j - 1];
+                    shape[n - i - 1][n - j - 1] = shape[j][n - i - 1];
+                    shape[j][n - i - 1] = temp;
+                } else {
+                    shape[i][j] = shape[j][n - i - 1];
+                    shape[j][n - i - 1] = shape[n - i - 1][n - j - 1];
+                    shape[n - i - 1][n - j - 1] = shape[n - j - 1][i];
+                    shape[n - j - 1][i] = temp;
+                }
             }
         }
-        return rotatedShape;
     }
 }
