@@ -5,14 +5,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static component.ScreenSize.*;
+
 public class
 Setting extends JFrame implements ActionListener {
 
-    static int _width = 400, _height = 400;
-
     public Setting() {
         setTitle("Tetris");
-        setSize(_width, _height);
+        setWidthHeight(_width, _height, this);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -82,12 +82,6 @@ Setting extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    public void setWidthHeight(int width, int height) {
-        _width = width;
-        _height = height;
-        setSize(_width, _height);
-    }
-
     public JButton createBtn(String btnName, String command) {
         JButton button = new JButton(btnName);
         button.setActionCommand(command);
@@ -99,19 +93,19 @@ Setting extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command.equals("small")) {
-            setWidthHeight(400, 400);
+            setWidthHeight(400, 400, this);
             System.out.println("Small!!!");
         } else if (command.equals("medium")) {
-            setWidthHeight(800, 800);
+            setWidthHeight(800, 800, this);
             System.out.println("Medium!!!");
         } else if (command.equals("big")) {
-            setWidthHeight(1200, 1200);
+            setWidthHeight(1200, 1200, this);
             System.out.println("Big!!!");
         } else if (command.equals("back")) {
             // Here, you should handle what happens when the "Back" button is clicked
             // For now, let's just close the ui.Setting window
             StartScreen startScreen = new StartScreen();
-            startScreen.setWidthHeight(_width, _height);
+//            setWidthHeight(_width, _height, this);
             setVisible(false);
         } else if (command.equals("initialize")) {
 
