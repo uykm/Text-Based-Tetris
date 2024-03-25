@@ -11,12 +11,15 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
+import static component.ScreenSize.*;
+
 public class GameOverUI extends JFrame {
 
     ScoreController manager = new ScoreController();
     JButton exitButton;
     public GameOverUI() {
         setTitle("Tetris - GameOver"); // 창의 제목 설정
+        setWidthHeight(_width, _height, this); // Adjusted size for demonstration
         setLocationRelativeTo(null); // 창을 화면 가운데에 위치시킴
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 창을 닫으면 프로그램 종료
 
