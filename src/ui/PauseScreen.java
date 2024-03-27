@@ -16,7 +16,7 @@ import static component.Panel.createPanel;
 import static component.ScreenSize.setWidthHeight;
 import static java.lang.System.exit;
 
-public class PauseScreen extends JFrame implements ActionListener {
+public class PauseScreen extends JFrame implements ActionListener{
     SettingController settingController = new SettingController();
 
     JButton btnBack = createBtn("Back", "back", this);
@@ -96,7 +96,6 @@ public class PauseScreen extends JFrame implements ActionListener {
     private void focusLeftButton() {
         if (btnBack.isFocusOwner()) {
             btnQuit.requestFocusInWindow();
-
         } else if (btnQuit.isFocusOwner()) {
             btnMainMenu.requestFocusInWindow();
 //        } else if (btnSetting.isFocusOwner()) {
@@ -108,14 +107,23 @@ public class PauseScreen extends JFrame implements ActionListener {
         }
     }
 
+    private PauseScreenCallback callback;
+
+    public void setCallback(PauseScreenCallback callback) {
+        this.callback = callback;
+    }
+
     private void applyPause() {
         setVisible(false);
         if (btnBack.isFocusOwner()) {
             setVisible(false);
+            callback.onResumeGame();
         } else if (btnReplay.isFocusOwner()) {
             new GameController();
+            callback.onHideFrame();
         } else if (btnMainMenu.isFocusOwner()) {
             new StartScreen();
+            callback.onHideFrame();
 //        } else if (btnSetting.isFocusOwner()) {
 //            new Setting();
         } else if (btnQuit.isFocusOwner()) {
