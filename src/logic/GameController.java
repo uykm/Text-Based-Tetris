@@ -3,6 +3,8 @@ package logic;
 import model.Direction;
 import ui.GameOverUI;
 import ui.InGameScreen;
+import ui.PauseScreen;
+import ui.PauseScreenCallback;
 import ui.ScoreBoardUI;
 
 import javax.swing.*;
@@ -10,9 +12,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 // 게임의 전반적인 흐름을 제어하는 클래스
-public class GameController {
-    private final BoardController boardController;
-    private final InGameScreen inGameScreen;
+public class GameController implements PauseScreenCallback {
+    private BoardController boardController;
+    private InGameScreen inGameScreen;
     private final ScoreController scoreController;
     private JFrame frame;
     private Timer timer;
@@ -46,9 +48,24 @@ public class GameController {
         });
     }
 
+    @Override
+    public void onResumeGame() {
+        System.out.println("On Resume Game");
+        timer.start();
+    }
+
+    @Override
+    public void onHideFrame() {
+        System.out.println("On Hide Frame");
+        frame.setVisible(false);
+    }
+
     // 키보드 이벤트 처리
     // TODO: 3/24/24 : 효정이가 KeyListener 구현 하면 바꿀 예정
     private void setupKeyListener(JFrame frame) {
+
+        // Create the PauseScreen instance once during initialization
+
         frame.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -72,11 +89,11 @@ public class GameController {
                         break;
                         //esc 누르면 게임 중지, 한번 더 누르면 다시 실행
                     case KeyEvent.VK_ESCAPE:
-                        if(timer.isRunning()){
-                            timer.stop();
-                        } else {
-                            timer.start();
-                        }
+                        PauseScreen pauseScreen = new PauseScreen();
+                        pauseScreen.setCallback(GameController.this); // Set the callback
+
+                        timer.stop();
+                        pauseScreen.setVisible(true); // Show the PauseScreen
                         break;
                 }
                 inGameScreen.repaint();

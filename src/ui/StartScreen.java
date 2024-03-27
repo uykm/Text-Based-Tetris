@@ -92,7 +92,7 @@ public class StartScreen extends JFrame implements ActionListener {
     }
 
     // Key listener class
-    class MyKeyListener extends KeyAdapter {
+    private class MyKeyListener extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
             int keyCode = e.getKeyCode();
             if (keyCode == KeyEvent.VK_DOWN) {
