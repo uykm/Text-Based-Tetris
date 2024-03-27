@@ -2,6 +2,7 @@ package ui;
 
 import logic.Score;
 import logic.ScoreController;
+import logic.SettingController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,11 +16,26 @@ import static component.ScreenSize.*;
 
 public class GameOverUI extends JFrame {
 
-    ScoreController manager = new ScoreController();
+    ScoreController scoreController = new ScoreController();
+    SettingController settingController = new SettingController();
     JButton exitButton;
     public GameOverUI() {
         setTitle("Tetris - GameOver"); // 창의 제목 설정
-        setWidthHeight(_width, _height, this); // Adjusted size for demonstration
+        String screenSize = settingController.getSetting("screenSize", "small");
+        switch (screenSize) {
+            case "small":
+                setWidthHeight(400, 550, this);
+                break;
+            case "medium":
+                setWidthHeight(600, 750, this);
+                break;
+            case "big":
+                setWidthHeight(800, 950, this);
+                break;
+            default:
+                setWidthHeight(600, 750, this);
+                break;
+        }
         setLocationRelativeTo(null); // 창을 화면 가운데에 위치시킴
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 창을 닫으면 프로그램 종료
 
@@ -36,7 +52,7 @@ public class GameOverUI extends JFrame {
         scorePanel.add(title);
 
         // 예시 데이터 추가
-        List<Score> topScores = manager.getScores();
+        List<Score> topScores = scoreController.getScores();
 
         // 상위 10개 스코어 표시
         for (int i = 0; i < topScores.size(); i++) {
