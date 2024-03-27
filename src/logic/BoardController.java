@@ -2,6 +2,7 @@ package logic;
 
 import model.BlockType;
 import model.Direction;
+import model.NullBlock;
 import ui.GameOverUI;
 
 import javax.swing.*;
@@ -21,19 +22,19 @@ public class BoardController {
     // 블록이 아래로 내려가면 0으로 초기화
     private int limitCount = 0;
 
-    private int score = 0;
+    private int score;
 
-    Timer timer;
+    private boolean canPlaceBlock;
 
     // 블록의 초기 좌표
     int x, y;
 
-    public BoardController(Timer timer) {
+    public BoardController() {
         this.grid = new Board();
         this.WIDTH = grid.getWidth();
         this.HEIGHT = grid.getHeight();
         this.score = 0;
-        this.timer = timer;
+        this.canPlaceBlock = true;
         // 초기 블록 배치
         placeNewBlock();
     }
@@ -54,8 +55,12 @@ public class BoardController {
     public void placeNewBlock() {
         this.currentBlock = this.nextBlock;
         this.nextBlock = Block.getBlock(BlockType.getRandomBlockType());
-        x = 6; y = 2;
-        placeBlock();
+        if(collisionCheck(6, 2, currentBlock)){
+            x = 6; y = 2;
+        } else {
+            canPlaceBlock = false;
+            this.currentBlock = new NullBlock();
+        }
     }
 
     // 블록을 게임 보드에 배치
@@ -126,6 +131,9 @@ public class BoardController {
     // 블록을 이동시킴
     public void moveBlock(Direction direction) {
         eraseCurrentBlock();
+        if(!canPlaceBlock) {
+            return;
+        }
         switch(direction) {
             case LEFT -> {
                 if (collisionCheck(x - 1, y, currentBlock)) {
@@ -143,12 +151,13 @@ public class BoardController {
             }
             case DOWN -> {
                 if (collisionCheck(x, y + 1, currentBlock)) {
-                    stopCount++;
+                    stopCount=0;
                     limitCount = 0;
                     score+=1;
                     y++;
                     placeBlock();
                 } else {
+                    stopCount++;
                     limitCount++;
                     placeBlock();
                     //2틱 동안 움직임 없거나 충돌 후 5틱이 지나면 블록을 고정시킴
@@ -156,6 +165,7 @@ public class BoardController {
                         checkGameOver();
                         lineCheck();
                         placeNewBlock();
+                        stopCount = 0;
                         limitCount = 0;
                     }
                 }
@@ -209,7 +219,7 @@ public class BoardController {
     // TODO: 3/24/24 : 게임 오버 조건 수정 확인 필요, ScoreController에게 점수 전달 로직 추가 필요
     public boolean checkGameOver() {
         for(int i=3; i<WIDTH+3; i++) {
-            if(grid.getBoard()[3][i] != 0) {
+            if((grid.getBoard()[3][i] != 0) || !canPlaceBlock) {
                 return true;
             }
         }

@@ -20,7 +20,7 @@ public class GameController {
     // 게임 컨트롤러 생성자
     public GameController() {
         initUI();
-        this.boardController = new BoardController(timer);
+        this.boardController = new BoardController();
         this.inGameScreen = new InGameScreen(this.boardController);
         this.scoreController = new ScoreController();
 
