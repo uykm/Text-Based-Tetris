@@ -1,5 +1,8 @@
 package ui;
 
+import logic.ScoreController;
+import logic.SettingController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,6 +11,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import static component.Button.createBtn;
+import static component.Panel.createPanel;
 import static component.ScreenSize.*;
 
 public class
@@ -17,78 +21,70 @@ Setting extends JFrame implements ActionListener {
     JButton btnColorBlind1, btnColorBlind2, btnColorBlind3;
     JButton btnInitializeSetting;
     JButton btnBack;
+    ScoreController scoreController = new ScoreController();
+    SettingController settingController = new SettingController();
+
     public Setting() {
         setTitle("Tetris");
-        setWidthHeight(_width, _height, this);
+        String screenSize = settingController.getSetting("screenSize", "small");
+        switch (screenSize) {
+            case "small":
+                setWidthHeight(400, 550, this);
+                break;
+            case "medium":
+                setWidthHeight(600, 750, this);
+                break;
+            case "big":
+                setWidthHeight(800, 950, this);
+                break;
+            default:
+                setWidthHeight(600, 750, this);
+                break;
+        }
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        // Use BorderLayout to organize components
         setLayout(new BorderLayout());
 
-        // Panel for settings options
         JPanel settingsPanel = new JPanel();
         settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.Y_AXIS));
 
-        // Panel for screen size settings
-        JPanel sizePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        sizePanel.add(new JLabel("Screen Size"));
         btnSize1 = createBtn("Small", "small", this::actionPerformed);
         btnSize2 = createBtn("Medium", "medium", this::actionPerformed);
         btnSize3 = createBtn("Big", "big", this::actionPerformed);
         btnSize1.addKeyListener(new MyKeyListener());
         btnSize2.addKeyListener(new MyKeyListener());
         btnSize3.addKeyListener(new MyKeyListener());
-        sizePanel.add(btnSize1);
-        sizePanel.add(btnSize2);
-        sizePanel.add(btnSize3);
+        settingsPanel.add(createPanel("Screen Size", new JButton[]{btnSize1, btnSize2, btnSize3}));
 
-
-        // Panel for initializing score board
-        JPanel scorePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        scorePanel.add(new JLabel("Initialize Score Board"));
         btnInitializeScore = createBtn("Yes", "scoreYes", this::actionPerformed);
         btnInitializeScore.addKeyListener(new MyKeyListener());
-        scorePanel.add(btnInitializeScore);
+        settingsPanel.add(createPanel("Initialize Score Board", new JButton[]{btnInitializeScore}));
 
-        // Panel for colorblind mode settings
-        JPanel colorBlindPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        colorBlindPanel.add(new JLabel("Colorblind Mode"));
-        btnColorBlind3 = createBtn("Colorblind3", "colorBLind3", this::actionPerformed);
-        btnColorBlind2 = createBtn("Colorblind2", "colorBLind2", this::actionPerformed);
-        btnColorBlind1 = createBtn("Colorblind1", "colorBLind1", this::actionPerformed);
+        btnColorBlind1 = createBtn("Colorblind1", "colorBlind1", this::actionPerformed);
+        btnColorBlind2 = createBtn("Colorblind2", "colorBlind2", this::actionPerformed);
+        btnColorBlind3 = createBtn("Colorblind3", "colorBlind3", this::actionPerformed);
         btnColorBlind1.addKeyListener(new MyKeyListener());
         btnColorBlind2.addKeyListener(new MyKeyListener());
         btnColorBlind3.addKeyListener(new MyKeyListener());
-        colorBlindPanel.add(btnColorBlind1);
-        colorBlindPanel.add(btnColorBlind2);
-        colorBlindPanel.add(btnColorBlind3);
+        settingsPanel.add(createPanel("Colorblind Mode", new JButton[]{btnColorBlind1, btnColorBlind2, btnColorBlind3}));
 
-        JPanel initializePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         btnInitializeSetting = createBtn("Initialize Setting", "initialize", this::actionPerformed);
         btnInitializeSetting.addKeyListener(new MyKeyListener());
-        initializePanel.add(btnInitializeSetting);
+        settingsPanel.add(createPanel("Initialize Setting", new JButton[]{btnInitializeSetting}));
 
-        // Panel for "Back" button
-        JPanel backPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         btnBack = createBtn("Back", "back", this::actionPerformed);
         btnBack.addKeyListener(new MyKeyListener());
+        JPanel backPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         backPanel.add(btnBack);
 
-        // Add all panels to settingsPanel
-        settingsPanel.add(sizePanel);
-        settingsPanel.add(scorePanel);
-        settingsPanel.add(colorBlindPanel);
-        settingsPanel.add(initializePanel);
-
-        // Add settingsPanel and backPanel to the frame
         add(settingsPanel, BorderLayout.CENTER);
         add(backPanel, BorderLayout.SOUTH);
 
         setVisible(true);
     }
 
-    class MyKeyListener extends KeyAdapter {
+    private class MyKeyListener extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
             int keyCode = e.getKeyCode();
             if (keyCode == KeyEvent.VK_RIGHT) {
@@ -108,12 +104,18 @@ Setting extends JFrame implements ActionListener {
     private void applySetting() {
         if (btnSize1.isFocusOwner()) {
             setWidthHeight(400, 550, this);
+            settingController.saveSettings("screenSize", "small");
         } else if (btnSize2.isFocusOwner()) {
             setWidthHeight(600, 750, this);
+            settingController.saveSettings("screenSize", "medium");
         } else if (btnSize3.isFocusOwner()) {
             setWidthHeight(800, 950, this);
+            settingController.saveSettings("screenSize", "big");
         } else if (btnInitializeScore.isFocusOwner()) {
-
+            scoreController.resetScores();
+        } else if (btnInitializeSetting.isFocusOwner()) {
+            setWidthHeight(400, 550, this);
+            settingController.saveSettings("screenSize", "small");
         } else if (btnColorBlind1.isFocusOwner()) {
 
         } else if (btnColorBlind2.isFocusOwner()) {
@@ -152,8 +154,6 @@ Setting extends JFrame implements ActionListener {
         }
     }
 
-
-
     private void focusRightButton() {
         if (btnSize1.isFocusOwner()) {
             btnSize2.requestFocusInWindow();
@@ -186,21 +186,32 @@ Setting extends JFrame implements ActionListener {
         }
     }
 
-
-
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command.equals("small")) {
             setWidthHeight(400, 550, this);
+            settingController.saveSettings("screenSize", "small");
         } else if (command.equals("medium")) {
             setWidthHeight(600, 750, this);
+            settingController.saveSettings("screenSize", "medium");
         } else if (command.equals("big")) {
             setWidthHeight(800, 950, this);
+            settingController.saveSettings("screenSize", "big");
         } else if (command.equals("back")) {
             StartScreen startScreen = new StartScreen();
             setVisible(false);
+        } else if (command.equals("scoreYes")) {
+            scoreController.resetScores();
         } else if (command.equals("initialize")) {
+            settingController.initializeSettings();
+            setWidthHeight(400, 550, this);
+            settingController.saveSettings("screenSize", "small");
+        } else if (command.equals("colorBlind1")) {
+
+        } else if (command.equals("colorBlind2")) {
+
+        } else if (command.equals("colorBlind3")) {
 
         }
     }

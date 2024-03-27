@@ -2,44 +2,65 @@ package logic;
 
 import model.Direction;
 import ui.InGameScreen;
+import ui.PauseScreen;
+import ui.PauseScreenCallback;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class GameController {
+// 게임의 전반적인 흐름을 제어하는 클래스
+public class GameController implements PauseScreenCallback {
     private BoardController boardController;
     private InGameScreen inGameScreen;
     private JFrame frame;
     private Timer timer;
 
+    // 게임 컨트롤러 생성자
     public GameController() {
-        this.boardController = new BoardController();
-        this.inGameScreen = new InGameScreen(); //
-        // Assuming InGameScreen can work with BoardController for game state visualization
         initUI();
-        setupKeyListener();
+        this.boardController = new BoardController();
+        this.inGameScreen = new InGameScreen(this.boardController);
         startGame();
     }
 
+    // 게임 UI 초기화
     private void initUI() {
         SwingUtilities.invokeLater(() -> {
             frame = new JFrame("Tetris Game");
-            InGameScreen gameScreen = new InGameScreen();
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.add(gameScreen);
+            frame.add(inGameScreen);
             frame.pack();
             frame.setLocationRelativeTo(null);
-
+            setupKeyListener(frame);
             frame.setVisible(true);
+            frame.setResizable(false);
 
             // 콘솔에서 상태 확인을 위한 임시 코드
             // 실제 게임에서는 게임 로직에 따라 점수를 업데이트하게 됩니다.
-            gameScreen.updateScore(0); // 점수를 임시로 0으로 설정
+            // TODO: 3/24/24 : 현재 점수 계산 로직 없음, BoardController 또는 GameController에서 점수 계산 로직 추가 필요
+            inGameScreen.updateScore(0); // 점수를 임시로 0으로 설정
         });
     }
 
-    private void setupKeyListener() {
+    @Override
+    public void onResumeGame() {
+        System.out.println("On Resume Game");
+        timer.start();
+    }
+
+    @Override
+    public void onHideFrame() {
+        System.out.println("On Hide Frame");
+        frame.setVisible(false);
+    }
+
+    // 키보드 이벤트 처리
+    // TODO: 3/24/24 : 효정이가 KeyListener 구현 하면 바꿀 예정
+    private void setupKeyListener(JFrame frame) {
+
+        // Create the PauseScreen instance once during initialization
+
         frame.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -48,19 +69,29 @@ public class GameController {
                         boardController.moveBlock(Direction.LEFT);
                         break;
                     case KeyEvent.VK_RIGHT:
-                        boardController.moveBlock(Direction.RIGHT);
+                        boardController.moveBlock(Direction.RIGHT); 
                         break;
                     case KeyEvent.VK_DOWN:
                         boardController.moveBlock(Direction.DOWN);
+                        inGameScreen.updateBoard();
                         break;
                     case KeyEvent.VK_UP:
                         boardController.moveBlock(Direction.UP);
                         break;
                     case KeyEvent.VK_SPACE:
-                        // Implement drop functionality or another action
+                        boardController.moveBlock(Direction.SPACE);
+                        inGameScreen.updateBoard();
+                        break;
+                        //esc 누르면 게임 중지, 한번 더 누르면 다시 실행
+                    case KeyEvent.VK_ESCAPE:
+                        PauseScreen pauseScreen = new PauseScreen();
+                        pauseScreen.setCallback(GameController.this); // Set the callback
+
+                        timer.stop();
+                        pauseScreen.setVisible(true); // Show the PauseScreen
                         break;
                 }
-                inGameScreen.repaint(); // Assuming InGameScreen has a method to update the UI based on the current game state
+                inGameScreen.repaint();
             }
         });
     }
@@ -68,7 +99,7 @@ public class GameController {
     private void startGame() {
         timer = new Timer(1000, e -> {
             boardController.moveBlock(Direction.DOWN);
-            inGameScreen.repaint(); // Assuming InGameScreen has a method to update the UI based on the current game state
+            inGameScreen.updateBoard(); // Assuming InGameScreen has a method to update the UI based on the current game state
         });
         timer.start();
     }

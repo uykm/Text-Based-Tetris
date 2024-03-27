@@ -1,13 +1,18 @@
 package ui;
 
 import logic.GameController;
+import logic.SettingController;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import static java.lang.System.exit;
 
 import static component.Button.createBtn;
 import static component.ScreenSize.*;
-import static java.lang.System.exit;
 
 public class StartScreen extends JFrame implements ActionListener {
 
@@ -15,10 +20,25 @@ public class StartScreen extends JFrame implements ActionListener {
     JButton btnSetting;
     JButton btnScoreBoard;
     JButton btnExit;
+    SettingController settingController = new SettingController();
 
     public StartScreen() {
         setTitle("Tetris");
-        setWidthHeight(_width, _height, this); // Adjusted size for demonstration
+        String screenSize = settingController.getSetting("screenSize", "small");
+        switch (screenSize) {
+            case "small":
+                setWidthHeight(400, 550, this);
+                break;
+            case "medium":
+                setWidthHeight(600, 750, this);
+                break;
+            case "big":
+                setWidthHeight(800, 950, this);
+                break;
+            default:
+                setWidthHeight(600, 750, this);
+                break;
+        }
         setLocationRelativeTo(null); // Centered window
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -30,14 +50,16 @@ public class StartScreen extends JFrame implements ActionListener {
         btnScoreBoard = createBtn("Score Board", "scoreboard", this::actionPerformed);
         btnExit = createBtn("Exit", "exit", this::actionPerformed);
 
-        add(new JLabel("Tetris"));
-        // Add buttons to the frame
+        // Create a JLabel for "Tetris" with center alignment and bold font
+        JLabel gameTitle = new JLabel("Tetris", SwingConstants.CENTER);
+        gameTitle.setFont(new Font(gameTitle.getFont().getName(), Font.BOLD, 20));
+        gameTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        add(gameTitle);
         add(btnGameStart);
         add(btnSetting);
         add(btnScoreBoard);
         add(btnExit);
-
-        setFocusable(true);
 
         setVisible(true);
 
@@ -51,8 +73,26 @@ public class StartScreen extends JFrame implements ActionListener {
         btnExit.addKeyListener(new MyKeyListener());
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String command = e.getActionCommand();
+        if (command.equals("gameStart")) {
+            setVisible(false);
+            new GameController();
+            setVisible(false);
+        } else if (command.equals("setting")) {
+            new Setting();
+            setVisible(false);
+        } else if (command.equals("scoreboard")) {
+            new ScoreBoardUI();
+            setVisible(false);
+        } else if (command.equals("exit")) {
+            System.exit(0);
+        }
+    }
+
     // Key listener class
-    class MyKeyListener extends KeyAdapter {
+    private class MyKeyListener extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
             int keyCode = e.getKeyCode();
             if (keyCode == KeyEvent.VK_DOWN) {
@@ -105,22 +145,5 @@ public class StartScreen extends JFrame implements ActionListener {
             btnScoreBoard.requestFocusInWindow();
         }
     }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String command = e.getActionCommand();
-        if (command.equals("gameStart")) {
-            setVisible(false);
-            new GameController();
-            setVisible(false);
-        } else if (command.equals("setting")) {
-            new Setting();
-            setVisible(false);
-        } else if (command.equals("scoreboard")) {
-            new ScoreBoardUI();
-            setVisible(false);
-        } else if (command.equals("exit")) {
-            exit(0);
-        }
-    }
 }
+
