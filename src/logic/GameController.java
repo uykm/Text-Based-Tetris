@@ -1,7 +1,9 @@
 package logic;
 
 import model.Direction;
+import ui.GameOverUI;
 import ui.InGameScreen;
+import ui.ScoreBoardUI;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -9,16 +11,19 @@ import java.awt.event.KeyEvent;
 
 // 게임의 전반적인 흐름을 제어하는 클래스
 public class GameController {
-    private BoardController boardController;
-    private InGameScreen inGameScreen;
+    private final BoardController boardController;
+    private final InGameScreen inGameScreen;
+    private final ScoreController scoreController;
     private JFrame frame;
     private Timer timer;
 
     // 게임 컨트롤러 생성자
     public GameController() {
         initUI();
-        this.boardController = new BoardController();
+        this.boardController = new BoardController(timer);
         this.inGameScreen = new InGameScreen(this.boardController);
+        this.scoreController = new ScoreController();
+
         startGame();
     }
 
@@ -83,6 +88,15 @@ public class GameController {
         timer = new Timer(1000, e -> {
             boardController.moveBlock(Direction.DOWN);
             inGameScreen.updateBoard(); // Assuming InGameScreen has a method to update the UI based on the current game state
+            if(boardController.checkGameOver()){
+                frame.dispose();
+                if(scoreController.isScoreInTop10(boardController.getScore())){
+                    new GameOverUI(boardController.getScore());
+                } else {
+                    new ScoreBoardUI();
+                }
+                timer.stop();
+            }
         });
         timer.start();
     }

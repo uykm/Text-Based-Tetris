@@ -33,6 +33,15 @@ public class Board {
         }
     }
 
+    // 게임 보드 초기화
+    public void clearBoard() {
+        for(int i=2; i<height+4; i++) {
+            for(int j=2; j<width+4; j++) {
+                board[i][j] = 0;
+            }
+        }
+    }
+
     // 게임 보드 배열을 반환
     public int[][] getBoard() {
         return board;
