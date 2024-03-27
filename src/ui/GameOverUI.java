@@ -96,7 +96,7 @@ public class GameOverUI extends JFrame {
         setVisible(true);
     }
 
-    class MyKeyListener extends KeyAdapter {
+    private class MyKeyListener extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
             int keyCode = e.getKeyCode();
             System.out.println("Keycode: " + keyCode);

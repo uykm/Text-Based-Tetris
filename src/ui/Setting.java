@@ -11,6 +11,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import static component.Button.createBtn;
+import static component.Panel.createPanel;
 import static component.ScreenSize.*;
 
 public class
@@ -54,11 +55,11 @@ Setting extends JFrame implements ActionListener {
         btnSize1.addKeyListener(new MyKeyListener());
         btnSize2.addKeyListener(new MyKeyListener());
         btnSize3.addKeyListener(new MyKeyListener());
-        settingsPanel.add(createOptionPanel("Screen Size", new JButton[]{btnSize1, btnSize2, btnSize3}));
+        settingsPanel.add(createPanel("Screen Size", new JButton[]{btnSize1, btnSize2, btnSize3}));
 
         btnInitializeScore = createBtn("Yes", "scoreYes", this::actionPerformed);
         btnInitializeScore.addKeyListener(new MyKeyListener());
-        settingsPanel.add(createOptionPanel("Initialize Score Board", new JButton[]{btnInitializeScore}));
+        settingsPanel.add(createPanel("Initialize Score Board", new JButton[]{btnInitializeScore}));
 
         btnColorBlind1 = createBtn("Colorblind1", "colorBlind1", this::actionPerformed);
         btnColorBlind2 = createBtn("Colorblind2", "colorBlind2", this::actionPerformed);
@@ -66,11 +67,11 @@ Setting extends JFrame implements ActionListener {
         btnColorBlind1.addKeyListener(new MyKeyListener());
         btnColorBlind2.addKeyListener(new MyKeyListener());
         btnColorBlind3.addKeyListener(new MyKeyListener());
-        settingsPanel.add(createOptionPanel("Colorblind Mode", new JButton[]{btnColorBlind1, btnColorBlind2, btnColorBlind3}));
+        settingsPanel.add(createPanel("Colorblind Mode", new JButton[]{btnColorBlind1, btnColorBlind2, btnColorBlind3}));
 
         btnInitializeSetting = createBtn("Initialize Setting", "initialize", this::actionPerformed);
         btnInitializeSetting.addKeyListener(new MyKeyListener());
-        settingsPanel.add(createOptionPanel("Initialize Setting", new JButton[]{btnInitializeSetting}));
+        settingsPanel.add(createPanel("Initialize Setting", new JButton[]{btnInitializeSetting}));
 
         btnBack = createBtn("Back", "back", this::actionPerformed);
         btnBack.addKeyListener(new MyKeyListener());
@@ -83,27 +84,7 @@ Setting extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    // 각 Setting 옵션들에 대한 JPanel 만들기 : 제목 + 버튼
-    private JPanel createOptionPanel(String labelText, JButton[] buttons) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-        JLabel label = new JLabel(labelText);
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        label.setHorizontalAlignment(JLabel.CENTER);
-        label.setFont(new Font(label.getFont().getName(), Font.BOLD, 16));
-
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        for (JButton button : buttons) {
-            buttonPanel.add(button);
-        }
-
-        panel.add(label);
-        panel.add(buttonPanel);
-        return panel;
-    }
-
-    class MyKeyListener extends KeyAdapter {
+    private class MyKeyListener extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
             int keyCode = e.getKeyCode();
             if (keyCode == KeyEvent.VK_RIGHT) {

@@ -168,7 +168,6 @@ public class InGameScreen extends JPanel {
                 charWidth = metrics.stringWidth("ㅇ");
                 g.drawString("ㅇ", x + (CELL_SIZE - charWidth) / 2, y+15);
                 break;
-
         }
     }
 

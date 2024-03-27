@@ -2,6 +2,7 @@ package logic;
 
 import model.Direction;
 import ui.InGameScreen;
+import ui.PauseScreen;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -69,6 +70,7 @@ public class GameController {
                     case KeyEvent.VK_ESCAPE:
                         if(timer.isRunning()){
                             timer.stop();
+                            new PauseScreen();
                         } else {
                             timer.start();
                         }
