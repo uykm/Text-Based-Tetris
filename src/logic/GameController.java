@@ -58,7 +58,9 @@ public class GameController implements PauseScreenCallback {
     // 키보드 이벤트 처리
     // TODO: 3/24/24 : 효정이가 KeyListener 구현 하면 바꿀 예정
     private void setupKeyListener(JFrame frame) {
-        
+
+        // Create the PauseScreen instance once during initialization
+
         frame.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {

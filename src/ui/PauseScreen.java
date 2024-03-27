@@ -24,7 +24,7 @@ public class PauseScreen extends JFrame implements ActionListener{
     JButton btnMainMenu = createBtn("Main Menu", "mainMenu", this);
     JButton btnSetting = createBtn("Setting", "setting", this);
 
-    JButton btnQuit = createBtn("Quit", "quit", this);
+    JButton btnQuit = createBtn("Quit Game", "quit", this);
 
     public PauseScreen() {
         setTitle("Tetris");
