@@ -19,7 +19,7 @@ public class GameOverUI extends JFrame {
     ScoreController scoreController = new ScoreController();
     SettingController settingController = new SettingController();
     JButton exitButton;
-    public GameOverUI() {
+    public GameOverUI(int curr_score) {
         setTitle("Tetris - GameOver"); // 창의 제목 설정
         String screenSize = settingController.getSetting("screenSize", "small");
         switch (screenSize) {
@@ -47,19 +47,9 @@ public class GameOverUI extends JFrame {
         JPanel scorePanel = new JPanel();
         scorePanel.setLayout(new GridLayout(11, 1)); // 제목 행(1칸) + 10개의 스코어(10칸)
 
-        JLabel title = new JLabel("Ranking", SwingConstants.CENTER); // 가운데 정렬
+        JLabel title = new JLabel("New Top10 Score!!", SwingConstants.CENTER); // 가운데 정렬
         title.setFont(new Font(title.getFont().getName(), Font.BOLD, 24)); // 제목의 폰트 설정
         scorePanel.add(title);
-
-        // 예시 데이터 추가
-        List<Score> topScores = scoreController.getScores();
-
-        // 상위 10개 스코어 표시
-        for (int i = 0; i < topScores.size(); i++) {
-            Score score = topScores.get(i);
-            JLabel scoreLabel = new JLabel((i + 1) + ". " + score.getPlayerName() + " - " + score.getScore(), SwingConstants.CENTER);
-            scorePanel.add(scoreLabel);
-        }
         mainPanel.add(scorePanel);
 
         // 상단 패널과 중앙 패널 사이의 간격 추가
@@ -67,11 +57,25 @@ public class GameOverUI extends JFrame {
 
         // 중앙 : 이름 입력 및 제출 버튼
         JPanel inputPanel = new JPanel();
+        // 이름 입력 텍스트
+        JLabel name = new JLabel("Name: ");
         JTextField nameField = new JTextField(20);
-        JButton submitButton = new JButton("Register");
+        JButton submitButton = new JButton("Submit");
+        inputPanel.add(name);
         inputPanel.add(nameField);
         inputPanel.add(submitButton);
         mainPanel.add(inputPanel);
+
+        //submit 버튼 누르면 이름과 점수를 저장
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = !nameField.getText().isEmpty() ? nameField.getText() : "익명";
+                scoreController.addScore(name, curr_score);
+                setVisible(false);
+                new ScoreBoardUI();
+            }
+        });
 
         // 하단 : 종료 버튼
         JPanel exitPanel = new JPanel();
@@ -106,15 +110,6 @@ public class GameOverUI extends JFrame {
                 setVisible(false);
             }
         }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new GameOverUI();
-            }
-        });
     }
 }
 
