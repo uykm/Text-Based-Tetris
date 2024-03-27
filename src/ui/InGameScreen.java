@@ -145,7 +145,7 @@ public class InGameScreen extends JPanel {
         int charHeight = metrics.getHeight();
 
         switch (content) {
-            case 0:
+            default:
                 g.setColor(Color.BLACK); // 검정색으로 배경을 채움
                 g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
                 break;
@@ -157,12 +157,18 @@ public class InGameScreen extends JPanel {
                 g.setColor(Color.WHITE); // 'X' 문자를 흰색으로 그림
                 g.drawString("X", x + (CELL_SIZE - charWidth) / 2, y + (CELL_SIZE - charHeight) / 3 + metrics.getAscent());
                 break;
-            default:
+            case 1,2, 4, 6,7:
                 // 다른 블록 타입에 대한 처리
                 g.setColor(Block.getBlock(BlockType.getBlockTypeByIndex(content-1)).getColor());
-                charWidth = metrics.stringWidth("O");
-                g.drawString("O", x + (CELL_SIZE - charWidth) / 2, y+15);
+                charWidth = metrics.stringWidth("ㅁ");
+                g.drawString("ㅁ", x + (CELL_SIZE - charWidth) / 2, y+15);
                 break;
+            case 3,5:
+                g.setColor(Block.getBlock(BlockType.getBlockTypeByIndex(content-1)).getColor());
+                charWidth = metrics.stringWidth("ㅇ");
+                g.drawString("ㅇ", x + (CELL_SIZE - charWidth) / 2, y+15);
+                break;
+
         }
     }
 
