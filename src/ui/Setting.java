@@ -1,6 +1,7 @@
 package ui;
 
 import logic.ScoreController;
+import logic.SettingController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,10 +21,25 @@ Setting extends JFrame implements ActionListener {
     JButton btnInitializeSetting;
     JButton btnBack;
     ScoreController scoreController = new ScoreController();
+    SettingController settingController = new SettingController();
 
     public Setting() {
         setTitle("Tetris");
-        setWidthHeight(_width, _height, this);
+        String screenSize = settingController.getSetting("screenSize", "small");
+        switch (screenSize) {
+            case "small":
+                setWidthHeight(400, 550, this);
+                break;
+            case "medium":
+                setWidthHeight(600, 750, this);
+                break;
+            case "big":
+                setWidthHeight(800, 950, this);
+                break;
+            default:
+                setWidthHeight(600, 750, this);
+                break;
+        }
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -107,12 +123,18 @@ Setting extends JFrame implements ActionListener {
     private void applySetting() {
         if (btnSize1.isFocusOwner()) {
             setWidthHeight(400, 550, this);
+            settingController.saveSettings("screenSize", "small");
         } else if (btnSize2.isFocusOwner()) {
             setWidthHeight(600, 750, this);
+            settingController.saveSettings("screenSize", "medium");
         } else if (btnSize3.isFocusOwner()) {
             setWidthHeight(800, 950, this);
+            settingController.saveSettings("screenSize", "big");
         } else if (btnInitializeScore.isFocusOwner()) {
             scoreController.resetScores();
+        } else if (btnInitializeSetting.isFocusOwner()) {
+            setWidthHeight(400, 550, this);
+            settingController.saveSettings("screenSize", "small");
         } else if (btnColorBlind1.isFocusOwner()) {
 
         } else if (btnColorBlind2.isFocusOwner()) {
@@ -188,17 +210,22 @@ Setting extends JFrame implements ActionListener {
         String command = e.getActionCommand();
         if (command.equals("small")) {
             setWidthHeight(400, 550, this);
+            settingController.saveSettings("screenSize", "small");
         } else if (command.equals("medium")) {
             setWidthHeight(600, 750, this);
+            settingController.saveSettings("screenSize", "medium");
         } else if (command.equals("big")) {
             setWidthHeight(800, 950, this);
+            settingController.saveSettings("screenSize", "big");
         } else if (command.equals("back")) {
             StartScreen startScreen = new StartScreen();
             setVisible(false);
         } else if (command.equals("scoreYes")) {
             scoreController.resetScores();
         } else if (command.equals("initialize")) {
-
+            settingController.initializeSettings();
+            setWidthHeight(400, 550, this);
+            settingController.saveSettings("screenSize", "small");
         } else if (command.equals("colorBlind1")) {
 
         } else if (command.equals("colorBlind2")) {

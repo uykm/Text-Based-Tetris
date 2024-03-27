@@ -1,6 +1,7 @@
 package ui;
 
 import logic.GameController;
+import logic.SettingController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,10 +20,25 @@ public class StartScreen extends JFrame implements ActionListener {
     JButton btnSetting;
     JButton btnScoreBoard;
     JButton btnExit;
+    SettingController settingController = new SettingController();
 
     public StartScreen() {
         setTitle("Tetris");
-        setWidthHeight(_width, _height, this); // Adjusted size for demonstration
+        String screenSize = settingController.getSetting("screenSize", "small");
+        switch (screenSize) {
+            case "small":
+                setWidthHeight(400, 550, this);
+                break;
+            case "medium":
+                setWidthHeight(600, 750, this);
+                break;
+            case "big":
+                setWidthHeight(800, 950, this);
+                break;
+            default:
+                setWidthHeight(600, 750, this);
+                break;
+        }
         setLocationRelativeTo(null); // Centered window
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
