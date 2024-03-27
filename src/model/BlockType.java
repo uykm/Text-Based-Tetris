@@ -7,9 +7,10 @@ public enum BlockType {
     OBlock,
     SBlock,
     TBlock,
-    ZBlock;
+    ZBlock,
+    NullBlock;
     public static BlockType getRandomBlockType() {
-        return values()[(int) (Math.random() * values().length)];
+        return values()[(int) (Math.random() * (values().length-1))];
     }
     public static BlockType getBlockTypeByIndex(int index) {
         return values()[index];

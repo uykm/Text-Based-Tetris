@@ -2,6 +2,10 @@ package logic;
 
 import model.BlockType;
 import model.Direction;
+import model.NullBlock;
+import ui.GameOverUI;
+
+import javax.swing.*;
 
 public class BoardController {
     // 게임 보드
@@ -18,6 +22,10 @@ public class BoardController {
     // 블록이 아래로 내려가면 0으로 초기화
     private int limitCount = 0;
 
+    private int score;
+
+    private boolean canPlaceBlock;
+
     // 블록의 초기 좌표
     int x, y;
 
@@ -25,9 +33,12 @@ public class BoardController {
         this.grid = new Board();
         this.WIDTH = grid.getWidth();
         this.HEIGHT = grid.getHeight();
+        this.score = 0;
+        this.canPlaceBlock = true;
         // 초기 블록 배치
         placeNewBlock();
     }
+
 
     // InGameScreen에서 다음 블록 띄우기 위해서 추가
     public Block getNextBlock() {
@@ -44,8 +55,12 @@ public class BoardController {
     public void placeNewBlock() {
         this.currentBlock = this.nextBlock;
         this.nextBlock = Block.getBlock(BlockType.getRandomBlockType());
-        x = 6; y = 2;
-        placeBlock();
+        if(collisionCheck(6, 2, currentBlock)){
+            x = 6; y = 2;
+        } else {
+            canPlaceBlock = false;
+            this.currentBlock = new NullBlock();
+        }
     }
 
     // 블록을 게임 보드에 배치
@@ -116,6 +131,9 @@ public class BoardController {
     // 블록을 이동시킴
     public void moveBlock(Direction direction) {
         eraseCurrentBlock();
+        if(!canPlaceBlock) {
+            return;
+        }
         switch(direction) {
             case LEFT -> {
                 if (collisionCheck(x - 1, y, currentBlock)) {
@@ -133,19 +151,21 @@ public class BoardController {
             }
             case DOWN -> {
                 if (collisionCheck(x, y + 1, currentBlock)) {
-                    stopCount++;
+                    stopCount=0;
                     limitCount = 0;
+                    score+=1;
                     y++;
                     placeBlock();
                 } else {
+                    stopCount++;
                     limitCount++;
                     placeBlock();
-                    checkGameOver();
                     //2틱 동안 움직임 없거나 충돌 후 5틱이 지나면 블록을 고정시킴
                     if(stopCount >= 1 || limitCount > 3) {
                         checkGameOver();
                         lineCheck();
                         placeNewBlock();
+                        stopCount = 0;
                         limitCount = 0;
                     }
                 }
@@ -158,10 +178,10 @@ public class BoardController {
             case SPACE -> {
                 while(collisionCheck(x, y+1, currentBlock)) {
                     y++;
+                    score += 1;
                 }
                 placeBlock();
                 lineCheck();
-                checkGameOver();
                 placeNewBlock();
                 limitCount = 0;
             }
@@ -173,17 +193,13 @@ public class BoardController {
     public void rotateBlock() {
         currentBlock.rotate();
         for(int i=0; i<3; i++){
-            for(int j=0; j<3; j++){
-                if(collisionCheck(x+i, y+j, currentBlock)){
-                    x += i;
-                    y += j;
-                    return;
-                }
-                if(collisionCheck(x-i, y-j, currentBlock)){
-                    x -= i;
-                    y -= j;
-                    return;
-                }
+            if(collisionCheck(x+i, y, currentBlock)){
+                x += i;
+                return;
+            }
+            if(collisionCheck(x-i, y, currentBlock)){
+                x -= i;
+                return;
             }
         }
         currentBlock.rotateBack();
@@ -201,15 +217,18 @@ public class BoardController {
 
     // Game Over Check
     // TODO: 3/24/24 : 게임 오버 조건 수정 확인 필요, ScoreController에게 점수 전달 로직 추가 필요
-    public void checkGameOver() {
+    public boolean checkGameOver() {
         for(int i=3; i<WIDTH+3; i++) {
-            if(grid.getBoard()[3][i] != 0) {
-                // ScoreController에게 점수 전달
-                System.out.println("Game Over");
-                System.exit(0);
+            if((grid.getBoard()[3][i] != 0) || !canPlaceBlock) {
+                return true;
             }
         }
+        return false;
     }
 
     // TODO: 3/24/24 : 점수 계산 로직 추가 필요
+
+    public int getScore() {
+        return score;
+    }
 }

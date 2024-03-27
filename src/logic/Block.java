@@ -67,6 +67,7 @@ public abstract class Block {
             case SBlock -> new SBlock();
             case TBlock -> new TBlock();
             case ZBlock -> new ZBlock();
+            case NullBlock -> new NullBlock();
         };
     }
 }

@@ -1,9 +1,11 @@
 package logic;
 
 import model.Direction;
+import ui.GameOverUI;
 import ui.InGameScreen;
 import ui.PauseScreen;
 import ui.PauseScreenCallback;
+import ui.ScoreBoardUI;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -13,6 +15,7 @@ import java.awt.event.KeyEvent;
 public class GameController implements PauseScreenCallback {
     private BoardController boardController;
     private InGameScreen inGameScreen;
+    private final ScoreController scoreController;
     private JFrame frame;
     private Timer timer;
 
@@ -21,6 +24,8 @@ public class GameController implements PauseScreenCallback {
         initUI();
         this.boardController = new BoardController();
         this.inGameScreen = new InGameScreen(this.boardController);
+        this.scoreController = new ScoreController();
+
         startGame();
     }
 
@@ -100,6 +105,15 @@ public class GameController implements PauseScreenCallback {
         timer = new Timer(1000, e -> {
             boardController.moveBlock(Direction.DOWN);
             inGameScreen.updateBoard(); // Assuming InGameScreen has a method to update the UI based on the current game state
+            if(boardController.checkGameOver()){
+                frame.dispose();
+                if(scoreController.isScoreInTop10(boardController.getScore())){
+                    new GameOverUI(boardController.getScore());
+                } else {
+                    new ScoreBoardUI();
+                }
+                timer.stop();
+            }
         });
         timer.start();
     }

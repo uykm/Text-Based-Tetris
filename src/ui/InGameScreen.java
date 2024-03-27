@@ -68,6 +68,8 @@ public class InGameScreen extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        score = boardController.getScore();
+
         // 전체 게임 보드의 배경을 검정색으로 설정
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, EXTEND_BOARD_WIDTH * CELL_SIZE, EXTEND_BOARD_HEIGHT * CELL_SIZE);

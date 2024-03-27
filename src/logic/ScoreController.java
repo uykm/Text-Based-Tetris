@@ -81,7 +81,7 @@ public class ScoreController {
         saveScores(); // 변경사항을 파일에 저장합니다.
     }
 
-    // 점수 목록을 가져오가
+    // 점수 목록을 가져오기
     public List<Score> getScores() {
         return scores;
     }

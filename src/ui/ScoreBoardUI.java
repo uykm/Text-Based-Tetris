@@ -48,7 +48,7 @@ public class ScoreBoardUI extends JFrame implements ActionListener {
 
         // Back 버튼
         JPanel backPanel = new JPanel();
-        backButton = createBtn("Back", "back",  this::actionPerformed);
+        backButton = createBtn("Back", "back", this);
         backPanel.add(backButton);
         panel.add(backPanel);
 
@@ -75,16 +75,5 @@ public class ScoreBoardUI extends JFrame implements ActionListener {
             new StartScreen();
             setVisible(false);
         }
-    }
-
-    public static void main(String[] args) {
-
-        // 스윙 컴포넌트들은 이벤트 디스패치 스레드에서 실행.
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new ScoreBoardUI();
-            }
-        });
     }
 }
