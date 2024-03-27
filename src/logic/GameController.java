@@ -89,10 +89,9 @@ public class GameController implements PauseScreenCallback {
                         break;
                         //esc 누르면 게임 중지, 한번 더 누르면 다시 실행
                     case KeyEvent.VK_ESCAPE:
+                        timer.stop();
                         PauseScreen pauseScreen = new PauseScreen();
                         pauseScreen.setCallback(GameController.this); // Set the callback
-
-                        timer.stop();
                         pauseScreen.setVisible(true); // Show the PauseScreen
                         break;
                 }
