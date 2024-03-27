@@ -22,8 +22,7 @@ public class PauseScreen extends JFrame implements ActionListener{
     JButton btnBack = createBtn("Back", "back", this);
     JButton btnReplay = createBtn("Replay", "replay", this);
     JButton btnMainMenu = createBtn("Main Menu", "mainMenu", this);
-    JButton btnSetting = createBtn("Setting", "setting", this);
-
+//    JButton btnSetting = createBtn("Setting", "setting", this);
     JButton btnQuit = createBtn("Quit Game", "quit", this);
 
     public PauseScreen() {
@@ -56,7 +55,6 @@ public class PauseScreen extends JFrame implements ActionListener{
         btnBack.addKeyListener(new MyKeyListener());
         btnReplay.addKeyListener(new MyKeyListener());
         btnMainMenu.addKeyListener(new MyKeyListener());
-        btnSetting.addKeyListener(new MyKeyListener());
         btnQuit.addKeyListener(new MyKeyListener());
 
         pausePannel.add(createPanel("Pause", new JButton[]{btnBack, btnReplay, btnMainMenu, btnQuit}));
@@ -84,9 +82,6 @@ public class PauseScreen extends JFrame implements ActionListener{
             btnMainMenu.requestFocusInWindow();
         } else if (btnMainMenu.isFocusOwner()) {
             btnQuit.requestFocusInWindow();
-//        } else if (btnSetting.isFocusOwner()) {
-//            btnQuit.requestFocusInWindow();
-//        }
         }
         else if (btnQuit.isFocusOwner()) {
             btnBack.requestFocusInWindow();
@@ -98,8 +93,6 @@ public class PauseScreen extends JFrame implements ActionListener{
             btnQuit.requestFocusInWindow();
         } else if (btnQuit.isFocusOwner()) {
             btnMainMenu.requestFocusInWindow();
-//        } else if (btnSetting.isFocusOwner()) {
-//            btnMainMenu.requestFocusInWindow();
         } else if (btnMainMenu.isFocusOwner()) {
             btnReplay.requestFocusInWindow();
         } else if (btnReplay.isFocusOwner()) {
@@ -124,8 +117,6 @@ public class PauseScreen extends JFrame implements ActionListener{
         } else if (btnMainMenu.isFocusOwner()) {
             new StartScreen();
             callback.onHideFrame();
-//        } else if (btnSetting.isFocusOwner()) {
-//            new Setting();
         } else if (btnQuit.isFocusOwner()) {
             exit(0);
         }
@@ -135,14 +126,17 @@ public class PauseScreen extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         setVisible(false);
-        if (command.equals("quit")) {
-            exit(0);
+        if (command.equals("back")) {
+            callback.onResumeGame();
         } else if (command.equals("replay")) {
             new GameController();
-        } else if (command.equals("setting")) {
-            new Setting();
+            callback.onHideFrame();
         } else if (command.equals("mainMenu")) {
             new StartScreen();
+            callback.onHideFrame();
+        } else if (command.equals("quit")) {
+            exit(0);
         }
+
     }
 }
