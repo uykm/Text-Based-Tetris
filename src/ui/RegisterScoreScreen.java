@@ -8,28 +8,24 @@ import java.awt.*;
 import java.awt.event.*;
 
 import static component.Button.createBtn;
-import static java.lang.System.exit;
 
 import static component.ScreenSize.*;
 
-public class GameOverUI extends JFrame implements ActionListener {
+public class RegisterScoreScreen extends JFrame implements ActionListener {
 
     ScoreController scoreController = new ScoreController();
     SettingController settingController = new SettingController();
 
     JTextField nameField;
-    JButton exitButton;
+    JButton submitButton;
     private int playerScore;
 
-    public GameOverUI(int curr_score) {
+    public RegisterScoreScreen(int curr_score) {
         setTitle("Tetris - GameOver"); // 창의 제목 설정
         String screenSize = settingController.getSetting("screenSize", "small");
         switch (screenSize) {
             case "small":
                 setWidthHeight(400, 550, this);
-                break;
-            case "medium":
-                setWidthHeight(600, 750, this);
                 break;
             case "big":
                 setWidthHeight(800, 950, this);
@@ -89,33 +85,21 @@ public class GameOverUI extends JFrame implements ActionListener {
                 }
             }
         });
-
-        // 등록 버튼
-        JButton submitButton = createBtn("Submit", "submit", this);
-        inputPanel.add(submitButton);
-
         mainPanel.add(inputPanel);
 
-        // 하단 : 종료 버튼
-        JPanel exitPanel = new JPanel();
-        exitButton = new JButton("Exit");
-        exitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                exit(0);
-            }
-        });
+        // 등록 버튼
+        JPanel submitPanel = new JPanel();
+        submitButton = createBtn("Submit", "submit", this);
 
-        exitButton.addKeyListener(new MyKeyListener());
-
-        exitPanel.add(exitButton);
-        mainPanel.add(exitPanel);
+        submitPanel.add(submitButton);
+        mainPanel.add(submitPanel);
 
         // 설정이 끝난 패널을 JFrame에 추가
         add(mainPanel);
 
-        exitButton.requestFocusInWindow();
-        setFocusable(true);
+        // 키 바인딩 설정
+        setKeyBindings();
+
         setVisible(true);
     }
 
@@ -127,19 +111,49 @@ public class GameOverUI extends JFrame implements ActionListener {
             String name = !nameField.getText().isEmpty() ? nameField.getText() : "익명";
             scoreController.addScore(name, playerScore);
             setVisible(false);
-            new ScoreBoardUI();
+            new ScoreboardScreen();
         }
     }
 
-    private class MyKeyListener extends KeyAdapter {
-        public void keyPressed(KeyEvent e) {
-            int keyCode = e.getKeyCode();
-            System.out.println("Keycode: " + keyCode);
-            if (keyCode == KeyEvent.VK_ENTER) {
-                System.out.println("KEYCODE: ENTER");
-                new StartScreen();
-                setVisible(false);
+    private void setKeyBindings() {
+        // 이름 필드에서 아래 키를 누를 때 버튼에 포커스 이동
+        nameField.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke("DOWN"), "moveDown");
+        nameField.getActionMap().put("moveDown", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                submitButton.requestFocus();
             }
-        }
+        });
+
+        // 버튼에서 위 키를 누를 때 텍스트 필드에 포커스 이동
+        submitButton.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke("UP"), "moveUp");
+        submitButton.getActionMap().put("moveUp", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                nameField.requestFocus();
+            }
+        });
+
+        // 이름 필드에서 엔터 키를 누를 때 버튼에 포커스 이동
+        nameField.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke("ENTER"), "submitFocus");
+        nameField.getActionMap().put("submitFocus", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                submitButton.requestFocus();
+            }
+        });
+
+        // 버튼에서 엔터 키를 누를 때 프로그램 종료
+        submitButton.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke("ENTER"), "submit");
+        submitButton.getActionMap().put("submit", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = !nameField.getText().isEmpty() ? nameField.getText() : "익명";
+                scoreController.addScore(name, playerScore);
+                setVisible(false);
+                new ScoreboardScreen();
+            }
+        });
     }
+
 }

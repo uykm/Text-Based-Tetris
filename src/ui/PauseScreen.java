@@ -32,9 +32,6 @@ public class PauseScreen extends JFrame implements ActionListener{
             case "small":
                 setWidthHeight(400, 550, this);
                 break;
-            case "medium":
-                setWidthHeight(600, 750, this);
-                break;
             case "big":
                 setWidthHeight(800, 950, this);
                 break;
@@ -132,7 +129,7 @@ public class PauseScreen extends JFrame implements ActionListener{
             new GameController();
             callback.onHideFrame();
         } else if (command.equals("mainMenu")) {
-            new StartScreen();
+            new MainMenuScreen();
             callback.onHideFrame();
         } else if (command.equals("quit")) {
             exit(0);

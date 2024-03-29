@@ -1,11 +1,7 @@
 package logic;
 
 import model.Direction;
-import ui.GameOverUI;
-import ui.InGameScreen;
-import ui.PauseScreen;
-import ui.PauseScreenCallback;
-import ui.ScoreBoardUI;
+import ui.*;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -107,9 +103,9 @@ public class GameController implements PauseScreenCallback {
             if(boardController.checkGameOver()){
                 frame.dispose();
                 if(scoreController.isScoreInTop10(boardController.getScore())){
-                    new GameOverUI(boardController.getScore());
+                    new RegisterScoreScreen(boardController.getScore());
                 } else {
-                    new ScoreBoardUI();
+                    new GameOverScreen(boardController.getScore());
                 }
                 timer.stop();
             }

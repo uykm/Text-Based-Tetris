@@ -15,7 +15,7 @@ import static component.Panel.createPanel;
 import static component.ScreenSize.*;
 
 public class
-Setting extends JFrame implements ActionListener {
+SettingScreen extends JFrame implements ActionListener {
     JButton btnSize1, btnSize2, btnSize3;
     JButton btnInitializeScore;
     JButton btnColorBlind1, btnColorBlind2, btnColorBlind3;
@@ -24,15 +24,12 @@ Setting extends JFrame implements ActionListener {
     ScoreController scoreController = new ScoreController();
     SettingController settingController = new SettingController();
 
-    public Setting() {
+    public SettingScreen() {
         setTitle("Tetris");
         String screenSize = settingController.getSetting("screenSize", "small");
         switch (screenSize) {
             case "small":
                 setWidthHeight(400, 550, this);
-                break;
-            case "medium":
-                setWidthHeight(600, 750, this);
                 break;
             case "big":
                 setWidthHeight(800, 950, this);
@@ -121,17 +118,16 @@ Setting extends JFrame implements ActionListener {
         } else if (btnInitializeSetting.isFocusOwner()) {
             setWidthHeight(400, 550, this);
             settingController.saveSettings("screenSize", "small");
+            // TODO : 색맹 설정 초기화 로직 구현
         } else if (btnColorBlind1.isFocusOwner()) {
 
         } else if (btnColorBlind2.isFocusOwner()) {
 
         } else if (btnColorBlind3.isFocusOwner()) {
 
-        } else if (btnInitializeSetting.isFocusOwner()) {
-
         } else if (btnBack.isFocusOwner()) {
             setVisible(false);
-            new StartScreen();
+            new MainMenuScreen();
         }
     }
 
@@ -204,7 +200,7 @@ Setting extends JFrame implements ActionListener {
             setWidthHeight(800, 950, this);
             settingController.saveSettings("screenSize", "big");
         } else if (command.equals("back")) {
-            StartScreen startScreen = new StartScreen();
+            new MainMenuScreen();
             setVisible(false);
         } else if (command.equals("scoreYes")) {
             scoreController.resetScores();
@@ -222,6 +218,6 @@ Setting extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(Setting::new);
+        SwingUtilities.invokeLater(SettingScreen::new);
     }
 }
