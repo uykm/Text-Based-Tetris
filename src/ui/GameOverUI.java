@@ -1,16 +1,13 @@
 package ui;
 
-import logic.Score;
 import logic.ScoreController;
 import logic.SettingController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.List;
+import java.awt.event.*;
+
+import static java.lang.System.exit;
 
 import static component.ScreenSize.*;
 
@@ -19,6 +16,7 @@ public class GameOverUI extends JFrame {
     ScoreController scoreController = new ScoreController();
     SettingController settingController = new SettingController();
     JButton exitButton;
+
     public GameOverUI(int curr_score) {
         setTitle("Tetris - GameOver"); // 창의 제목 설정
         String screenSize = settingController.getSetting("screenSize", "small");
@@ -50,20 +48,46 @@ public class GameOverUI extends JFrame {
         JLabel title = new JLabel("New Top10 Score!!", SwingConstants.CENTER); // 가운데 정렬
         title.setFont(new Font(title.getFont().getName(), Font.BOLD, 24)); // 제목의 폰트 설정
         scorePanel.add(title);
+
+        JLabel score = new JLabel("Your score : " + curr_score, SwingConstants.CENTER);
+        title.setFont(new Font(title.getFont().getName(), Font.BOLD, 18)); // 제목의 폰트 설정
+        scorePanel.add(score);
+
         mainPanel.add(scorePanel);
 
         // 상단 패널과 중앙 패널 사이의 간격 추가
         mainPanel.add(Box.createVerticalStrut(10));
 
-        // 중앙 : 이름 입력 및 제출 버튼
+        // 중앙 : 이름 입력 칸 + 제출 버튼
         JPanel inputPanel = new JPanel();
-        // 이름 입력 텍스트
-        JLabel name = new JLabel("Name: ");
-        JTextField nameField = new JTextField(20);
-        JButton submitButton = new JButton("Submit");
-        inputPanel.add(name);
+
+        JTextField nameField = new JTextField("Please register playerName", 20);
+        nameField.setHorizontalAlignment(JTextField.CENTER);
+        nameField.setForeground(Color.GRAY);
         inputPanel.add(nameField);
+
+        // 이름 필드에 대한 포커스 리스너 추가
+        nameField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (nameField.getText().equals("이름을 입력하세요")) {
+                    nameField.setText("");
+                    nameField.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (nameField.getText().isEmpty()) {
+                    nameField.setForeground(Color.GRAY);
+                    nameField.setText("이름을 입력하세요");
+                }
+            }
+        });
+
+        JButton submitButton = new JButton("Submit");
         inputPanel.add(submitButton);
+
         mainPanel.add(inputPanel);
 
         //submit 버튼 누르면 이름과 점수를 저장
@@ -83,7 +107,7 @@ public class GameOverUI extends JFrame {
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+                exit(0);
             }
         });
 
@@ -112,4 +136,3 @@ public class GameOverUI extends JFrame {
         }
     }
 }
-

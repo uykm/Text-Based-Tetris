@@ -74,7 +74,7 @@ public class GameController implements PauseScreenCallback {
                         boardController.moveBlock(Direction.LEFT);
                         break;
                     case KeyEvent.VK_RIGHT:
-                        boardController.moveBlock(Direction.RIGHT); 
+                        boardController.moveBlock(Direction.RIGHT);
                         break;
                     case KeyEvent.VK_DOWN:
                         boardController.moveBlock(Direction.DOWN);
@@ -87,7 +87,7 @@ public class GameController implements PauseScreenCallback {
                         boardController.moveBlock(Direction.SPACE);
                         inGameScreen.updateBoard();
                         break;
-                        //esc 누르면 게임 중지, 한번 더 누르면 다시 실행
+                    //esc 누르면 게임 중지, 한번 더 누르면 다시 실행
                     case KeyEvent.VK_ESCAPE:
                         timer.stop();
                         PauseScreen pauseScreen = new PauseScreen();
