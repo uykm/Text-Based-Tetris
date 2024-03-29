@@ -29,9 +29,6 @@ public class StartScreen extends JFrame implements ActionListener {
             case "small":
                 setWidthHeight(400, 550, this);
                 break;
-            case "medium":
-                setWidthHeight(600, 750, this);
-                break;
             case "big":
                 setWidthHeight(800, 950, this);
                 break;
@@ -81,10 +78,10 @@ public class StartScreen extends JFrame implements ActionListener {
             new GameController();
             setVisible(false);
         } else if (command.equals("setting")) {
-            new Setting();
+            new SettingScreen();
             setVisible(false);
         } else if (command.equals("scoreboard")) {
-            new ScoreBoardUI();
+            new ScoreboardScreen();
             setVisible(false);
         } else if (command.equals("exit")) {
             System.exit(0);
@@ -112,9 +109,9 @@ public class StartScreen extends JFrame implements ActionListener {
         if (btnGameStart.isFocusOwner()) {
             new GameController();
         } else if (btnSetting.isFocusOwner()) {
-            new Setting();
+            new SettingScreen();
         } else if (btnScoreBoard.isFocusOwner()) {
-            new ScoreBoardUI();
+            new ScoreboardScreen();
         }
         else if (btnExit.isFocusOwner()) {
             exit(0);
@@ -145,5 +142,11 @@ public class StartScreen extends JFrame implements ActionListener {
             btnScoreBoard.requestFocusInWindow();
         }
     }
+
+    public static void main(String[] args) {
+
+        SwingUtilities.invokeLater(StartScreen::new);
+    }
 }
+
 

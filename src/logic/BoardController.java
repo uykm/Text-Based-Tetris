@@ -3,9 +3,6 @@ package logic;
 import model.BlockType;
 import model.Direction;
 import model.NullBlock;
-import ui.GameOverUI;
-
-import javax.swing.*;
 
 public class BoardController {
     // 게임 보드

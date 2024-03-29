@@ -1,9 +1,14 @@
 package component;
 
+import logic.Score;
+import logic.ScoreController;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class Panel {
+
     static public JPanel createPanel(String labelText, JButton[] buttons) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));

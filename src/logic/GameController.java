@@ -1,11 +1,7 @@
 package logic;
 
 import model.Direction;
-import ui.GameOverUI;
-import ui.InGameScreen;
-import ui.PauseScreen;
-import ui.PauseScreenCallback;
-import ui.ScoreBoardUI;
+import ui.*;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -74,7 +70,7 @@ public class GameController implements PauseScreenCallback {
                         boardController.moveBlock(Direction.LEFT);
                         break;
                     case KeyEvent.VK_RIGHT:
-                        boardController.moveBlock(Direction.RIGHT); 
+                        boardController.moveBlock(Direction.RIGHT);
                         break;
                     case KeyEvent.VK_DOWN:
                         boardController.moveBlock(Direction.DOWN);
@@ -87,7 +83,7 @@ public class GameController implements PauseScreenCallback {
                         boardController.moveBlock(Direction.SPACE);
                         inGameScreen.updateBoard();
                         break;
-                        //esc 누르면 게임 중지, 한번 더 누르면 다시 실행
+                    //esc 누르면 게임 중지, 한번 더 누르면 다시 실행
                     case KeyEvent.VK_ESCAPE:
                         timer.stop();
                         PauseScreen pauseScreen = new PauseScreen();
@@ -107,9 +103,9 @@ public class GameController implements PauseScreenCallback {
             if(boardController.checkGameOver()){
                 frame.dispose();
                 if(scoreController.isScoreInTop10(boardController.getScore())){
-                    new GameOverUI(boardController.getScore());
+                    new RegisterScoreScreen(boardController.getScore());
                 } else {
-                    new ScoreBoardUI();
+                    new GameOverScreen(boardController.getScore());
                 }
                 timer.stop();
             }
