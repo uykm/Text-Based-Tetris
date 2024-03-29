@@ -50,35 +50,35 @@ Setting extends JFrame implements ActionListener {
         settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.Y_AXIS));
 
         // Screen Size
-        btnSize1 = createBtn("Small", "small", this::actionPerformed);
-        btnSize2 = createBtn("Medium", "medium", this::actionPerformed);
-        btnSize3 = createBtn("Big", "big", this::actionPerformed);
+        btnSize1 = createBtn("Small", "small", this);
+        btnSize2 = createBtn("Medium", "medium", this);
+        btnSize3 = createBtn("Big", "big", this);
         btnSize1.addKeyListener(new MyKeyListener());
         btnSize2.addKeyListener(new MyKeyListener());
         btnSize3.addKeyListener(new MyKeyListener());
         settingsPanel.add(createPanel("Screen Size", new JButton[]{btnSize1, btnSize2, btnSize3}));
 
         // Initialize Scoreboard
-        btnInitializeScore = createBtn("Clear", "scoreYes", this::actionPerformed);
+        btnInitializeScore = createBtn("Clear", "scoreYes", this);
         btnInitializeScore.addKeyListener(new MyKeyListener());
         settingsPanel.add(createPanel("Initialize Score Board", new JButton[]{btnInitializeScore}));
 
         // Colorblind Mode
-        btnColorBlind1 = createBtn("Mode1", "colorBlind1", this::actionPerformed);
-        btnColorBlind2 = createBtn("Mode2", "colorBlind2", this::actionPerformed);
-        btnColorBlind3 = createBtn("Mode3", "colorBlind3", this::actionPerformed);
+        btnColorBlind1 = createBtn("Mode1", "colorBlind1", this);
+        btnColorBlind2 = createBtn("Mode2", "colorBlind2", this);
+        btnColorBlind3 = createBtn("Mode3", "colorBlind3", this);
         btnColorBlind1.addKeyListener(new MyKeyListener());
         btnColorBlind2.addKeyListener(new MyKeyListener());
         btnColorBlind3.addKeyListener(new MyKeyListener());
         settingsPanel.add(createPanel("Colorblind Mode", new JButton[]{btnColorBlind1, btnColorBlind2, btnColorBlind3}));
 
         // Initialize Setting
-        btnInitializeSetting = createBtn("Initialize", "initialize", this::actionPerformed);
+        btnInitializeSetting = createBtn("Initialize", "initialize", this);
         btnInitializeSetting.addKeyListener(new MyKeyListener());
         settingsPanel.add(createPanel("Initialize Setting", new JButton[]{btnInitializeSetting}));
 
         // Back to Main Menu
-        btnBack = createBtn("Back", "back", this::actionPerformed);
+        btnBack = createBtn("Menu", "back", this);
         btnBack.addKeyListener(new MyKeyListener());
         JPanel backPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         backPanel.add(btnBack);

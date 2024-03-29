@@ -46,9 +46,9 @@ public class ScoreBoardUI extends JFrame implements ActionListener {
             panel.add(scoreLabel);
         }
 
-        // Back 버튼
+        // 메뉴 버튼
         JPanel backPanel = new JPanel();
-        backButton = createBtn("Back", "back", this);
+        backButton = createBtn("Menu", "back", this);
         backPanel.add(backButton);
         panel.add(backPanel);
 

@@ -7,15 +7,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import static component.Button.createBtn;
 import static java.lang.System.exit;
 
 import static component.ScreenSize.*;
 
-public class GameOverUI extends JFrame {
+public class GameOverUI extends JFrame implements ActionListener {
 
     ScoreController scoreController = new ScoreController();
     SettingController settingController = new SettingController();
+
+    JTextField nameField;
     JButton exitButton;
+    private int playerScore;
 
     public GameOverUI(int curr_score) {
         setTitle("Tetris - GameOver"); // 창의 제목 설정
@@ -49,6 +53,7 @@ public class GameOverUI extends JFrame {
         title.setFont(new Font(title.getFont().getName(), Font.BOLD, 24)); // 제목의 폰트 설정
         scorePanel.add(title);
 
+        playerScore = curr_score;
         JLabel score = new JLabel("Your score : " + curr_score, SwingConstants.CENTER);
         title.setFont(new Font(title.getFont().getName(), Font.BOLD, 18)); // 제목의 폰트 설정
         scorePanel.add(score);
@@ -61,7 +66,7 @@ public class GameOverUI extends JFrame {
         // 중앙 : 이름 입력 칸 + 제출 버튼
         JPanel inputPanel = new JPanel();
 
-        JTextField nameField = new JTextField("Please register playerName", 20);
+        nameField = new JTextField("Please register playerName", 20);
         nameField.setHorizontalAlignment(JTextField.CENTER);
         nameField.setForeground(Color.GRAY);
         inputPanel.add(nameField);
@@ -70,7 +75,7 @@ public class GameOverUI extends JFrame {
         nameField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (nameField.getText().equals("이름을 입력하세요")) {
+                if (nameField.getText().equals("Please register playerName")) {
                     nameField.setText("");
                     nameField.setForeground(Color.BLACK);
                 }
@@ -80,26 +85,16 @@ public class GameOverUI extends JFrame {
             public void focusLost(FocusEvent e) {
                 if (nameField.getText().isEmpty()) {
                     nameField.setForeground(Color.GRAY);
-                    nameField.setText("이름을 입력하세요");
+                    nameField.setText("Please register playerName");
                 }
             }
         });
 
-        JButton submitButton = new JButton("Submit");
+        // 등록 버튼
+        JButton submitButton = createBtn("Submit", "submit", this);
         inputPanel.add(submitButton);
 
         mainPanel.add(inputPanel);
-
-        //submit 버튼 누르면 이름과 점수를 저장
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String name = !nameField.getText().isEmpty() ? nameField.getText() : "익명";
-                scoreController.addScore(name, curr_score);
-                setVisible(false);
-                new ScoreBoardUI();
-            }
-        });
 
         // 하단 : 종료 버튼
         JPanel exitPanel = new JPanel();
@@ -122,6 +117,18 @@ public class GameOverUI extends JFrame {
         exitButton.requestFocusInWindow();
         setFocusable(true);
         setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String command = e.getActionCommand();
+        setVisible(false);
+        if (command.equals("submit")) {
+            String name = !nameField.getText().isEmpty() ? nameField.getText() : "익명";
+            scoreController.addScore(name, playerScore);
+            setVisible(false);
+            new ScoreBoardUI();
+        }
     }
 
     private class MyKeyListener extends KeyAdapter {
