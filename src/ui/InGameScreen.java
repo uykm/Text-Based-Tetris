@@ -17,13 +17,13 @@ public class InGameScreen extends JPanel {
     private final int EXTEND_BOARD_HEIGHT = 26;
 
     // 실제 게임 플레이 영역
-    private final int BOARD_WIDTH = 10;
+    private final int BOARD_WIDTH = 15;
     private final int BOARD_HEIGHT = 20;
 
     private final int CELL_SIZE = 15; // 셀의 크기
     private final int NEXT_BLOCK_BOARD_WIDTH = 8; // 다음 블록 표시 영역의 가로 길이
     private final int NEXT_BLOCK_BOARD_HEIGHT = 8; // 다음 블록 표시 영역의 세로 길이
-    private final int[][] board; // 게임 보드 상태
+    private final int[][] board; // 게임 보드 상태s
     private int[][] nextBlockBoard; // 다음 블록 표시 영역
     private final BoardController boardController; // 게임 보드 컨트롤러
     private int score; // 점수
@@ -91,9 +91,9 @@ public class InGameScreen extends JPanel {
         }
         int borderWidth = CELL_SIZE / 3 * 2; // 테두리 선의 너비
         // 어두운 회색 상단 선 그리기
-        drawBorderLine(g, CELL_SIZE * 2 - borderWidth, CELL_SIZE * 2 - borderWidth, (EXTEND_BOARD_WIDTH - 2) * CELL_SIZE - borderWidth, borderWidth);
+        drawBorderLine(g, CELL_SIZE * 2 - borderWidth, CELL_SIZE * 2 - borderWidth, (EXTEND_BOARD_WIDTH - 4) * CELL_SIZE + borderWidth * 2, borderWidth);
         // 하단 선 그리기
-        drawBorderLine(g, CELL_SIZE * 2 - borderWidth, EXTEND_BOARD_HEIGHT * CELL_SIZE - CELL_SIZE * 2, (EXTEND_BOARD_WIDTH - 2) * CELL_SIZE - borderWidth, borderWidth);
+        drawBorderLine(g, CELL_SIZE * 2 - borderWidth, EXTEND_BOARD_HEIGHT * CELL_SIZE - CELL_SIZE * 2, (EXTEND_BOARD_WIDTH - 4) * CELL_SIZE + borderWidth * 2, borderWidth);
         // 좌측 선 그리기
         drawBorderLine(g, CELL_SIZE * 2 - borderWidth, CELL_SIZE * 2, borderWidth, (EXTEND_BOARD_HEIGHT - 4) * CELL_SIZE);
         // 우측 선 그리기
@@ -210,5 +210,4 @@ public class InGameScreen extends JPanel {
         initNextBlockBoard();
         repaint();
     }
-
 }
