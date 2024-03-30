@@ -122,6 +122,7 @@ public class GameController implements PauseScreenCallback {
         if(currentSpeed >= MAX_SPEED){
             currentSpeed -= speed;
             timer.setDelay(currentSpeed);
+            boardController.addScoreMessage("Speed up! \nCurrent Delay " + currentSpeed);
         }
     }
 }

@@ -17,7 +17,7 @@ public class InGameScreen extends JPanel {
     private final int EXTEND_BOARD_HEIGHT = 26;
 
     // 실제 게임 플레이 영역
-    private final int BOARD_WIDTH = 15;
+    private final int BOARD_WIDTH = 10;
     private final int BOARD_HEIGHT = 20;
 
     private final int CELL_SIZE = 15; // 셀의 크기

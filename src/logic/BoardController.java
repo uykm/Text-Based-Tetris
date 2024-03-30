@@ -34,20 +34,21 @@ public class BoardController {
 
     private int erasedLineCount;
 
+    final int BLOCK_COUNT_TO_SPEED_UP = 10;
+    final int LINE_COUNT_TO_SPEED_UP = 5;
+    final int BLOCK_SPEED_UP_THRESHOLD = 10;
+    final int LINE_SPEED_UP_THRESHOLD = 20;
+
     private void checkSpeedUp() {
-        int BLOCK_COUNT_TO_SPEED_UP = 10;
+
         if(placedBlockCount >= BLOCK_COUNT_TO_SPEED_UP) {
             placedBlockCount = 0;
-            int BLOCK_SPEED_UP_THRESHOLD = 5;
+
             gameController.speedUp(BLOCK_SPEED_UP_THRESHOLD);
-            addScoreMessage("Speed up!\n" + BLOCK_COUNT_TO_SPEED_UP + " blocks placed");
         }
-        int LINE_COUNT_TO_SPEED_UP = 5;
         if(erasedLineCount >= LINE_COUNT_TO_SPEED_UP) {
             erasedLineCount = erasedLineCount - LINE_COUNT_TO_SPEED_UP;
-            int LINE_SPEED_UP_THRESHOLD = 10;
             gameController.speedUp(LINE_SPEED_UP_THRESHOLD);
-            addScoreMessage("Speed up!\n" + LINE_COUNT_TO_SPEED_UP + " lines erased");
         }
     }
 
@@ -133,7 +134,7 @@ public class BoardController {
         }
     }
 
-    private void addScoreMessage(String message) {
+    public void addScoreMessage(String message) {
         if (Messages.size() > 7) {
             Messages.remove();
         }
