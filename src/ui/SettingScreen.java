@@ -2,6 +2,7 @@ package ui;
 
 import logic.ScoreController;
 import logic.SettingController;
+import model.JBlock;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +18,7 @@ import static component.ScreenSize.*;
 public class
 SettingScreen extends JFrame implements ActionListener {
     JButton btnSize1, btnSize2, btnSize3;
+    JButton btnKeySetting;
     JButton btnInitializeScore;
     JButton btnColorBlind1, btnColorBlind2, btnColorBlind3;
     JButton btnInitializeSetting;
@@ -54,6 +56,11 @@ SettingScreen extends JFrame implements ActionListener {
         btnSize2.addKeyListener(new MyKeyListener());
         btnSize3.addKeyListener(new MyKeyListener());
         settingsPanel.add(createPanel("Screen Size", new JButton[]{btnSize1, btnSize2, btnSize3}));
+
+        // Key Setting
+        btnKeySetting = createBtn("Key Setting", "keySetting", this);
+        btnKeySetting.addKeyListener(new MyKeyListener());
+        settingsPanel.add(createPanel("Key Setting", new JButton[]{btnKeySetting}));
 
         // Initialize Scoreboard
         btnInitializeScore = createBtn("Clear", "scoreYes", this);
@@ -113,7 +120,12 @@ SettingScreen extends JFrame implements ActionListener {
         } else if (btnSize3.isFocusOwner()) {
             setWidthHeight(800, 950, this);
             settingController.saveSettings("screenSize", "big");
-        } else if (btnInitializeScore.isFocusOwner()) {
+        } else if (btnKeySetting.isFocusOwner()) {
+            setVisible(false);
+            // keySetting 창을 위한 컨트롤러를 하나 만들어야 할 듯
+            new KeySettingScreen();
+        }
+        else if (btnInitializeScore.isFocusOwner()) {
             scoreController.resetScores();
         } else if (btnInitializeSetting.isFocusOwner()) {
             setWidthHeight(400, 550, this);
@@ -133,7 +145,9 @@ SettingScreen extends JFrame implements ActionListener {
 
     private void focusDownButton() {
         if (btnSize1.isFocusOwner() || btnSize2.isFocusOwner() || btnSize3.isFocusOwner()) {
-            btnInitializeScore.requestFocusInWindow();
+            btnKeySetting.requestFocusInWindow();
+        } else if (btnKeySetting.isFocusOwner()) {
+           btnInitializeScore.requestFocusInWindow();
         } else if (btnInitializeScore.isFocusOwner()) {
             btnColorBlind2.requestFocusInWindow();
         } else if (btnColorBlind1.isFocusOwner() || btnColorBlind2.isFocusOwner() || btnColorBlind3.isFocusOwner()) {
@@ -151,6 +165,8 @@ SettingScreen extends JFrame implements ActionListener {
         } else if (btnColorBlind1.isFocusOwner() || btnColorBlind2.isFocusOwner() || btnColorBlind3.isFocusOwner()) {
             btnInitializeScore.requestFocusInWindow();
         } else if (btnInitializeScore.isFocusOwner()) {
+            btnKeySetting.requestFocusInWindow();
+        } else if (btnKeySetting.isFocusOwner()) {
             btnSize2.requestFocusInWindow();
         }
     }
