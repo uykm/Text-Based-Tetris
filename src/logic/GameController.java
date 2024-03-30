@@ -15,10 +15,14 @@ public class GameController implements PauseScreenCallback {
     private JFrame frame;
     private Timer timer;
 
+    final int MAX_SPEED = 500;
+
+    private int currentSpeed;
+
     // 게임 컨트롤러 생성자
     public GameController() {
         initUI();
-        this.boardController = new BoardController();
+        this.boardController = new BoardController(this);
         this.inGameScreen = new InGameScreen(this.boardController);
         this.scoreController = new ScoreController();
 
@@ -97,7 +101,8 @@ public class GameController implements PauseScreenCallback {
     }
 
     private void startGame() {
-        timer = new Timer(1000, e -> {
+        currentSpeed = 1000;
+        timer = new Timer(currentSpeed, e -> {
             boardController.moveBlock(Direction.DOWN);
             inGameScreen.updateBoard(); // Assuming InGameScreen has a method to update the UI based on the current game state
             if(boardController.checkGameOver()){
@@ -111,5 +116,12 @@ public class GameController implements PauseScreenCallback {
             }
         });
         timer.start();
+    }
+
+    public void speedUp(int speed){
+        if(currentSpeed >= MAX_SPEED){
+            currentSpeed -= speed;
+            timer.setDelay(currentSpeed);
+        }
     }
 }

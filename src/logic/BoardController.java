@@ -4,6 +4,9 @@ import model.BlockType;
 import model.Direction;
 import model.NullBlock;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class BoardController {
     // 게임 보드
     final private Board grid;
@@ -19,21 +22,121 @@ public class BoardController {
     // 블록이 아래로 내려가면 0으로 초기화
     private int limitCount = 0;
 
+    private boolean canPlaceBlock;
+
     private int score;
 
-    private boolean canPlaceBlock;
+    private long blockCreationTime;
+
+    private int blockCountWithNoLineErase;
+
+    private int placedBlockCount;
+
+    private int erasedLineCount;
+
+    private void checkSpeedUp() {
+        int BLOCK_COUNT_TO_SPEED_UP = 10;
+        if(placedBlockCount >= BLOCK_COUNT_TO_SPEED_UP) {
+            placedBlockCount = 0;
+            int BLOCK_SPEED_UP_THRESHOLD = 5;
+            gameController.speedUp(BLOCK_SPEED_UP_THRESHOLD);
+            addScoreMessage("Speed up!: " + BLOCK_COUNT_TO_SPEED_UP + " blocks placed");
+        }
+        int LINE_COUNT_TO_SPEED_UP = 5;
+        if(erasedLineCount >= LINE_COUNT_TO_SPEED_UP) {
+            erasedLineCount = erasedLineCount - LINE_COUNT_TO_SPEED_UP;
+            int LINE_SPEED_UP_THRESHOLD = 10;
+            gameController.speedUp(LINE_SPEED_UP_THRESHOLD);
+            addScoreMessage("Speed up!: " + LINE_COUNT_TO_SPEED_UP + " lines erased");
+        }
+    }
+
+    private final Queue<String> Messages;
+
+
+    GameController gameController;
+
+
+    public String getScoreMessages() {
+        StringBuilder sb = new StringBuilder();
+        for(String message : Messages) {
+            sb.append(message).append("\n");
+        }
+        return sb.toString();
+    }
 
     // 블록의 초기 좌표
     int x, y;
 
-    public BoardController() {
+    public BoardController(GameController gameController) {
         this.grid = new Board();
         this.WIDTH = grid.getWidth();
         this.HEIGHT = grid.getHeight();
         this.score = 0;
         this.canPlaceBlock = true;
+        this.blockCountWithNoLineErase = 0;
+        this.Messages = new LinkedList<>();
+        this.gameController = gameController;
         // 초기 블록 배치
         placeNewBlock();
+    }
+
+    // 점수 로직
+
+    // 점수 추가
+    private void addScore(int score) {
+        this.score += score;
+    }
+
+    // 블록 이동 시 점수 추가
+    private void addScoreOnBlockMoveDown() {
+        addScore(1);
+    }
+
+
+    // 라인 삭제 시 점수 추가, 한번에 여러 라인 삭제 시 추가 점수, 3초 안에 라인 삭제 시 추가 점수
+    private void addScoreOnLineEraseWithBonus(int lineCount) {
+        long blockPlacementTime = System.currentTimeMillis();
+        long diff = blockPlacementTime - blockCreationTime;
+        int multiplier = 1;
+        if(diff < 3000) {
+            multiplier = 2;
+        }
+        int addedScore = (13*lineCount-3)*multiplier;
+        addScore(addedScore);
+        if(multiplier == 2) {
+            if(lineCount == 1) {
+                addScoreMessage("+" + addedScore + ": Line erased (x2)");
+            } else {
+                addScoreMessage("+" + addedScore + ": Lines erased (x2)");
+            }
+        } else {
+            if(lineCount == 1) {
+                addScoreMessage("+" + addedScore + ": Line erased");
+            } else {
+                addScoreMessage("+" + addedScore + ": Lines erased");
+            }
+        }
+    }
+
+    private void subScoreOnLineNotEraseIn10Blocks() {
+        if(blockCountWithNoLineErase > 10) {
+            addScore(-5);
+            blockCountWithNoLineErase = 0;
+            addScoreMessage("-5: No line erased in 10 blocks");
+        }
+    }
+
+    // 블록 생성 시간 설정
+    private void setBlockCreationTime() {
+        blockCreationTime = System.currentTimeMillis();
+    }
+
+    private void addScoreMessage(String message) {
+        if (Messages.size() > 4) {
+            Messages.remove();
+        }
+        Messages.add(message);
     }
 
 
@@ -50,10 +153,13 @@ public class BoardController {
 
     // nextBlock을 currentBlock으로 옮기고 새로운 nextBlock을 생성
     public void placeNewBlock() {
+        placedBlockCount++;
         this.currentBlock = this.nextBlock;
         this.nextBlock = Block.getBlock(BlockType.getRandomBlockType());
         if(collisionCheck(6, 2, currentBlock)){
+            checkSpeedUp();
             x = 6; y = 2;
+            setBlockCreationTime();
         } else {
             canPlaceBlock = false;
             this.currentBlock = new NullBlock();
@@ -90,6 +196,7 @@ public class BoardController {
 
     // 라인이 꽉 찼는지 확인하고 꽉 찼으면 지우기
     public void lineCheck() {
+        int lineCount = 0;
         for(int i=3; i< HEIGHT+3; i++) {
             boolean canErase = true;
             for(int j=3; j< WIDTH+3; j++) {
@@ -100,7 +207,13 @@ public class BoardController {
             }
             if(canErase) {
                 eraseLine(i);
+                lineCount++;
             }
+        }
+        if(lineCount > 0) {
+            addScoreOnLineEraseWithBonus(lineCount);
+        } else {
+            subScoreOnLineNotEraseIn10Blocks();
         }
     }
 
@@ -150,8 +263,8 @@ public class BoardController {
                 if (collisionCheck(x, y + 1, currentBlock)) {
                     stopCount=0;
                     limitCount = 0;
-                    score+=1;
                     y++;
+                    addScoreOnBlockMoveDown(); // 한 칸 내릴 때마다 1점 추가
                     placeBlock();
                 } else {
                     stopCount++;
@@ -175,7 +288,7 @@ public class BoardController {
             case SPACE -> {
                 while(collisionCheck(x, y+1, currentBlock)) {
                     y++;
-                    score += 1;
+                    addScoreOnBlockMoveDown(); // 한 칸 내릴 때마다 1점 추가
                 }
                 placeBlock();
                 lineCheck();

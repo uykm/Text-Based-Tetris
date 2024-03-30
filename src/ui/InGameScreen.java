@@ -68,6 +68,8 @@ public class InGameScreen extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        String scoreMessage = boardController.getScoreMessages();
+
         score = boardController.getScore();
 
         // 전체 게임 보드의 배경을 검정색으로 설정
@@ -136,6 +138,25 @@ public class InGameScreen extends JPanel {
         g.setColor(Color.RED); // 점수 문자열 색상
         String scoreText = "" + score;
         g.drawString(scoreText, scoreboardX + (scoreboardWidth - metrics.stringWidth(scoreText)) / 2, scoreboardY + CELL_SIZE * 2 + metrics.getAscent());
+
+        drawScoreMessages(g, scoreMessage);
+    }
+
+    // 스코어 메시지를 여러 줄로 그리는 메소드
+    private void drawScoreMessages(Graphics g, String scoreMessages) {
+        int messageX = EXTEND_BOARD_WIDTH * CELL_SIZE + CELL_SIZE; // 점수 메시지 x 위치
+        int messageY = NEXT_BLOCK_BOARD_HEIGHT * CELL_SIZE + CELL_SIZE * 6; // 점수 메시지 y 위치, 위치 조정 필요
+        g.setColor(Color.WHITE); // 점수 메시지 색상
+        Font messageFont = new Font("Arial", Font.PLAIN, 12);
+        g.setFont(messageFont);
+        drawStringMultiLine(g, scoreMessages, messageX, messageY);
+    }
+
+    // 멀티라인 문자열을 그리는 메소드
+    private void drawStringMultiLine(Graphics g, String text, int x, int y) {
+        for (String line : text.split("\n")) {
+            g.drawString(line, x, y += g.getFontMetrics().getHeight());
+        }
     }
 
     // 셀을 그리는 메소드
