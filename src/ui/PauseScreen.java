@@ -112,7 +112,7 @@ public class PauseScreen extends JFrame implements ActionListener{
             new GameController();
             callback.onHideFrame();
         } else if (btnMainMenu.isFocusOwner()) {
-            new StartScreen();
+            new MainMenuScreen();
             callback.onHideFrame();
         } else if (btnQuit.isFocusOwner()) {
             exit(0);

@@ -7,11 +7,46 @@ import java.util.Properties;
 
 public class SettingController {
     private final String configPath = "config.properties";
-    private Properties properties;
+    private final Properties properties;
+
+    // Screen을 위한 사이즈 변수
+    private String screenSize;
 
     public SettingController() {
         properties = new Properties();
         loadSettings();
+    }
+
+    public int getCellSize(String screenSize) {
+        return switch (screenSize) {
+            case "small" -> 15;
+            case "big" -> 35;
+            default -> 25;
+        };
+    }
+
+    public int getScoreSize(String screenSize) {
+        return switch (screenSize) {
+            case "small" -> 20;
+            case "big" -> 60;
+            default -> 40;
+        };
+    }
+
+    public int getMessageSize(String screenSize) {
+        return switch (screenSize) {
+            case "small" -> 12;
+            case "big" -> 22;
+            default -> 17;
+        };
+    }
+
+    public int getBlockSize(String screenSize) {
+        return switch (screenSize) {
+            case "small" -> 22;
+            case "big" -> 48;
+            default -> 36;
+        };
     }
 
     public void saveSettings(String key, String value) {
