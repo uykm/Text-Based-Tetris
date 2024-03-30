@@ -26,7 +26,7 @@ public class BoardController {
 
     private int score;
 
-    private long blockCreationTime;
+    private long lastLineEraseTime;
 
     private int blockCountWithNoLineErase;
 
@@ -40,14 +40,14 @@ public class BoardController {
             placedBlockCount = 0;
             int BLOCK_SPEED_UP_THRESHOLD = 5;
             gameController.speedUp(BLOCK_SPEED_UP_THRESHOLD);
-            addScoreMessage("Speed up!: " + BLOCK_COUNT_TO_SPEED_UP + " blocks placed");
+            addScoreMessage("Speed up!\n" + BLOCK_COUNT_TO_SPEED_UP + " blocks placed");
         }
         int LINE_COUNT_TO_SPEED_UP = 5;
         if(erasedLineCount >= LINE_COUNT_TO_SPEED_UP) {
             erasedLineCount = erasedLineCount - LINE_COUNT_TO_SPEED_UP;
             int LINE_SPEED_UP_THRESHOLD = 10;
             gameController.speedUp(LINE_SPEED_UP_THRESHOLD);
-            addScoreMessage("Speed up!: " + LINE_COUNT_TO_SPEED_UP + " lines erased");
+            addScoreMessage("Speed up!\n" + LINE_COUNT_TO_SPEED_UP + " lines erased");
         }
     }
 
@@ -77,6 +77,7 @@ public class BoardController {
         this.blockCountWithNoLineErase = 0;
         this.Messages = new LinkedList<>();
         this.gameController = gameController;
+        this.lastLineEraseTime = 0;
         // 초기 블록 배치
         placeNewBlock();
     }
@@ -93,11 +94,16 @@ public class BoardController {
         addScore(1);
     }
 
+    private void addScoreOnBlockMoveDown(int changedY) {
+        addScore(changedY);
+    }
+
 
     // 라인 삭제 시 점수 추가, 한번에 여러 라인 삭제 시 추가 점수, 3초 안에 라인 삭제 시 추가 점수
     private void addScoreOnLineEraseWithBonus(int lineCount) {
-        long blockPlacementTime = System.currentTimeMillis();
-        long diff = blockPlacementTime - blockCreationTime;
+        long currLineEraseTime = System.currentTimeMillis();
+        long diff = currLineEraseTime - lastLineEraseTime;
+        lastLineEraseTime = currLineEraseTime;
         int multiplier = 1;
         if(diff < 3000) {
             multiplier = 2;
@@ -127,13 +133,8 @@ public class BoardController {
         }
     }
 
-    // 블록 생성 시간 설정
-    private void setBlockCreationTime() {
-        blockCreationTime = System.currentTimeMillis();
-    }
-
     private void addScoreMessage(String message) {
-        if (Messages.size() > 4) {
+        if (Messages.size() > 7) {
             Messages.remove();
         }
         Messages.add(message);
@@ -159,7 +160,6 @@ public class BoardController {
         if(collisionCheck(6, 2, currentBlock)){
             checkSpeedUp();
             x = 6; y = 2;
-            setBlockCreationTime();
         } else {
             canPlaceBlock = false;
             this.currentBlock = new NullBlock();
@@ -271,7 +271,7 @@ public class BoardController {
                     limitCount++;
                     placeBlock();
                     //2틱 동안 움직임 없거나 충돌 후 5틱이 지나면 블록을 고정시킴
-                    if(stopCount >= 1 || limitCount > 3) {
+                    if(stopCount > 1 || limitCount > 3) {
                         checkGameOver();
                         lineCheck();
                         placeNewBlock();
@@ -302,14 +302,20 @@ public class BoardController {
     // 블록을 회전시킴. 충돌 시 회전하지 않음
     public void rotateBlock() {
         currentBlock.rotate();
-        for(int i=0; i<3; i++){
-            if(collisionCheck(x+i, y, currentBlock)){
-                x += i;
-                return;
-            }
-            if(collisionCheck(x-i, y, currentBlock)){
-                x -= i;
-                return;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (collisionCheck(x + i, y + j, currentBlock)) {
+                    addScoreOnBlockMoveDown(j);
+                    x += i;
+                    y += j;
+                    return;
+                }
+                if (collisionCheck(x - i, y + j, currentBlock)) {
+                    addScoreOnBlockMoveDown(j);
+                    x -= i;
+                    y += j;
+                    return;
+                }
             }
         }
         currentBlock.rotateBack();
