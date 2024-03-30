@@ -186,5 +186,3 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         SwingUtilities.invokeLater(MainMenuScreen::new);
     }
 }
-
-
