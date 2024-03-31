@@ -27,13 +27,13 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         String screenSize = settingController.getScreenSize("screenSize", "small");
         switch (screenSize) {
             case "small":
-                setWidthHeight(400, 550, this);
+                setWidthHeight(390, 420, this);
                 break;
             case "big":
-                setWidthHeight(800, 950, this);
+                setWidthHeight(910, 940, this);
                 break;
             default:
-                setWidthHeight(600, 750, this);
+                setWidthHeight(650, 680, this);
                 break;
         }
         setLocationRelativeTo(null); // Centered window
@@ -43,7 +43,7 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         // 상단에 Tetris 제목 레이블 추가
-        JLabel titleLabel = new JLabel("Tetris", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("TETRIS", SwingConstants.CENTER);
         titleLabel.setFont(new Font(titleLabel.getFont().getName(), Font.BOLD, 50));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(titleLabel, BorderLayout.NORTH);
