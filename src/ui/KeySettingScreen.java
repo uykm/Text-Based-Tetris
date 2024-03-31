@@ -1,6 +1,5 @@
 package ui;
 
-import logic.GameController;
 import logic.SettingController;
 
 import javax.swing.*;
@@ -26,7 +25,7 @@ public class KeySettingScreen extends JFrame implements ActionListener {
     public KeySettingScreen() {
         setTitle("Key Setting");
 
-        String screenSize = settingController.getSetting("screenSize", "small");
+        String screenSize = settingController.getScreenSize("screenSize", "small");
         switch (screenSize) {
             case "small":
                 setWidthHeight(400, 550, this);

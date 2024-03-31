@@ -24,7 +24,7 @@ public class StartScreen extends JFrame implements ActionListener {
 
     public StartScreen() {
         setTitle("Tetris");
-        String screenSize = settingController.getSetting("screenSize", "small");
+        String screenSize = settingController.getScreenSize("screenSize", "small");
         switch (screenSize) {
             case "small":
                 setWidthHeight(400, 550, this);

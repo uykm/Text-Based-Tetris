@@ -2,7 +2,6 @@ package ui;
 
 import logic.ScoreController;
 import logic.SettingController;
-import model.JBlock;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +27,7 @@ SettingScreen extends JFrame implements ActionListener {
 
     public SettingScreen() {
         setTitle("Tetris");
-        String screenSize = settingController.getSetting("screenSize", "small");
+        String screenSize = settingController.getScreenSize("screenSize", "small");
         switch (screenSize) {
             case "small":
                 setWidthHeight(400, 550, this);

@@ -24,7 +24,7 @@ public class ScoreboardScreen extends JFrame implements ActionListener {
     public ScoreboardScreen() {
 
         setTitle("Tetris - ScoreBoard"); // 창의 제목 설정
-        String screenSize = settingController.getSetting("screenSize", "small");
+        String screenSize = settingController.getScreenSize("screenSize", "small");
         switch (screenSize) {
             case "small":
                 setWidthHeight(400, 550, this);

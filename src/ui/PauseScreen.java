@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.Set;
 
 import static component.Button.createBtn;
 import static component.Panel.createPanel;
@@ -27,7 +26,7 @@ public class PauseScreen extends JFrame implements ActionListener{
 
     public PauseScreen() {
         setTitle("Tetris");
-        String screenSize = settingController.getSetting("screenSize", "small");
+        String screenSize = settingController.getScreenSize("screenSize", "small");
         switch (screenSize) {
             case "small":
                 setWidthHeight(400, 550, this);

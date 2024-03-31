@@ -17,6 +17,20 @@ public class SettingController {
         loadSettings();
     }
 
+    // 스크린 크기 받아오기
+    public String getScreenSize(String key, String defaultValue) {
+
+        // screenSize=small/medium/big
+        return properties.getProperty(key, defaultValue);
+    }
+
+    // 색맹모드 받아오기
+    public String getColorMode(String key, String defaultValue) {
+
+        // colorMode=one/two/three
+        return properties.getProperty(key, defaultValue);
+    }
+
     public int getCellSize(String screenSize) {
         return switch (screenSize) {
             case "small" -> 15;
@@ -67,9 +81,8 @@ public class SettingController {
         }
     }
 
-    public String getSetting(String key, String defaultValue) {
-        return properties.getProperty(key, defaultValue);
-    }
+
+
 
     public void initializeSettings() {
         properties.setProperty("screenSize", "small");
