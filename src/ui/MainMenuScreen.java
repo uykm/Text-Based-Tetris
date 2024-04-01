@@ -17,6 +17,7 @@ import static java.lang.System.exit;
 public class MainMenuScreen extends JFrame implements ActionListener {
 
     JButton btnPlay;
+    JButton btnItem;
     JButton btnSetting;
     JButton btnRanking;
     JButton btnExit;
@@ -53,11 +54,20 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         JPanel centerPanel = new JPanel();
         add(Box.createVerticalStrut(10));
         btnPlay = createLogoBtnNext("Play", "play", this, "src/image/play_logo.png");
-        btnPlay.setPreferredSize(new Dimension(300, 100));
+        btnPlay.setPreferredSize(new Dimension(150, 80));
         btnPlay.setFont(new Font("Serif", Font.BOLD, 20));
         btnPlay.setFocusable(true);
         centerPanel.add(btnPlay);
+
+        // btnItem 버튼 추가
+        btnItem = createLogoBtnNext("Item", "item", this, "src/image/itemMode.png");
+        btnItem.setPreferredSize(new Dimension(150, 80)); // btnPlay와 동일한 크기 설정
+        btnItem.setFont(new Font("Serif", Font.BOLD, 20)); // 폰트 설정
+        btnItem.setFocusable(true);
+        centerPanel.add(btnItem);
+
         add(centerPanel, BorderLayout.CENTER);
+
 
         // 하단 패널에 Setting, Ranking, Exit 버튼 추가
         JPanel bottomPanel = new JPanel();
@@ -87,6 +97,7 @@ public class MainMenuScreen extends JFrame implements ActionListener {
 
         // Attach a key listener to each button
         btnPlay.addKeyListener(new MyKeyListener());
+        btnItem.addKeyListener(new MyKeyListener());
         btnSetting.addKeyListener(new MyKeyListener());
         btnRanking.addKeyListener(new MyKeyListener());
         btnExit.addKeyListener(new MyKeyListener());
@@ -99,6 +110,9 @@ public class MainMenuScreen extends JFrame implements ActionListener {
             setVisible(false);
             new GameController();
             setVisible(false);
+        } else if (command.equals("item")) {
+            // TODO : 아이템 모드 게임 로직 구현
+            System.out.println("아이템 모드 플레이!");
         } else if (command.equals("setting")) {
             new SettingScreen();
             setVisible(false);
@@ -135,6 +149,9 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         setVisible(false);
         if (btnPlay.isFocusOwner()) {
             new GameController();
+        } else if (btnItem.isFocusOwner()) {
+            // TODO : 아이템 모드 게임 로직 구현
+            System.out.println("아이템 모드 플레이!");
         } else if (btnSetting.isFocusOwner()) {
             new SettingScreen();
         } else if (btnRanking.isFocusOwner()) {
@@ -160,12 +177,16 @@ public class MainMenuScreen extends JFrame implements ActionListener {
     private void focusDownButton() {
         if (btnPlay.isFocusOwner()) {
             btnRanking.requestFocusInWindow();
+        } else if (btnItem.isFocusOwner()) {
+            btnRanking.requestFocusInWindow();
         }
     }
 
     // 왼쪽 방향키
     private void focusLeftButton() {
-        if (btnExit.isFocusOwner()) {
+        if (btnItem.isFocusOwner()) {
+            btnPlay.requestFocusInWindow();
+        } else if (btnExit.isFocusOwner()) {
             btnRanking.requestFocusInWindow();
         } else if (btnRanking.isFocusOwner()) {
             btnSetting.requestFocusInWindow();
@@ -174,7 +195,9 @@ public class MainMenuScreen extends JFrame implements ActionListener {
 
     // 오른쪽 방향키
     private void focusRightButton() {
-        if (btnSetting.isFocusOwner()) {
+        if (btnPlay.isFocusOwner()) {
+            btnItem.requestFocusInWindow();
+        } else if (btnSetting.isFocusOwner()) {
             btnRanking.requestFocusInWindow();
         } else if (btnRanking.isFocusOwner()) {
             btnExit.requestFocusInWindow();

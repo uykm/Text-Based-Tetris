@@ -9,16 +9,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import static java.lang.System.exit;
 
-import static component.Button.createBtn;
-import static component.ScreenSize.*;
+import static component.Button.*;
+import static component.ScreenSize.setWidthHeight;
+import static java.lang.System.exit;
 
 public class StartScreen extends JFrame implements ActionListener {
 
-    JButton btnGameStart;
+    JButton btnPlay;
+    JButton btnItem;
     JButton btnSetting;
-    JButton btnScoreBoard;
+    JButton btnRanking;
     JButton btnExit;
     SettingController settingController = new SettingController();
 
@@ -39,48 +40,79 @@ public class StartScreen extends JFrame implements ActionListener {
         setLocationRelativeTo(null); // Centered window
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        // Use BoxLayout with Y_AXIS alignment for vertical alignment
+        // 레이아웃 설정
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-        btnGameStart = createBtn("Game Start", "gameStart", this::actionPerformed);
-        btnSetting = createBtn("Setting", "setting", this::actionPerformed);
-        btnScoreBoard = createBtn("Score Board", "scoreboard", this::actionPerformed);
-        btnExit = createBtn("Exit", "exit", this::actionPerformed);
+        // 상단에 Tetris 제목 레이블 추가
+        JLabel titleLabel = new JLabel("TETRIS", SwingConstants.CENTER);
+        titleLabel.setFont(new Font(titleLabel.getFont().getName(), Font.BOLD, 50));
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        add(titleLabel, BorderLayout.NORTH);
+        add(Box.createVerticalStrut(20));
 
-        // Create a JLabel for "Tetris" with center alignment and bold font
-        JLabel gameTitle = new JLabel("Tetris", SwingConstants.CENTER);
-        gameTitle.setFont(new Font(gameTitle.getFont().getName(), Font.BOLD, 20));
-        gameTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // 중앙 패널에 Play 버튼 추가
+        JPanel centerPanel = new JPanel();
+        add(Box.createVerticalStrut(10));
+        btnPlay = createLogoBtnNext("Play", "play", this, "src/image/play_logo.png");
+        btnPlay.setPreferredSize(new Dimension(200, 100));
+        btnPlay.setFont(new Font("Serif", Font.BOLD, 20));
+        btnPlay.setFocusable(true);
+        centerPanel.add(btnPlay);
 
-        add(gameTitle);
-        add(btnGameStart);
-        add(btnSetting);
-        add(btnScoreBoard);
-        add(btnExit);
+        // btnItem 버튼 추가
+        btnItem = createLogoBtnNext("Item", "item", this, "src/image/itemMode.png");
+        btnItem.setPreferredSize(new Dimension(200, 100)); // btnPlay와 동일한 크기 설정
+        btnItem.setFont(new Font("Serif", Font.BOLD, 20)); // 폰트 설정
+        btnItem.setFocusable(true);
+        centerPanel.add(btnItem);
+
+        add(centerPanel, BorderLayout.CENTER);
+
+
+        // 하단 패널에 Setting, Ranking, Exit 버튼 추가
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new FlowLayout()); // 버튼들이 나란하게 배치되도록 FlowLayout 사용
+
+        btnSetting = createLogoBtnUp("Setting", "setting", this, "src/image/setting_logo.png");
+        btnSetting.setPreferredSize((new Dimension(100, 100)));
+        btnSetting.setFocusable(true);
+        bottomPanel.add(btnSetting);
+
+        btnRanking = createLogoBtnUp("Ranking", "ranking", this, "src/image/medal.png");
+        btnRanking.setPreferredSize((new Dimension(100, 100)));
+        btnRanking.setFocusable(true);
+        bottomPanel.add(btnRanking);
+
+        btnExit = createLogoBtnUp("Exit", "exit", this, "src/image/exit_logo.png");
+        btnExit.setPreferredSize((new Dimension(100, 100)));
+        btnExit.setFocusable(true);
+        bottomPanel.add(btnExit);
+
+        add(bottomPanel, BorderLayout.SOUTH);
 
         setVisible(true);
 
         // Set initial focus to the "Game Start" button after the GUI is fully initialized
-        btnGameStart.requestFocusInWindow();
+        btnPlay.requestFocusInWindow();
 
         // Attach a key listener to each button
-        btnGameStart.addKeyListener(new MyKeyListener());
+        btnPlay.addKeyListener(new MyKeyListener());
         btnSetting.addKeyListener(new MyKeyListener());
-        btnScoreBoard.addKeyListener(new MyKeyListener());
+        btnRanking.addKeyListener(new MyKeyListener());
         btnExit.addKeyListener(new MyKeyListener());
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        if (command.equals("gameStart")) {
+        if (command.equals("play")) {
             setVisible(false);
             new GameController();
             setVisible(false);
         } else if (command.equals("setting")) {
             new SettingScreen();
             setVisible(false);
-        } else if (command.equals("scoreboard")) {
+        } else if (command.equals("ranking")) {
             new ScoreboardScreen();
             setVisible(false);
         } else if (command.equals("exit")) {
@@ -93,9 +125,13 @@ public class StartScreen extends JFrame implements ActionListener {
         public void keyPressed(KeyEvent e) {
             int keyCode = e.getKeyCode();
             if (keyCode == KeyEvent.VK_DOWN) {
-                focusNextButton();
+                focusDownButton();
             } else if (keyCode == KeyEvent.VK_UP) {
-                focusPreviousButton();
+                focusUpButton();
+            } else if (keyCode == KeyEvent.VK_LEFT) {
+                focusLeftButton();
+            } else if (keyCode == KeyEvent.VK_RIGHT) {
+                focusRightButton();
             } else if (keyCode == KeyEvent.VK_ENTER) {
                 moveScreen();
             }
@@ -104,13 +140,14 @@ public class StartScreen extends JFrame implements ActionListener {
         }
     }
 
+    // 엔터 키
     private void moveScreen() {
         setVisible(false);
-        if (btnGameStart.isFocusOwner()) {
+        if (btnPlay.isFocusOwner()) {
             new GameController();
         } else if (btnSetting.isFocusOwner()) {
             new SettingScreen();
-        } else if (btnScoreBoard.isFocusOwner()) {
+        } else if (btnRanking.isFocusOwner()) {
             new ScoreboardScreen();
         }
         else if (btnExit.isFocusOwner()) {
@@ -118,28 +155,39 @@ public class StartScreen extends JFrame implements ActionListener {
         }
     }
 
-    private void focusNextButton() {
-        if (btnGameStart.isFocusOwner()) {
-            btnSetting.requestFocusInWindow();
-        } else if (btnSetting.isFocusOwner()) {
-            btnScoreBoard.requestFocusInWindow();
-        } else if (btnScoreBoard.isFocusOwner()) {
-            btnExit.requestFocusInWindow();
+    // 위 방향키
+    private void focusUpButton() {
+        if (btnSetting.isFocusOwner()) {
+            btnPlay.requestFocusInWindow();
+        } else if (btnRanking.isFocusOwner()) {
+            btnPlay.requestFocusInWindow();
         } else if (btnExit.isFocusOwner()) {
-            btnGameStart.requestFocusInWindow(); // Wrap around to the first button
+            btnPlay.requestFocusInWindow();
         }
     }
 
-    private void focusPreviousButton() {
-        if (btnGameStart.isFocusOwner()) {
-            btnExit.requestFocusInWindow();
-        } else if (btnSetting.isFocusOwner()) {
-            btnGameStart.requestFocusInWindow();
-        } else if (btnScoreBoard.isFocusOwner()) {
+    // 아래 방향키
+    private void focusDownButton() {
+        if (btnPlay.isFocusOwner()) {
+            btnRanking.requestFocusInWindow();
+        }
+    }
+
+    // 왼쪽 방향키
+    private void focusLeftButton() {
+        if (btnExit.isFocusOwner()) {
+            btnRanking.requestFocusInWindow();
+        } else if (btnRanking.isFocusOwner()) {
             btnSetting.requestFocusInWindow();
-        } else if (btnExit.isFocusOwner()) {
-            // Wrap around to the last button if the first button is focused
-            btnScoreBoard.requestFocusInWindow();
+        }
+    }
+
+    // 오른쪽 방향키
+    private void focusRightButton() {
+        if (btnSetting.isFocusOwner()) {
+            btnRanking.requestFocusInWindow();
+        } else if (btnRanking.isFocusOwner()) {
+            btnExit.requestFocusInWindow();
         }
     }
 
@@ -148,5 +196,3 @@ public class StartScreen extends JFrame implements ActionListener {
         SwingUtilities.invokeLater(StartScreen::new);
     }
 }
-
-
