@@ -40,7 +40,7 @@ public class InGameScreen extends JPanel {
 
         initNextBlockBoard();
 
-        String screenSize = settingController.getSetting("screenSize", "medium");
+        String screenSize = settingController.getScreenSize("screenSize", "medium");
         cellSize = settingController.getCellSize(screenSize);
         blockSize = settingController.getBlockSize(screenSize);
         scoreSize = settingController.getScoreSize(screenSize);

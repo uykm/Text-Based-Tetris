@@ -1,6 +1,5 @@
 package ui;
 
-import logic.GameController;
 import logic.Score;
 import logic.ScoreController;
 import logic.SettingController;
@@ -28,16 +27,16 @@ public class GameOverScreen extends JFrame implements ActionListener {
 
     public GameOverScreen(int score) {
         setTitle("Tetris - GameOver");
-        String screenSize = settingController.getSetting("screenSize", "small");
+        String screenSize = settingController.getScreenSize("screenSize", "small");
         switch (screenSize) {
             case "small":
-                setWidthHeight(400, 550, this);
+                setWidthHeight(390, 420, this);
                 break;
             case "big":
-                setWidthHeight(800, 950, this);
+                setWidthHeight(910, 940, this);
                 break;
             default:
-                setWidthHeight(600, 750, this);
+                setWidthHeight(650, 680, this);
                 break;
         }
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
