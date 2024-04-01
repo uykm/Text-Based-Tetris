@@ -154,9 +154,10 @@ public class RegisterScoreScreen extends JFrame implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String name = !nameField.getText().isEmpty() ? nameField.getText() : "익명";
+                Score currScore = new Score(name, playerScore); // 이번 게임에 얻은 점수
                 scoreController.addScore(name, playerScore);
                 setVisible(false);
-                new ScoreboardScreen();
+                new ScoreboardScreen(currScore);
             }
         });
     }
