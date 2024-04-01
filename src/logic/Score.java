@@ -1,5 +1,7 @@
 package logic;
 
+import java.util.Objects;
+
 public class Score implements Comparable<Score> {
     private String playerName;
     private int score;
@@ -27,5 +29,19 @@ public class Score implements Comparable<Score> {
     @Override
     public String toString() {
         return playerName + ":" + score;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Score score = (Score) o;
+        return this.score == score.score &&
+                Objects.equals(playerName, score.playerName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(playerName, score);
     }
 }

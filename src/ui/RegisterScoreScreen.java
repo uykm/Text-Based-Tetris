@@ -1,5 +1,6 @@
 package ui;
 
+import logic.Score;
 import logic.ScoreController;
 import logic.SettingController;
 
@@ -109,9 +110,13 @@ public class RegisterScoreScreen extends JFrame implements ActionListener {
         setVisible(false);
         if (command.equals("submit")) {
             String name = !nameField.getText().isEmpty() ? nameField.getText() : "익명";
+
+            Score currScore = new Score(name, playerScore); // 이번 게임에 얻은 점수
             scoreController.addScore(name, playerScore);
             setVisible(false);
-            new ScoreboardScreen();
+
+            // TODO : 등록한 점수에 대해서 강조 표시하는 스코어보드 출력
+            new ScoreboardScreen(currScore);
         }
     }
 
