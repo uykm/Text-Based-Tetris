@@ -8,6 +8,6 @@ public class NullBlock extends Block {
     public NullBlock() {
         super(new int[][] {
                 {0},
-        }, Color.BLACK);
+        }, new Color[]{Color.BLACK, Color.BLACK, Color.BLACK,  Color.BLACK});
     }
 }

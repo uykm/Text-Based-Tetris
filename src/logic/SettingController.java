@@ -5,8 +5,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import static logic.SettingProperties.COLOR_BLIND_MODE;
+import static logic.SettingProperties.configPath;
+
 public class SettingController {
-    private final String configPath = "config.properties";
     private final Properties properties;
 
     // Screen을 위한 사이즈 변수
@@ -82,8 +84,6 @@ public class SettingController {
     }
 
 
-
-
     public void initializeSettings() {
         properties.setProperty("screenSize", "small");
         try (FileOutputStream fos = new FileOutputStream(configPath)) {
@@ -91,5 +91,9 @@ public class SettingController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setColorBlindMode(String mode) {
+        saveSettings(COLOR_BLIND_MODE, mode);
     }
 }

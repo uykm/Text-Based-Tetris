@@ -11,6 +11,6 @@ public class SBlock extends Block {
                 {0, 0, 5, 5},
                 {0, 5, 5, 0},
                 {0, 0, 0, 0}
-        }, Color.GREEN);
+        }, new Color[]{Color.GREEN, Color.YELLOW,  Color.MAGENTA,  Color.DARK_GRAY});
     }
 }

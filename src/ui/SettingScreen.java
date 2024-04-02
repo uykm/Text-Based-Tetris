@@ -67,9 +67,9 @@ SettingScreen extends JFrame implements ActionListener {
         settingsPanel.add(createPanel("Initialize Score Board", new JButton[]{btnInitializeScore}));
 
         // Colorblind Mode
-        btnColorBlind1 = createBtn("Mode1", "colorBlind1", this);
-        btnColorBlind2 = createBtn("Mode2", "colorBlind2", this);
-        btnColorBlind3 = createBtn("Mode3", "colorBlind3", this);
+        btnColorBlind1 = createBtn("Red blindness [protanopia]", "protanopia", this::actionPerformed);
+        btnColorBlind2 = createBtn("Green blindness [Deuteranopia]", "deuteranopia", this::actionPerformed);
+        btnColorBlind3 = createBtn("Blue blindness [Tritanopia]", "tritanopia", this::actionPerformed);
         btnColorBlind1.addKeyListener(new MyKeyListener());
         btnColorBlind2.addKeyListener(new MyKeyListener());
         btnColorBlind3.addKeyListener(new MyKeyListener());
@@ -131,14 +131,17 @@ SettingScreen extends JFrame implements ActionListener {
             settingController.saveSettings("screenSize", "small");
             // TODO : 색맹 설정 초기화 로직 구현
         } else if (btnColorBlind1.isFocusOwner()) {
-
+            // 적색맹
+            settingController.setColorBlindMode("protanopia");
         } else if (btnColorBlind2.isFocusOwner()) {
-
+            // 녹색맹
+            settingController.setColorBlindMode("deuteranopia");
         } else if (btnColorBlind3.isFocusOwner()) {
-
+            // 청색맹
+            settingController.setColorBlindMode("tritanopia");
         } else if (btnBack.isFocusOwner()) {
             setVisible(false);
-            new MainMenuScreen();
+            new StartScreen();
         }
     }
 
@@ -223,12 +226,12 @@ SettingScreen extends JFrame implements ActionListener {
             settingController.initializeSettings();
             setWidthHeight(400, 550, this);
             settingController.saveSettings("screenSize", "small");
-        } else if (command.equals("colorBlind1")) {
-
-        } else if (command.equals("colorBlind2")) {
-
-        } else if (command.equals("colorBlind3")) {
-
+        } else if (command.equals("protanopia")) {
+            settingController.setColorBlindMode("protanopia");
+        } else if (command.equals("deuteranopia")) {
+            settingController.setColorBlindMode("deuteranopia");
+        } else if (command.equals("tritanopia")) {
+            settingController.setColorBlindMode("tritanopia");
         }
     }
 

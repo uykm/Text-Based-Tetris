@@ -11,6 +11,6 @@ public class JBlock extends Block {
             {0, 2, 2, 2},
             {0, 0, 0, 2},
             {0, 0, 0, 0}
-        }, Color.BLUE);
+        }, new Color[]{Color.BLUE, Color.BLUE,  Color.BLUE,  Color.BLUE});
     }
 }

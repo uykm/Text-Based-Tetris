@@ -4,13 +4,18 @@ import model.*;
 
 import java.awt.Color;
 
+import static logic.SettingProperties.COLOR_BLIND_MODE;
+import static logic.SettingProperties.DEFAULT_COLOR_MODE;
+
 public abstract class Block {
     protected int[][] shape;
-    protected Color color;
+    protected Color[] colors;
+    private final SettingController settingController;
 
-    public Block(int[][] shape, Color color) {
+    public Block(int[][] shape, Color[] colors) {
+        settingController = new SettingController();
         this.shape = shape;
-        this.color = color;
+        this.colors = colors;
     }
 
     public int getShape(int x, int y) {
@@ -18,7 +23,18 @@ public abstract class Block {
     }
 
     public Color getColor() {
-        return color;
+        String mode = settingController.getColorMode(COLOR_BLIND_MODE, DEFAULT_COLOR_MODE);
+
+        switch (mode) {
+            case "protanopia":
+                return colors[1]; // 적생맹
+            case "deuteranopia":
+                return colors[2]; // 녹생맹
+            case "tritanopia":
+                return colors[3]; // 청색맹
+            default:
+                return colors[0]; // 기본 색상
+        }
     }
 
     public int height() {

@@ -11,6 +11,6 @@ public class IBlock extends Block {
              {1, 1, 1, 1},
              {0, 0, 0, 0},
              {0, 0, 0, 0},
-        }, Color.CYAN);
+        }, new Color[]{Color.CYAN, Color.CYAN,  Color.CYAN,  Color.WHITE});
     }
 }
