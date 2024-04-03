@@ -19,7 +19,7 @@ SettingScreen extends JFrame implements ActionListener {
     JButton btnSize1, btnSize2, btnSize3;
     JButton btnKeySetting;
     JButton btnInitializeScore;
-    JButton btnColorBlind1, btnColorBlind2, btnColorBlind3;
+    JButton btnColorBlind0, btnColorBlind1, btnColorBlind2, btnColorBlind3;
     JButton btnInitializeSetting;
     JButton btnBack;
     ScoreController scoreController = new ScoreController();
@@ -67,13 +67,15 @@ SettingScreen extends JFrame implements ActionListener {
         settingsPanel.add(createPanel("Initialize Score Board", new JButton[]{btnInitializeScore}));
 
         // Colorblind Mode
-        btnColorBlind1 = createBtn("Red blindness [protanopia]", "protanopia", this::actionPerformed);
+        btnColorBlind0 = createBtn("Default", "default", this::actionPerformed);
+        btnColorBlind1 = createBtn("Red blindness [Protanopia]", "protanopia", this::actionPerformed);
         btnColorBlind2 = createBtn("Green blindness [Deuteranopia]", "deuteranopia", this::actionPerformed);
         btnColorBlind3 = createBtn("Blue blindness [Tritanopia]", "tritanopia", this::actionPerformed);
+        btnColorBlind0.addKeyListener(new MyKeyListener());
         btnColorBlind1.addKeyListener(new MyKeyListener());
         btnColorBlind2.addKeyListener(new MyKeyListener());
         btnColorBlind3.addKeyListener(new MyKeyListener());
-        settingsPanel.add(createPanel("Colorblind Mode", new JButton[]{btnColorBlind1, btnColorBlind2, btnColorBlind3}));
+        settingsPanel.add(createPanel("Colorblind Mode", new JButton[]{btnColorBlind0, btnColorBlind1, btnColorBlind2, btnColorBlind3}));
 
         // Initialize Setting
         btnInitializeSetting = createBtn("Initialize", "initialize", this);
@@ -130,7 +132,11 @@ SettingScreen extends JFrame implements ActionListener {
             setWidthHeight(400, 550, this);
             settingController.saveSettings("screenSize", "small");
             // TODO : 색맹 설정 초기화 로직 구현
-        } else if (btnColorBlind1.isFocusOwner()) {
+        } else if (btnColorBlind0.isFocusOwner()) {
+            // 기본
+            settingController.setColorBlindMode("protanopia");
+            settingController.saveSettings("colorMode", "default");
+        }else if (btnColorBlind1.isFocusOwner()) {
             // 적색맹
             settingController.setColorBlindMode("protanopia");
         } else if (btnColorBlind2.isFocusOwner()) {
@@ -151,7 +157,7 @@ SettingScreen extends JFrame implements ActionListener {
         } else if (btnKeySetting.isFocusOwner()) {
            btnInitializeScore.requestFocusInWindow();
         } else if (btnInitializeScore.isFocusOwner()) {
-            btnColorBlind2.requestFocusInWindow();
+            btnColorBlind0.requestFocusInWindow();
         } else if (btnColorBlind1.isFocusOwner() || btnColorBlind2.isFocusOwner() || btnColorBlind3.isFocusOwner()) {
             btnInitializeSetting.requestFocusInWindow();
         } else if (btnInitializeSetting.isFocusOwner()) {
@@ -164,7 +170,7 @@ SettingScreen extends JFrame implements ActionListener {
             btnInitializeSetting.requestFocusInWindow();
         } else if (btnInitializeSetting.isFocusOwner()) {
             btnColorBlind2.requestFocusInWindow();
-        } else if (btnColorBlind1.isFocusOwner() || btnColorBlind2.isFocusOwner() || btnColorBlind3.isFocusOwner()) {
+        } else if (btnColorBlind0.isFocusOwner() || btnColorBlind1.isFocusOwner() || btnColorBlind2.isFocusOwner() || btnColorBlind3.isFocusOwner()) {
             btnInitializeScore.requestFocusInWindow();
         } else if (btnInitializeScore.isFocusOwner()) {
             btnKeySetting.requestFocusInWindow();
@@ -180,12 +186,14 @@ SettingScreen extends JFrame implements ActionListener {
             btnSize3.requestFocusInWindow();
         } else if (btnSize3.isFocusOwner()) {
             btnSize1.requestFocusInWindow();
+        } else if (btnColorBlind0.isFocusOwner()) {
+            btnColorBlind1.requestFocusInWindow();
         } else if (btnColorBlind1.isFocusOwner()) {
             btnColorBlind2.requestFocusInWindow();
         } else if (btnColorBlind2.isFocusOwner()) {
             btnColorBlind3.requestFocusInWindow();
         } else if (btnColorBlind3.isFocusOwner()) {
-            btnColorBlind1.requestFocusInWindow();
+            btnColorBlind0.requestFocusInWindow();
         }
     }
 
@@ -201,6 +209,8 @@ SettingScreen extends JFrame implements ActionListener {
         } else if (btnColorBlind2.isFocusOwner()) {
             btnColorBlind1.requestFocusInWindow();
         } else if (btnColorBlind1.isFocusOwner()) {
+            btnColorBlind0.requestFocusInWindow();
+        } else if (btnColorBlind0.isFocusOwner()) {
             btnColorBlind3.requestFocusInWindow();
         }
     }
@@ -226,6 +236,8 @@ SettingScreen extends JFrame implements ActionListener {
             settingController.initializeSettings();
             setWidthHeight(400, 550, this);
             settingController.saveSettings("screenSize", "small");
+        } else if (command.equals("default")) {
+            settingController.setColorBlindMode("default");
         } else if (command.equals("protanopia")) {
             settingController.setColorBlindMode("protanopia");
         } else if (command.equals("deuteranopia")) {

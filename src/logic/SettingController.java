@@ -86,6 +86,7 @@ public class SettingController {
 
     public void initializeSettings() {
         properties.setProperty("screenSize", "small");
+        properties.setProperty("colorMode", "default");
         try (FileOutputStream fos = new FileOutputStream(configPath)) {
             properties.store(fos, null);
         } catch (IOException e) {
