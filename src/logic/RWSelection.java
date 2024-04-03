@@ -45,14 +45,6 @@ public class RWSelection {
         }
     }
 
-    public Block selectBlock(int mode) {
-        Block[] blocks = switch (mode) {
-            case 0 ->
-                    new Block[]{new IBlock(), new JBlock(), new LBlock(), new OBlock(), new SBlock(), new TBlock(), new ZBlock()};
-            default -> throw new IllegalArgumentException("Invalid mode: " + mode);
-        };
-        return blocks[select()];
-    }
 
     private double getMaxFitness() {
         double max = Double.NEGATIVE_INFINITY;
@@ -97,5 +89,20 @@ public class RWSelection {
             }
         }
         return true; // All tests passed
+    }
+
+    //select for the block
+    public Block selectBlock() {
+        int blockType = select();
+        return switch (blockType) {
+            case 0 -> new IBlock();
+            case 1 -> new JBlock();
+            case 2 -> new LBlock();
+            case 3 -> new OBlock();
+            case 4 -> new SBlock();
+            case 5 -> new TBlock();
+            case 6 -> new ZBlock();
+            default -> throw new IllegalArgumentException("Invalid block type: " + blockType);
+        };
     }
 }
