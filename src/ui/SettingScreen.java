@@ -1,8 +1,9 @@
 package ui;
 
+import com.sun.tools.javac.Main;
 import logic.ScoreController;
 import logic.SettingController;
-import src.ui.KeyConfigWindow;
+import src.ui.KeySettingScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -123,7 +124,7 @@ SettingScreen extends JFrame implements ActionListener {
         } else if (btnKeySetting.isFocusOwner()) {
             setVisible(false);
             // keySetting 창을 위한 컨트롤러를 하나 만들어야 할 듯
-            new KeyConfigWindow();
+            new KeySettingScreen();
         }
         else if (btnInitializeScore.isFocusOwner()) {
             scoreController.resetScores();
@@ -142,7 +143,7 @@ SettingScreen extends JFrame implements ActionListener {
             settingController.setColorBlindMode("tritanopia");
         } else if (btnBack.isFocusOwner()) {
             setVisible(false);
-            new StartScreen();
+            new ui.MainMenuScreen();
         }
     }
 
