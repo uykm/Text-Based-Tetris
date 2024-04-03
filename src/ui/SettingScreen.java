@@ -1,7 +1,9 @@
 package ui;
 
+import com.sun.tools.javac.Main;
 import logic.ScoreController;
 import logic.SettingController;
+import src.ui.KeySettingScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -156,7 +158,7 @@ SettingScreen extends JFrame implements ActionListener {
             settingController.saveSettings("colorMode", "tritanopia");
         } else if (btnMenu.isFocusOwner()) {
             setVisible(false);
-            new MainMenuScreen();
+            new ui.MainMenuScreen();
         }
     }
 
@@ -237,7 +239,7 @@ SettingScreen extends JFrame implements ActionListener {
             // keySetting 창을 위한 컨트롤러를 하나 만들어야 할 듯
             new KeySettingScreen();
         } else if (command.equals("back")) {
-            new MainMenuScreen();
+            new ui.MainMenuScreen();
             setVisible(false);
         } else if (command.equals("scoreNormal")) {
             scoreController.resetScores(false);

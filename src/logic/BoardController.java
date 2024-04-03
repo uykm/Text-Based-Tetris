@@ -337,7 +337,7 @@ public class BoardController {
     // TODO: 3/24/24 : 게임 오버 조건 수정 확인 필요, ScoreController에게 점수 전달 로직 추가 필요
     public boolean checkGameOver() {
         for(int i=3; i<WIDTH+3; i++) {
-            if((grid.getBoard()[3][i] != 0) || !canPlaceBlock) {
+            if((grid.getBoard()[2][i] > 10) || !canPlaceBlock) {
                 return true;
             }
         }
