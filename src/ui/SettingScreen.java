@@ -2,6 +2,7 @@ package ui;
 
 import logic.ScoreController;
 import logic.SettingController;
+import src.ui.KeyConfigWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -122,7 +123,7 @@ SettingScreen extends JFrame implements ActionListener {
         } else if (btnKeySetting.isFocusOwner()) {
             setVisible(false);
             // keySetting 창을 위한 컨트롤러를 하나 만들어야 할 듯
-            new KeySettingScreen();
+            new KeyConfigWindow();
         }
         else if (btnInitializeScore.isFocusOwner()) {
             scoreController.resetScores();
@@ -218,7 +219,7 @@ SettingScreen extends JFrame implements ActionListener {
             setWidthHeight(800, 950, this);
             settingController.saveSettings("screenSize", "big");
         } else if (command.equals("back")) {
-            new MainMenuScreen();
+            new ui.MainMenuScreen();
             setVisible(false);
         } else if (command.equals("scoreYes")) {
             scoreController.resetScores();
