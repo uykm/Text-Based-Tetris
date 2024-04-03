@@ -1,5 +1,6 @@
 package ui;
 
+import logic.GameController;
 import logic.Score;
 import logic.ScoreController;
 import logic.SettingController;
@@ -24,8 +25,13 @@ public class GameOverScreen extends JFrame implements ActionListener {
     JButton btnReplay;
     JButton btnMenu;
     JButton btnExit;
+    boolean isItem;
 
     public GameOverScreen(int score, boolean isItem) {
+
+        // 노말모드 vs 아이템모드
+        this.isItem = isItem;
+
         setTitle("Tetris - GameOver");
         String screenSize = settingController.getScreenSize("screenSize", "small");
         switch (screenSize) {
@@ -78,6 +84,7 @@ public class GameOverScreen extends JFrame implements ActionListener {
         add(bottomPanel, BorderLayout.SOUTH);
 
         // UI를 보이게 설정
+        pack();
         setVisible(true);
 
         // Set initial focus to the "Game Start" button after the GUI is fully initialized
@@ -117,6 +124,7 @@ public class GameOverScreen extends JFrame implements ActionListener {
             new MainMenuScreen();
         } else if (command.equals("replay")) {
             // TODO : 게임 재개 로직 구현
+            new GameController(isItem);
         } else if (command.equals("exit")) {
             exit(0);
         }
@@ -145,6 +153,7 @@ public class GameOverScreen extends JFrame implements ActionListener {
             new MainMenuScreen();
         } else if (btnReplay.isFocusOwner()) {
             // TODO : 게임 재개 로직 구현
+            new GameController(isItem);
         } else if (btnExit.isFocusOwner()) {
             exit(0);
         }
