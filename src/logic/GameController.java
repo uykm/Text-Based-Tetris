@@ -18,15 +18,20 @@ public class GameController implements PauseScreenCallback {
     final int MAX_SPEED = 500;
 
     private int currentSpeed;
+    private boolean isItem;
 
     // 게임 컨트롤러 생성자
-    public GameController() {
+    public GameController(boolean isItem) {
+
+        // 노말 모드 vs 아이템 모드
+        this.isItem = isItem;
+
         initUI();
         this.boardController = new BoardController(this);
         this.inGameScreen = new InGameScreen(this.boardController);
         this.scoreController = new ScoreController();
 
-        startGame();
+        startGame(isItem);
     }
 
     // 게임 UI 초기화
@@ -90,7 +95,7 @@ public class GameController implements PauseScreenCallback {
                     //esc 누르면 게임 중지, 한번 더 누르면 다시 실행
                     case KeyEvent.VK_ESCAPE:
                         timer.stop();
-                        PauseScreen pauseScreen = new PauseScreen();
+                        PauseScreen pauseScreen = new PauseScreen(isItem);
                         pauseScreen.setCallback(GameController.this); // Set the callback
                         pauseScreen.setVisible(true); // Show the PauseScreen
                         break;
@@ -100,17 +105,17 @@ public class GameController implements PauseScreenCallback {
         });
     }
 
-    private void startGame() {
+    private void startGame(boolean isItem) {
         currentSpeed = 1000;
         timer = new Timer(currentSpeed, e -> {
             boardController.moveBlock(Direction.DOWN);
             inGameScreen.updateBoard(); // Assuming InGameScreen has a method to update the UI based on the current game state
             if(boardController.checkGameOver()){
                 frame.dispose();
-                if(scoreController.isScoreInTop10(boardController.getScore())){
-                    new RegisterScoreScreen(boardController.getScore());
+                if(scoreController.isScoreInTop10(boardController.getScore(), isItem)){
+                    new RegisterScoreScreen(boardController.getScore(), isItem);
                 } else {
-                    new GameOverScreen(boardController.getScore());
+                    new GameOverScreen(boardController.getScore(), isItem);
                 }
                 timer.stop();
             }

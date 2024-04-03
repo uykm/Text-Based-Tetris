@@ -65,6 +65,10 @@ public class SettingController {
         };
     }
 
+    public int getDifficulty() {
+        return Integer.parseInt(properties.getProperty("difficulty", "1"));
+    }
+
     public void saveSettings(String key, String value) {
         properties.setProperty(key, value);
         try (FileOutputStream fos = new FileOutputStream(configPath)) {
@@ -86,6 +90,7 @@ public class SettingController {
 
     public void initializeSettings() {
         properties.setProperty("screenSize", "small");
+        properties.setProperty("colorMode", "default");
         try (FileOutputStream fos = new FileOutputStream(configPath)) {
             properties.store(fos, null);
         } catch (IOException e) {
