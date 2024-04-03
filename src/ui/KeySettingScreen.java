@@ -121,6 +121,9 @@ public class KeySettingScreen extends JFrame implements ActionListener {
         } else if (command.equals("toRight")) {
         } else if (command.equals("descend")) {
         } else if (command.equals("changeDirection")) {
+        } else if (command.equals("back")) {
+            setVisible(false);
+            new SettingScreen();
         }
     }
 
