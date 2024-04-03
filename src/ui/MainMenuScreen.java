@@ -61,7 +61,7 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         centerPanel.add(btnPlay);
 
         // btnItem 버튼 추가
-        btnItem = createLogoBtnNext("Item", "item", this, "src/image/itemMode.png");
+        btnItem = createLogoBtnNext("Item", "item", this, "src/image/mario.png");
         btnItem.setPreferredSize(new Dimension(150, 80)); // btnPlay와 동일한 크기 설정
         btnItem.setFont(new Font("Serif", Font.BOLD, 20)); // 폰트 설정
         btnItem.setFocusable(true);
