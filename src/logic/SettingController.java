@@ -65,6 +65,10 @@ public class SettingController {
         };
     }
 
+    public int getMode() {
+        return Integer.parseInt(properties.getProperty("mode", "1"));
+    }
+
     public void saveSettings(String key, String value) {
         properties.setProperty(key, value);
         try (FileOutputStream fos = new FileOutputStream(configPath)) {
