@@ -9,8 +9,8 @@ public class RWSelection {
     private final double[] fitness;
     private final Random random;
 
-    public RWSelection(int mode) {
-        switch (mode) {
+    public RWSelection(int difficulty) {
+        switch (difficulty) {
             case 0:
                 this.fitness = new double[]{12, 10, 10, 10, 10, 10, 10};
                 break;
@@ -21,7 +21,7 @@ public class RWSelection {
                 this.fitness = new double[]{8, 10, 10, 10, 10, 10, 10};
                 break;
             default:
-                throw new IllegalArgumentException("Invalid mode: " + mode);
+                throw new IllegalArgumentException("Invalid Difficulty: " + difficulty);
         }
         this.random = new Random();
     }
@@ -82,10 +82,10 @@ public class RWSelection {
     }
 
     public boolean testAll(int testCount) {
-        for (int mode = 0; mode <= 2; mode++) {
-            RWSelection rwSelection = new RWSelection(mode);
+        for (int difficulty = 0; difficulty <= 2; difficulty++) {
+            RWSelection rwSelection = new RWSelection(difficulty);
             if (!rwSelection.test(testCount)) {
-                return false; // Return false if any mode fails
+                return false; // Return false if any difficulty fails
             }
         }
         return true; // All tests passed

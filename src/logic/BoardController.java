@@ -8,7 +8,7 @@ import java.util.Queue;
 
 public class BoardController {
     SettingController settingController = new SettingController();
-    RWSelection rwSelection = new RWSelection(settingController.getMode());
+    RWSelection rwSelection = new RWSelection(settingController.getDifficulty());
     // 게임 보드
     final private Board grid;
     // 게임 보드의 너비, 높이

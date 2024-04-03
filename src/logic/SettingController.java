@@ -65,8 +65,8 @@ public class SettingController {
         };
     }
 
-    public int getMode() {
-        return Integer.parseInt(properties.getProperty("mode", "1"));
+    public int getDifficulty() {
+        return Integer.parseInt(properties.getProperty("difficulty", "1"));
     }
 
     public void saveSettings(String key, String value) {
