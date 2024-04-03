@@ -108,12 +108,13 @@ public class MainMenuScreen extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command.equals("play")) {
+            // TODO : 난이도 선택 화면으로 넘어가서 GameController 실행
             setVisible(false);
             new GameController(false);
             setVisible(false);
         } else if (command.equals("item")) {
-            // TODO : 아이템 모드 게임 로직 구현
-            System.out.println("아이템 모드 플레이!");
+            // TODO : 난이도 선택 화면으로 넘어가서 GameController 실행
+
         } else if (command.equals("setting")) {
             new SettingScreen();
             setVisible(false);
@@ -149,10 +150,11 @@ public class MainMenuScreen extends JFrame implements ActionListener {
     private void moveScreen() {
         setVisible(false);
         if (btnPlay.isFocusOwner()) {
+            // TODO : 난이도 선택 화면으로 넘어가서 GameController 실행
             new GameController(false);
         } else if (btnItem.isFocusOwner()) {
-            // TODO : 아이템 모드 게임 로직 구현
-            System.out.println("아이템 모드 플레이!");
+            // TODO : 난이도 선택 화면으로 넘어가서 GameController 실행
+
         } else if (btnSetting.isFocusOwner()) {
             new SettingScreen();
         } else if (btnRanking.isFocusOwner()) {
