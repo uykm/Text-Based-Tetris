@@ -76,7 +76,6 @@ public class DifficultyScreen extends JFrame implements ActionListener {
         bottomPanel.add(btnMenu);
         add(bottomPanel, BorderLayout.SOUTH);
 
-        pack();
         setVisible(true);
     }
 

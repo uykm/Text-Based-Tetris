@@ -1,4 +1,4 @@
-package src.ui;
+package ui;
 
 import logic.SettingController;
 
@@ -11,7 +11,6 @@ import static component.Button.createBtn;
 public class KeySettingScreen extends JFrame {
     private JLabel[] labels = new JLabel[5];
     private JTextField[] textFields = new JTextField[5];
-    private JButton btnInitialize = createBtn("Initialize", "initialize", this::actionPerformed);
     private JButton btnBack = createBtn("Back", "back", this::actionPerformed);
     private SettingController settingController = new SettingController();
     private final int[] keyCodes = new int[5];
@@ -54,24 +53,12 @@ public class KeySettingScreen extends JFrame {
             add(panel);
         }
 
-        btnInitialize.addKeyListener(new MyKeyListener());
         btnBack.addKeyListener(new MyKeyListener());
 
         add(Box.createVerticalStrut(20));
-        add(btnInitialize);
         add(btnBack);
-        btnInitialize.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         updateFocus();
-
-        btnInitialize.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                for (JTextField textField : textFields) {
-                    textField.setText("Press Enter to Set Key");
-                }
-            }
-        });
 
         // 키 바인딩 설정
         setFocusable(true);
@@ -116,11 +103,9 @@ public class KeySettingScreen extends JFrame {
     }
 
     private void applySetting() {
-        if (btnInitialize.isFocusOwner()) {
-
-        } else if (btnBack.isFocusOwner()) {
+        if (btnBack.isFocusOwner()) {
             setVisible(false);
-            new ui.MainMenuScreen();
+            new MainMenuScreen();
         }
     }
 
@@ -138,11 +123,9 @@ public class KeySettingScreen extends JFrame {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
 
-        if (command.equals("initialize")) {
-
-        } else if (command.equals("back")) {
+        if (command.equals("back")) {
             setVisible(false);
-            new ui.SettingScreen();
+            new SettingScreen();
         }
     }
 
@@ -189,9 +172,5 @@ public class KeySettingScreen extends JFrame {
         });
 
         inputDialog.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new KeySettingScreen());
     }
 }
