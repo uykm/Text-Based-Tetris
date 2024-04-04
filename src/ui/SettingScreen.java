@@ -13,6 +13,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import static component.Button.createBtn;
+import static component.Button.createLogoBtn;
 import static component.Panel.createPanel;
 import static component.ScreenSize.setWidthHeight;
 
@@ -90,7 +91,9 @@ SettingScreen extends JFrame implements ActionListener {
         settingsPanel.add(createPanel("Initialize Setting", new JButton[]{btnInitializeSetting}));
 
         // Back to Main Menu
-        btnMenu = createBtn("Menu", "back", this);
+        // btnMenu = createBtn("Menu", "back", this);
+        btnMenu = createLogoBtn("menu", this, "src/image/backLogo.png");
+        btnMenu.setPreferredSize((new Dimension(60, 32)));
         btnMenu.addKeyListener(new MyKeyListener());
         JPanel backPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         backPanel.add(btnMenu);
@@ -158,7 +161,7 @@ SettingScreen extends JFrame implements ActionListener {
             settingController.saveSettings("colorMode", "tritanopia");
         } else if (btnMenu.isFocusOwner()) {
             setVisible(false);
-            new ui.MainMenuScreen();
+            new MainMenuScreen();
         }
     }
 
@@ -238,9 +241,9 @@ SettingScreen extends JFrame implements ActionListener {
             setVisible(false);
             // keySetting 창을 위한 컨트롤러를 하나 만들어야 할 듯
             new KeySettingScreen();
-        } else if (command.equals("back")) {
-            new ui.MainMenuScreen();
+        } else if (command.equals("menu")) {
             setVisible(false);
+            new MainMenuScreen();
         } else if (command.equals("scoreNormal")) {
             scoreController.resetScores(false);
         } else if (command.equals("scoreItem")) {

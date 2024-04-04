@@ -11,8 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import static component.Button.createBtn;
-import static component.Button.createLogoBtnUp;
+import static component.Button.*;
 import static component.ScreenSize.setWidthHeight;
 
 public class DifficultyScreen extends JFrame implements ActionListener {
@@ -69,12 +68,15 @@ public class DifficultyScreen extends JFrame implements ActionListener {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout());
 
-        btnMenu = createBtn("Menu", "menu", this);
+        // btnMenu = createBtn("Menu", "menu", this);
+        btnMenu = createLogoBtn("menu", this, "src/image/backLogo.png");
+        btnMenu.setPreferredSize((new Dimension(60, 32)));
         btnMenu.addKeyListener(new MyKeyListener());
 
         bottomPanel.add(btnMenu);
         add(bottomPanel, BorderLayout.SOUTH);
 
+        pack();
         setVisible(true);
     }
 
@@ -89,6 +91,8 @@ public class DifficultyScreen extends JFrame implements ActionListener {
             settingController.saveSettings("difficulty", "2");
         } else if (command.equals("menu")) {
             // 게임 모드 선택 화면으로 돌아가기
+            setVisible(false);
+            new MainMenuScreen();
         }
     }
 

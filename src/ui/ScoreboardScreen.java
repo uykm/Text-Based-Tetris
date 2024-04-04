@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 
 import static component.Button.createBtn;
+import static component.Button.createLogoBtn;
 import static component.ScreenSize.setWidthHeight;
 
 public class ScoreboardScreen extends JFrame implements ActionListener {
@@ -58,7 +59,9 @@ public class ScoreboardScreen extends JFrame implements ActionListener {
 
         // 메뉴 버튼
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        menuBtn = createBtn("Menu", "menu", this);
+        // menuBtn = createBtn("Menu", "menu", this);
+        menuBtn = createLogoBtn("menu", this, "src/image/backLogo.png");
+        menuBtn.setPreferredSize((new Dimension(60, 32)));
         menuBtn.addKeyListener(new MyKeyListener());
         btnPanel.add(menuBtn);
 
