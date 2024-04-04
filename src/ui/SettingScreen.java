@@ -1,16 +1,12 @@
 package ui;
 
-import com.sun.tools.javac.Main;
 import logic.ScoreController;
 import logic.SettingController;
-import src.ui.KeySettingScreen;
+import ui.KeySettingScreen;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 import static component.Button.createBtn;
 import static component.Button.createLogoBtn;
@@ -21,6 +17,7 @@ public class
 SettingScreen extends JFrame implements ActionListener {
     JButton btnSize1, btnSize2, btnSize3;
     JButton btnKeySetting;
+    JButton btnInitializeKeySetting;
     JButton btnInitializeNormalScore, btnInitializeItemScore;
     JButton btnColorBlind0, btnColorBlind1, btnColorBlind2, btnColorBlind3;
     JButton btnInitializeSetting;
@@ -63,7 +60,11 @@ SettingScreen extends JFrame implements ActionListener {
         // Key Setting
         btnKeySetting = createBtn("Key Setting", "keySetting", this);
         btnKeySetting.addKeyListener(new MyKeyListener());
-        settingsPanel.add(createPanel("Key Setting", new JButton[]{btnKeySetting}));
+
+        btnInitializeKeySetting = createBtn("Initialize", "initializeKey", this);
+        btnInitializeKeySetting.addKeyListener(new MyKeyListener());
+
+        settingsPanel.add(createPanel("Key Setting", new JButton[]{btnKeySetting, btnInitializeKeySetting}));
 
         // Initialize Scoreboard
         btnInitializeNormalScore = createBtn("Normal", "scoreNormal", this); // Normal
@@ -135,93 +136,34 @@ SettingScreen extends JFrame implements ActionListener {
             setVisible(false);
             // keySetting 창을 위한 컨트롤러를 하나 만들어야 할 듯
             new KeySettingScreen();
+        } else if (btnInitializeKeySetting.isFocusOwner()) {
+            settingController.initializeKeySettings();
         } else if (btnInitializeNormalScore.isFocusOwner()) {
             scoreController.resetScores(false);
         } else if (btnInitializeItemScore.isFocusOwner()) {
             scoreController.resetScores(true);
         } else if (btnInitializeSetting.isFocusOwner()) {
             setWidthHeight(400, 550, this);
-            settingController.saveSettings("screenSize", "small");
-            // TODO : 색맹 설정 초기화 로직 구현
+            settingController.initializeSettings();
         } else if (btnColorBlind0.isFocusOwner()) {
             // 기본
             settingController.setColorBlindMode("default");
-            settingController.saveSettings("colorMode", "default");
+            settingController.saveSettings("colorBlindMode", "default");
         } else if (btnColorBlind1.isFocusOwner()) {
             // 적색맹
             settingController.setColorBlindMode("protanopia");
-            settingController.saveSettings("colorMode", "protanopia");
+            settingController.saveSettings("colorBlindMode", "protanopia");
         } else if (btnColorBlind2.isFocusOwner()) {
             // 녹색맹
             settingController.setColorBlindMode("deuteranopia");
-            settingController.saveSettings("colorMode", "deuteranopia");
+            settingController.saveSettings("colorBlindMode", "deuteranopia");
         } else if (btnColorBlind3.isFocusOwner()) {
             // 청색맹
             settingController.setColorBlindMode("tritanopia");
-            settingController.saveSettings("colorMode", "tritanopia");
+            settingController.saveSettings("colorBlindMode", "tritanopia");
         } else if (btnMenu.isFocusOwner()) {
             setVisible(false);
             new MainMenuScreen();
-        }
-    }
-
-    private void focusDownButton() {
-        if (btnSize1.isFocusOwner() || btnSize2.isFocusOwner() || btnSize3.isFocusOwner()) {
-            btnKeySetting.requestFocusInWindow();
-        } else if (btnKeySetting.isFocusOwner()) {
-            btnInitializeNormalScore.requestFocusInWindow();
-        } else if (btnInitializeNormalScore.isFocusOwner() || btnInitializeItemScore.isFocusOwner()) {
-            btnColorBlind1.requestFocusInWindow();
-        } else if (btnColorBlind0.isFocusOwner() || btnColorBlind1.isFocusOwner() || btnColorBlind2.isFocusOwner() || btnColorBlind3.isFocusOwner()) {
-            btnInitializeSetting.requestFocusInWindow();
-        } else if (btnInitializeSetting.isFocusOwner()) {
-            btnMenu.requestFocusInWindow();
-        }
-    }
-
-    private void focusUpButton() {
-        if (btnMenu.isFocusOwner()) {
-            btnInitializeSetting.requestFocusInWindow();
-        } else if (btnInitializeSetting.isFocusOwner()) {
-            btnColorBlind2.requestFocusInWindow();
-        } else if (btnColorBlind0.isFocusOwner() ||btnColorBlind1.isFocusOwner() || btnColorBlind2.isFocusOwner() || btnColorBlind3.isFocusOwner()) {
-            btnInitializeNormalScore.requestFocusInWindow();
-        } else if (btnInitializeNormalScore.isFocusOwner() || btnInitializeItemScore.isFocusOwner()) {
-            btnKeySetting.requestFocusInWindow();
-        } else if (btnKeySetting.isFocusOwner()) {
-            btnSize2.requestFocusInWindow();
-        }
-    }
-
-    private void focusRightButton() {
-        if (btnSize1.isFocusOwner()) {
-            btnSize2.requestFocusInWindow();
-        } else if (btnSize2.isFocusOwner()) {
-            btnSize3.requestFocusInWindow();
-        } else if (btnInitializeNormalScore.isFocusOwner()) {
-            btnInitializeItemScore.requestFocusInWindow();
-        } else if (btnColorBlind0.isFocusOwner()) {
-            btnColorBlind1.requestFocusInWindow();
-        } else if (btnColorBlind1.isFocusOwner()) {
-            btnColorBlind2.requestFocusInWindow();
-        } else if (btnColorBlind2.isFocusOwner()) {
-            btnColorBlind3.requestFocusInWindow();
-        }
-    }
-
-    private void focusLeftButton() {
-        if (btnSize2.isFocusOwner()) {
-            btnSize1.requestFocusInWindow();
-        } else if (btnSize3.isFocusOwner()) {
-            btnSize2.requestFocusInWindow();
-        } else if (btnInitializeItemScore.isFocusOwner()) {
-            btnInitializeNormalScore.requestFocusInWindow();
-        } else if (btnColorBlind3.isFocusOwner()) {
-            btnColorBlind2.requestFocusInWindow();
-        } else if (btnColorBlind2.isFocusOwner()) {
-            btnColorBlind1.requestFocusInWindow();
-        } else if (btnColorBlind1.isFocusOwner()) {
-            btnColorBlind0.requestFocusInWindow();
         }
     }
 
@@ -241,6 +183,8 @@ SettingScreen extends JFrame implements ActionListener {
             setVisible(false);
             // keySetting 창을 위한 컨트롤러를 하나 만들어야 할 듯
             new KeySettingScreen();
+        } else if (command.equals("initializeKey")) {
+            settingController.initializeKeySettings();
         } else if (command.equals("menu")) {
             setVisible(false);
             new MainMenuScreen();
@@ -249,25 +193,88 @@ SettingScreen extends JFrame implements ActionListener {
         } else if (command.equals("scoreItem")) {
             scoreController.resetScores(true);
         } else if (command.equals("initialize")) {
-            settingController.initializeSettings();
             setWidthHeight(400, 550, this);
-            settingController.saveSettings("screenSize", "small");
+            settingController.initializeSettings();
         } else if (command.equals("default")) {
             // 기본
             settingController.setColorBlindMode("default");
-            settingController.saveSettings("colorMode", "default");
+            settingController.saveSettings("colorBlindMode", "default");
         } else if (command.equals("colorBlind1")) {
             // 적색맹
             settingController.setColorBlindMode("protanopia");
-            settingController.saveSettings("colorMode", "protanopia");
+            settingController.saveSettings("colorBlindMode", "protanopia");
         } else if (command.equals("colorBlind2")) {
             // 녹색맹
             settingController.setColorBlindMode("deuteranopia");
-            settingController.saveSettings("colorMode", "deuteranopia");
+            settingController.saveSettings("colorBlindMode", "deuteranopia");
         } else if (command.equals("colorBlind3")) {
             // 청색맹
             settingController.setColorBlindMode("tritanopia");
-            settingController.saveSettings("colorMode", "tritanopia");
+            settingController.saveSettings("colorBlindMode", "tritanopia");
+        }
+    }
+
+    private void focusDownButton() {
+        if (btnSize1.isFocusOwner() || btnSize2.isFocusOwner() || btnSize3.isFocusOwner()) {
+            btnKeySetting.requestFocusInWindow();
+        } else if (btnKeySetting.isFocusOwner() || btnInitializeKeySetting.isFocusOwner()) {
+            btnInitializeNormalScore.requestFocusInWindow();
+        } else if (btnInitializeNormalScore.isFocusOwner() || btnInitializeItemScore.isFocusOwner()) {
+            btnColorBlind1.requestFocusInWindow();
+        } else if (btnColorBlind0.isFocusOwner() || btnColorBlind1.isFocusOwner() || btnColorBlind2.isFocusOwner() || btnColorBlind3.isFocusOwner()) {
+            btnInitializeSetting.requestFocusInWindow();
+        } else if (btnInitializeSetting.isFocusOwner()) {
+            btnMenu.requestFocusInWindow();
+        }
+    }
+
+    private void focusUpButton() {
+        if (btnMenu.isFocusOwner()) {
+            btnInitializeSetting.requestFocusInWindow();
+        } else if (btnInitializeSetting.isFocusOwner()) {
+            btnColorBlind2.requestFocusInWindow();
+        } else if (btnColorBlind0.isFocusOwner() ||btnColorBlind1.isFocusOwner() || btnColorBlind2.isFocusOwner() || btnColorBlind3.isFocusOwner()) {
+            btnInitializeNormalScore.requestFocusInWindow();
+        } else if (btnInitializeNormalScore.isFocusOwner() || btnInitializeItemScore.isFocusOwner()) {
+            btnKeySetting.requestFocusInWindow();
+        } else if (btnKeySetting.isFocusOwner() || btnInitializeKeySetting.isFocusOwner()) {
+            btnSize2.requestFocusInWindow();
+        }
+    }
+
+    private void focusRightButton() {
+        if (btnSize1.isFocusOwner()) {
+            btnSize2.requestFocusInWindow();
+        } else if (btnSize2.isFocusOwner()) {
+            btnSize3.requestFocusInWindow();
+        } else if (btnKeySetting.isFocusOwner()) {
+            btnInitializeKeySetting.requestFocusInWindow();
+        } else if (btnInitializeNormalScore.isFocusOwner()) {
+            btnInitializeItemScore.requestFocusInWindow();
+        } else if (btnColorBlind0.isFocusOwner()) {
+            btnColorBlind1.requestFocusInWindow();
+        } else if (btnColorBlind1.isFocusOwner()) {
+            btnColorBlind2.requestFocusInWindow();
+        } else if (btnColorBlind2.isFocusOwner()) {
+            btnColorBlind3.requestFocusInWindow();
+        }
+    }
+
+    private void focusLeftButton() {
+        if (btnSize2.isFocusOwner()) {
+            btnSize1.requestFocusInWindow();
+        } else if (btnSize3.isFocusOwner()) {
+            btnSize2.requestFocusInWindow();
+        } else if (btnInitializeKeySetting.isFocusOwner()) {
+            btnKeySetting.requestFocusInWindow();
+        } else if (btnInitializeItemScore.isFocusOwner()) {
+            btnInitializeNormalScore.requestFocusInWindow();
+        } else if (btnColorBlind3.isFocusOwner()) {
+            btnColorBlind2.requestFocusInWindow();
+        } else if (btnColorBlind2.isFocusOwner()) {
+            btnColorBlind1.requestFocusInWindow();
+        } else if (btnColorBlind1.isFocusOwner()) {
+            btnColorBlind0.requestFocusInWindow();
         }
     }
 }

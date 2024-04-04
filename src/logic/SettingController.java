@@ -124,15 +124,24 @@ public class SettingController {
         }
     }
 
+    public void initializeKeySettings() {
+        int[] keyCodes = new int[]{38, 37, 39, 40, 32};
+        String[] keyShapes = new String[5];
+
+        for (int i = 0; i < 5; i++) {
+            String keyShape = KeyEvent.getKeyText(keyCodes[i]);
+            keyShapes[i] = keyShape;
+        }
+
+        setKeyCodes(keyCodes);
+        setKeyShape(keyShapes);
+    }
 
     public void initializeSettings() {
-        properties.setProperty("screenSize", "small");
-        properties.setProperty("colorMode", "default");
-        try (FileOutputStream fos = new FileOutputStream(configPath)) {
-            properties.store(fos, null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        saveSettings("screenSize", "small");
+        saveSettings("colorBlindMode", "default");
+        initializeKeySettings();
     }
 
     public void setColorBlindMode(String mode) {
