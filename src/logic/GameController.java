@@ -12,6 +12,13 @@ public class GameController implements PauseScreenCallback {
     private BoardController boardController;
     private InGameScreen inGameScreen;
     private final ScoreController scoreController;
+    private final SettingController settingController = new SettingController();
+    private final int[] keyCodes = settingController.getKeyCodes();
+    private int ROTATE = keyCodes[0];
+    private int LEFT = keyCodes[1];
+    private int RIGHT = keyCodes[2];
+    private int DOWN = keyCodes[3];
+    private int DROP = keyCodes[4];
     private JFrame frame;
     private Timer timer;
 
@@ -68,37 +75,29 @@ public class GameController implements PauseScreenCallback {
     // 키보드 이벤트 처리
     // TODO: 3/24/24 : 효정이가 KeyListener 구현 하면 바꿀 예정
     private void setupKeyListener(JFrame frame) {
-
         // Create the PauseScreen instance once during initialization
 
         frame.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_LEFT:
-                        boardController.moveBlock(Direction.LEFT);
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        boardController.moveBlock(Direction.RIGHT);
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        boardController.moveBlock(Direction.DOWN);
-                        inGameScreen.updateBoard();
-                        break;
-                    case KeyEvent.VK_UP:
-                        boardController.moveBlock(Direction.UP);
-                        break;
-                    case KeyEvent.VK_SPACE:
-                        boardController.moveBlock(Direction.SPACE);
-                        inGameScreen.updateBoard();
-                        break;
-                    //esc 누르면 게임 중지, 한번 더 누르면 다시 실행
-                    case KeyEvent.VK_ESCAPE:
-                        timer.stop();
-                        PauseScreen pauseScreen = new PauseScreen(isItem);
-                        pauseScreen.setCallback(GameController.this); // Set the callback
-                        pauseScreen.setVisible(true); // Show the PauseScreen
-                        break;
+                // Use the custom key codes for controls
+                if (e.getKeyCode() == LEFT) {
+                    boardController.moveBlock(Direction.LEFT);
+                } else if (e.getKeyCode() == RIGHT) {
+                    boardController.moveBlock(Direction.RIGHT);
+                } else if (e.getKeyCode() == DOWN) {
+                    boardController.moveBlock(Direction.DOWN);
+                    inGameScreen.updateBoard();
+                } else if (e.getKeyCode() == ROTATE) {
+                    boardController.moveBlock(Direction.UP); // Consider renaming Direction.UP to ROTATE for clarity
+                } else if (e.getKeyCode() == DROP) {
+                    boardController.moveBlock(Direction.SPACE); // Consider renaming Direction.SPACE to DROP for clarity
+                    inGameScreen.updateBoard();
+                } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    timer.stop();
+                    PauseScreen pauseScreen = new PauseScreen(isItem);
+                    pauseScreen.setCallback(GameController.this); // Set the callback
+                    pauseScreen.setVisible(true); // Show the PauseScreen
                 }
                 inGameScreen.repaint();
             }

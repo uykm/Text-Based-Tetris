@@ -1,5 +1,7 @@
 package src.ui;
 
+import logic.SettingController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -7,10 +9,13 @@ import java.awt.event.*;
 import static component.Button.createBtn;
 
 public class KeySettingScreen extends JFrame {
-    private JLabel[] labels = new JLabel[4];
-    private JTextField[] textFields = new JTextField[4];
+    private JLabel[] labels = new JLabel[5];
+    private JTextField[] textFields = new JTextField[5];
     private JButton btnInitialize = createBtn("Initialize", "initialize", this::actionPerformed);
     private JButton btnBack = createBtn("Back", "back", this::actionPerformed);
+    private SettingController settingController = new SettingController();
+    private final int[] keyCodes = new int[5];
+    private final String[] keyShape = settingController.getKeyShape();
 
     private int focusedIndex = 0;
 
@@ -22,20 +27,22 @@ public class KeySettingScreen extends JFrame {
         // Initialize labels and text fields
         for (int i = 0; i < textFields.length; i++) {
             JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-
             labels[i] = new JLabel();
             if (i == 0) {
                 labels[i].setText("Change Shape");
-                textFields[i] = new JTextField("Press Enter to Set Key");
+                textFields[i] = new JTextField(keyShape[i], 5);
             } else if (i == 1) {
                 labels[i].setText("Left Key");
-                textFields[i] = new JTextField("Press Enter to Set Key");
+                textFields[i] = new JTextField(keyShape[i], 5);
             } else if (i == 2) {
                 labels[i].setText("Right Key");
-                textFields[i] = new JTextField("Press Enter to Set Key");
+                textFields[i] = new JTextField(keyShape[i], 5);
             } else if (i == 3) {
+                labels[i].setText("Down Key");
+                textFields[i] = new JTextField(keyShape[i], 5);
+            } else if (i == 4) {
                 labels[i].setText("Go down at once");
-                textFields[i] = new JTextField("Press Enter to Set Key");
+                textFields[i] = new JTextField(keyShape[i], 5);
             }
             textFields[i].setEditable(false);
             textFields[i].setBackground(Color.WHITE);
@@ -170,6 +177,10 @@ public class KeySettingScreen extends JFrame {
                 }
                 if (!keyAssigned) {
                     textFields[focusedIndex].setText(keyString);
+                    keyCodes[focusedIndex] = keyCode;
+                    keyShape[focusedIndex] = keyString;
+                    settingController.setKeyCodes(keyCodes);
+                    settingController.setKeyShape(keyShape);
                 } else {
                     JOptionPane.showMessageDialog(KeySettingScreen.this, "This key is already assigned to another section.", "Key Already Assigned", JOptionPane.WARNING_MESSAGE);
                 }

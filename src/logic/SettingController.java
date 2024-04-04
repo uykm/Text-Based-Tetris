@@ -1,5 +1,6 @@
 package logic;
 
+import java.awt.event.KeyEvent;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -67,6 +68,42 @@ public class SettingController {
 
     public int getDifficulty() {
         return Integer.parseInt(properties.getProperty("difficulty", "1"));
+    }
+
+    public int[] getKeyCodes() {
+        int[] keyCodes = new int[5];
+        keyCodes[0] = Integer.parseInt(properties.getProperty("key_rotate", "38")); // 기본값은 KeyEvent.VK_UP
+        keyCodes[1] = Integer.parseInt(properties.getProperty("key_left", "37")); // 기본값은 KeyEvent.VK_LEFT
+        keyCodes[2] = Integer.parseInt(properties.getProperty("key_right", "39")); // 기본값은 KeyEvent.VK_RIGHT
+        keyCodes[3] = Integer.parseInt(properties.getProperty("key_down", "40")); // 기본값은 KeyEvent.VK_DOWN
+        keyCodes[4] = Integer.parseInt(properties.getProperty("key_drop", "32")); // 기본값은 KeyEvent.VK_P
+        return keyCodes;
+    }
+
+    public void setKeyCodes(int[] keyCodes) {
+        saveSettings("key_rotate", Integer.toString(keyCodes[0]));
+        saveSettings("key_left", Integer.toString(keyCodes[1]));
+        saveSettings("key_right", Integer.toString(keyCodes[2]));
+        saveSettings("key_down", Integer.toString(keyCodes[3]));
+        saveSettings("key_drop", Integer.toString(keyCodes[4]));
+    }
+
+    public String[] getKeyShape() {
+        String[] keyShape = new String[7];
+        keyShape[0] = properties.getProperty("key_rotate_shape", "\\u2191");
+        keyShape[1] = properties.getProperty("key_left_shape", "\\u2190");
+        keyShape[2] = properties.getProperty("key_right_shape", "\\u2192");
+        keyShape[3] = properties.getProperty("key_down_shape", "\\u2193");
+        keyShape[4] = properties.getProperty("key_drop_shape", "\\u2423");
+        return keyShape;
+    }
+
+    public void setKeyShape(String[] keyShape) {
+        saveSettings("key_rotate_shape", keyShape[0]);
+        saveSettings("key_left_shape", keyShape[1]);
+        saveSettings("key_right_shape", keyShape[2]);
+        saveSettings("key_down_shape", keyShape[3]);
+        saveSettings("key_drop_shape", keyShape[4]);
     }
 
     public void saveSettings(String key, String value) {
