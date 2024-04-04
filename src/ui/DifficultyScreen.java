@@ -84,10 +84,16 @@ public class DifficultyScreen extends JFrame implements ActionListener {
         String command = e.getActionCommand();
         if (command.equals("easy")) {
             settingController.saveSettings("difficulty", "0");
+            setVisible(false);
+            new GameController(isItem);
         } else if (command.equals("normal")) {
             settingController.saveSettings("difficulty", "1");
+            setVisible(false);
+            new GameController(isItem);
         } else if (command.equals("hard")) {
             settingController.saveSettings("difficulty", "2");
+            setVisible(false);
+            new GameController(isItem);
         } else if (command.equals("menu")) {
             // 게임 모드 선택 화면으로 돌아가기
             setVisible(false);
@@ -98,12 +104,15 @@ public class DifficultyScreen extends JFrame implements ActionListener {
     private void moveScreen() {
         setVisible(false);
         if (btnEasy.isFocusOwner()) {
+            settingController.saveSettings("difficulty", "0");
             setVisible(false);
             new GameController(isItem);
         } else if (btnNormal.isFocusOwner()) {
+            settingController.saveSettings("difficulty", "1");
             setVisible(false);
             new GameController(isItem);
         } else if (btnHard.isFocusOwner()) {
+            settingController.saveSettings("difficulty", "2");
             setVisible(false);
             new GameController(isItem);
         } else if (btnMenu.isFocusOwner()) {
