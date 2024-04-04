@@ -1,5 +1,6 @@
 package ui;
 
+import logic.GameController;
 import logic.SettingController;
 
 import javax.swing.*;
@@ -19,9 +20,14 @@ public class DifficultyScreen extends JFrame implements ActionListener {
     JButton btnEasy, btnNormal, btnHard;
     JButton btnGeneral, btnItem;
     JButton btnMenu;
+    boolean isItem;
     SettingController settingController = new SettingController();
 
-    public DifficultyScreen() {
+    public DifficultyScreen(boolean isItem) {
+
+        // 노말 모드 vs 아이템 모드
+        this.isItem = isItem;
+
         setTitle("Tetris - Difficulty");
         String screenSize = settingController.getScreenSize("screenSize", "small");
         switch (screenSize) {
@@ -89,13 +95,17 @@ public class DifficultyScreen extends JFrame implements ActionListener {
     private void moveScreen() {
         setVisible(false);
         if (btnEasy.isFocusOwner()) {
-
+            setVisible(false);
+            new GameController(isItem);
         } else if (btnNormal.isFocusOwner()) {
-
+            setVisible(false);
+            new GameController(isItem);
         } else if (btnHard.isFocusOwner()) {
-
+            setVisible(false);
+            new GameController(isItem);
         } else if (btnMenu.isFocusOwner()) {
-            // 게임 모드 선택 화면으로 돌아가기
+            setVisible(false);
+            new MainMenuScreen();
         }
     }
 
@@ -141,10 +151,5 @@ public class DifficultyScreen extends JFrame implements ActionListener {
         if (btnEasy.isFocusOwner() || btnNormal.isFocusOwner() || btnHard.isFocusOwner()) {
             btnMenu.requestFocusInWindow();
         }
-    }
-
-    public static void main(String[] args) {
-
-        SwingUtilities.invokeLater(DifficultyScreen::new);
     }
 }

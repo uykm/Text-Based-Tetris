@@ -110,11 +110,10 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         if (command.equals("play")) {
             // TODO : 난이도 선택 화면으로 넘어가서 GameController 실행
             setVisible(false);
-            new GameController(false);
-            setVisible(false);
+            new DifficultyScreen(false);
         } else if (command.equals("item")) {
             // TODO : 난이도 선택 화면으로 넘어가서 GameController 실행
-
+            new DifficultyScreen(true);
         } else if (command.equals("setting")) {
             new SettingScreen();
             setVisible(false);
@@ -151,10 +150,10 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         setVisible(false);
         if (btnPlay.isFocusOwner()) {
             // TODO : 난이도 선택 화면으로 넘어가서 GameController 실행
-            new GameController(false);
+            new DifficultyScreen(false);
         } else if (btnItem.isFocusOwner()) {
             // TODO : 난이도 선택 화면으로 넘어가서 GameController 실행
-
+            new DifficultyScreen(true);
         } else if (btnSetting.isFocusOwner()) {
             new SettingScreen();
         } else if (btnRanking.isFocusOwner()) {
