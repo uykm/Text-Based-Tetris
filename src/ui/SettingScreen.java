@@ -126,12 +126,15 @@ SettingScreen extends JFrame implements ActionListener {
         if (btnSize1.isFocusOwner()) {
             setWidthHeight(400, 550, this);
             settingController.saveSettings("screenSize", "small");
+            setLocationRelativeTo(null); // Centered window
         } else if (btnSize2.isFocusOwner()) {
             setWidthHeight(600, 750, this);
             settingController.saveSettings("screenSize", "medium");
+            setLocationRelativeTo(null); // Centered window
         } else if (btnSize3.isFocusOwner()) {
             setWidthHeight(800, 950, this);
             settingController.saveSettings("screenSize", "big");
+            setLocationRelativeTo(null); // Centered window
         } else if (btnKeySetting.isFocusOwner()) {
             setVisible(false);
             // keySetting 창을 위한 컨트롤러를 하나 만들어야 할 듯
@@ -169,12 +172,15 @@ SettingScreen extends JFrame implements ActionListener {
         if (command.equals("small")) {
             setWidthHeight(400, 550, this);
             settingController.saveSettings("screenSize", "small");
+            setLocationRelativeTo(null); // Centered window
         } else if (command.equals("medium")) {
             setWidthHeight(600, 750, this);
             settingController.saveSettings("screenSize", "medium");
+            setLocationRelativeTo(null); // Centered window
         } else if (command.equals("big")) {
             setWidthHeight(800, 950, this);
             settingController.saveSettings("screenSize", "big");
+            setLocationRelativeTo(null); // Centered window
         } else if (command.equals("keySetting")) {
             setVisible(false);
             // keySetting 창을 위한 컨트롤러를 하나 만들어야 할 듯
