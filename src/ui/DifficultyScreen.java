@@ -22,6 +22,8 @@ public class DifficultyScreen extends JFrame implements ActionListener {
     boolean isItem;
     SettingController settingController = new SettingController();
 
+    private int btnSize;
+
     public DifficultyScreen(boolean isItem) {
 
         // 노말 모드 vs 아이템 모드
@@ -32,12 +34,15 @@ public class DifficultyScreen extends JFrame implements ActionListener {
         switch (screenSize) {
             case "small":
                 setWidthHeight(390, 420, this);
+                btnSize = 100;
                 break;
             case "big":
                 setWidthHeight(910, 940, this);
+                btnSize = 200;
                 break;
             default:
                 setWidthHeight(650, 680, this);
+                btnSize = 170;
                 break;
         }
         setLocationRelativeTo(null); // Centered window
@@ -48,12 +53,12 @@ public class DifficultyScreen extends JFrame implements ActionListener {
 
         // 버튼
         JPanel topPanel = new JPanel();
-        btnEasy = createLogoBtnUp("Easy", "easy", this, "src/image/easy_logo.png");
-        btnEasy.setPreferredSize((new Dimension(100, 100)));
-        btnNormal = createLogoBtnUp("Normal", "normal", this, "src/image/normal_logo.png");
-        btnNormal.setPreferredSize((new Dimension(100, 100)));
-        btnHard = createLogoBtnUp("Hard", "hard", this, "src/image/hard_logo.png");
-        btnHard.setPreferredSize((new Dimension(100, 100)));
+        btnEasy = createLogoBtnUp("Easy", "easy", this, screenSize,"src/image/easy_logo.png");
+        btnEasy.setPreferredSize((new Dimension(btnSize, btnSize)));
+        btnNormal = createLogoBtnUp("Normal", "normal", this, screenSize, "src/image/normal_logo.png");
+        btnNormal.setPreferredSize((new Dimension(btnSize, btnSize)));
+        btnHard = createLogoBtnUp("Hard", "hard", this, screenSize,"src/image/hard_logo.png");
+        btnHard.setPreferredSize((new Dimension(btnSize, btnSize)));
 
         btnEasy.addKeyListener(new MyKeyListener());
         btnNormal.addKeyListener(new MyKeyListener());
@@ -76,6 +81,7 @@ public class DifficultyScreen extends JFrame implements ActionListener {
         bottomPanel.add(btnMenu);
         add(bottomPanel, BorderLayout.SOUTH);
 
+        pack();
         setVisible(true);
     }
 
