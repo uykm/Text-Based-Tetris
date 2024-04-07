@@ -2,6 +2,7 @@ package logic;
 
 import model.Direction;
 import model.NullBlock;
+import model.WeightItemBlock;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -14,7 +15,7 @@ public class BoardController {
     // 게임 보드의 너비, 높이
     final private int WIDTH;
     final private int HEIGHT;
-    private int erasedLineCount;
+    private int erasedLineCount = 0;
     private boolean isItemMode;
     // 현재 블록, 다음 블록
     private Block currentBlock;
@@ -34,11 +35,15 @@ public class BoardController {
     private int blockCountWithNoLineErase;
 
     private int placedBlockCount;
+    private boolean canMoveSide;
 
     final int BLOCK_COUNT_TO_SPEED_UP = 10;
     final int LINE_COUNT_TO_SPEED_UP = 10;
     final int BLOCK_SPEED_UP_THRESHOLD = 10;
     final int LINE_SPEED_UP_THRESHOLD = 20;
+
+    // 블록의 초기 좌표
+    int x, y;
 
     private void checkSpeedUp() {
 
@@ -66,8 +71,6 @@ public class BoardController {
         return sb.toString();
     }
 
-    // 블록의 초기 좌표
-    int x, y;
 
     public BoardController(GameController gameController, Boolean isItemMode) {
         this.isItemMode = isItemMode;
@@ -80,6 +83,7 @@ public class BoardController {
         this.Messages = new LinkedList<>();
         this.gameController = gameController;
         this.lastLineEraseTime = 0;
+        this.canMoveSide = true;
         // 초기 블록 배치
         placeNewBlock();
     }
@@ -158,8 +162,9 @@ public class BoardController {
     public void placeNewBlock() {
         placedBlockCount++;
         this.currentBlock = this.nextBlock;
+        canMoveSide = true;
         this.nextBlock = rwSelection.selectBlock(isItemMode, erasedLineCount);
-        if(collisionCheck(6, 2, currentBlock)){
+        if(collisionCheck(6, 2)){
             checkSpeedUp();
             x = 6; y = 2;
         } else {
@@ -171,26 +176,27 @@ public class BoardController {
 
     // 블록을 게임 보드에 배치
     public void placeBlock() {
+        // 기본 블록 배치 로직
         for(int j=0; j<currentBlock.height(); j++) {
             for(int i=0; i<currentBlock.width(); i++) {
                 grid.getBoard()[y+j][x+i] += currentBlock.getShape(i, j);
             }
         }
-
     }
 
 
     // 충돌 검사, 충돌하지 않으면 true 반환
-    public boolean collisionCheck(int newX, int newY, Block newBlock) {
-        for (int i = 0; i < newBlock.height(); i++) {
-            for (int j = 0; j < newBlock.width(); j++) {
-                if (newBlock.getShape(j, i) != 0) { // Check if part of the block
+    public boolean collisionCheck(int newX, int newY) {
+        for (int i = 0; i < currentBlock.height(); i++) {
+            for (int j = 0; j < currentBlock.width(); j++) {
+                if (currentBlock.getShape(j, i) != 0) { // Check if part of the block
                     int boardX = newX + j;
                     int boardY = newY + i;
                     if (boardX < 3 || boardX >= WIDTH + 3 || boardY < 3 || boardY >= HEIGHT + 3) {
                         return false; // Out of bounds
                     }
                     if (grid.getBoard()[boardY][boardX] != 0) {
+                        // F((WeightItemBlock)currentBlock).isActive = false;
                         return false; // Position already occupied
                     }
                 }
@@ -198,6 +204,7 @@ public class BoardController {
         }
         return true; // No collision detected
     }
+
 
     // 라인이 꽉 찼는지 확인하고 꽉 찼으면 지우기
     public void lineCheck() {
@@ -230,12 +237,35 @@ public class BoardController {
 
     // 라인을 지우고 위에 있는 블록들을 내림
     private void eraseLine(int line) {
-        for(int i=3; i< WIDTH+3; i++) {
+        for(int i=3; i<WIDTH+3; i++) {
             grid.getBoard()[line][i] = 0;
         }
         for(int i=line; i>3; i--) {
             System.arraycopy(grid.getBoard()[i - 1], 3, grid.getBoard()[i], 3, WIDTH);
         }
+    }
+
+    // 무게 추로 아래 블럭 지우기
+    private void breakBlocks(int x, int y, int length) {
+
+        if(x <= 2 || x >= WIDTH + 3 || y <= 2 || y >= HEIGHT + 2) {
+            placeBlock();
+            lineCheck();
+            placeNewBlock();
+            stopCount = 0;
+            limitCount = 0;
+            return;
+        }
+
+        for(int i=x; i<x+length; i++) {
+            grid.getBoard()[y+1][i] = 0;
+        }
+
+        for(int i=y; i>3; i--) {
+            System.arraycopy(grid.getBoard()[i - 1], x, grid.getBoard()[i], x, length);
+        }
+
+        this.y += 1;
     }
 
     // 현재 배열에서 블록을 지움, 블록을 회전하거나 이동하기 전에 사용
@@ -257,31 +287,33 @@ public class BoardController {
         }
         switch(direction) {
             case LEFT -> {
-                if (collisionCheck(x - 1, y, currentBlock)) {
+                if (canMoveSide && collisionCheck(x - 1, y)) {
                         x--;
                         stopCount = 0;
                 }
                 placeBlock();
             }
             case RIGHT -> {
-                if (collisionCheck(x + 1, y, currentBlock)) {
+                if (canMoveSide && collisionCheck(x + 1, y)) {
                     x++;
                     stopCount = 0;
                 }
                 placeBlock();
             }
             case DOWN -> {
-                if (collisionCheck(x, y + 1, currentBlock)) {
-                    stopCount=0;
-                    limitCount = 0;
-                    y++;
+                if (collisionCheck(x, y + 1)) {
+                    placeDown();
                     addScoreOnBlockMoveDown(); // 한 칸 내릴 때마다 1점 추가
+                } else { // 충돌!
+                    if(currentBlock instanceof WeightItemBlock) {
+                        canMoveSide = false;
+                        breakBlocks(x, y + currentBlock.height() - 1, currentBlock.width());
+                    } else {
+                        stopCount++;
+                        limitCount++;
+                    }
                     placeBlock();
-                } else {
-                    stopCount++;
-                    limitCount++;
-                    placeBlock();
-                    //2틱 동안 움직임 없거나 충돌 후 5틱이 지나면 블록을 고정시킴
+                    // 2틱 동안 움직임 없거나 충돌 후 2틱이 지나면 블록을 고정시킴
                     if(stopCount > 1 || limitCount > 1) {
                         checkGameOver();
                         lineCheck();
@@ -297,11 +329,16 @@ public class BoardController {
                 placeBlock();
             }
             case SPACE -> {
-                while(collisionCheck(x, y+1, currentBlock)) {
+                while(collisionCheck(x, y+1)) {
                     y++;
                     addScoreOnBlockMoveDown(); // 한 칸 내릴 때마다 1점 추가
                 }
                 placeBlock();
+
+                if(currentBlock instanceof WeightItemBlock) {
+                    break;
+                }
+
                 lineCheck();
                 placeNewBlock();
                 limitCount = 0;
@@ -315,13 +352,13 @@ public class BoardController {
         currentBlock.rotate();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (collisionCheck(x + i, y + j, currentBlock)) {
+                if (collisionCheck(x + i, y + j)) {
                     addScoreOnBlockMoveDown(j);
                     x += i;
                     y += j;
                     return;
                 }
-                if (collisionCheck(x - i, y + j, currentBlock)) {
+                if (collisionCheck(x - i, y + j)) {
                     addScoreOnBlockMoveDown(j);
                     x -= i;
                     y += j;
@@ -357,5 +394,12 @@ public class BoardController {
 
     public int getScore() {
         return score;
+    }
+
+    private void placeDown() {
+        stopCount=0;
+        limitCount = 0;
+        y++;
+        placeBlock();
     }
 }

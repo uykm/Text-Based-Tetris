@@ -1,6 +1,5 @@
 package logic;
 
-import jdk.jfr.Description;
 import model.*;
 
 import java.awt.*;
@@ -10,6 +9,7 @@ import java.util.Random;
 public class RWSelection {
     private final double[] fitness;
     private final Random random;
+    private int eraseLineCountForItem;
 
     public RWSelection(int difficulty) {
         switch (difficulty) {
@@ -97,6 +97,8 @@ public class RWSelection {
     public Block selectBlock(boolean isItem, int eraseLineCount){
         int blockType = select();
         Random random = new Random();
+
+        // 기본 블록 선택 로직
         Block basicBlock = switch (blockType) {
             case 0 -> new IBlock();
             case 1 -> new JBlock();
@@ -107,25 +109,34 @@ public class RWSelection {
             case 6 -> new ZBlock();
             default -> throw new IllegalArgumentException("Invalid block type.");
         };
-        // 10줄이 삭제될 때마다 아이템 블록 생성
-        if (isItem && eraseLineCount % 10 == 0 && eraseLineCount != 0) {
-            // 값이 0보다 큰 인덱스들을 저장할 리스트 생성
-            ArrayList<Point> greaterThanZeroIndices = new ArrayList<>();
-            for (int y = 0; y < basicBlock.shape.length; y++) {
-                for (int x = 0; x < basicBlock.shape[y].length; x++) {
-                    if (basicBlock.shape[y][x] > 0) {
-                        greaterThanZeroIndices.add(new Point(x, y));
+
+        // 10줄이 삭제될 때마다 아이템 블록 생성 로직
+        if (isItem && eraseLineCount % 10 == 0 && eraseLineCount != 0 && eraseLineCountForItem < eraseLineCount) {
+           eraseLineCountForItem = eraseLineCount;
+
+            // 50% 확률로 기존 아이템 블록 또는 WeightItemBlock을 선택
+            if (random.nextBoolean()) {
+                // 기존 아이템 블록 로직
+                ArrayList<Point> greaterThanZeroIndices = new ArrayList<>();
+                for (int y = 0; y < basicBlock.shape.length; y++) {
+                    for (int x = 0; x < basicBlock.shape[y].length; x++) {
+                        if (basicBlock.shape[y][x] > 0) {
+                            greaterThanZeroIndices.add(new Point(x, y));
+                        }
                     }
                 }
-            }
 
-            // 리스트 내 랜덤 인덱스 선택하여 해당 값 8로 변경
-            if (!greaterThanZeroIndices.isEmpty()) {
-                Point selectedPoint = greaterThanZeroIndices.get(random.nextInt(greaterThanZeroIndices.size()));
-                basicBlock.shape[selectedPoint.y][selectedPoint.x] = 8;
-            }
+                if (!greaterThanZeroIndices.isEmpty()) {
+                    Point selectedPoint = greaterThanZeroIndices.get(random.nextInt(greaterThanZeroIndices.size()));
+                    basicBlock.shape[selectedPoint.y][selectedPoint.x] = 8;
+                }
 
-            return basicBlock;
+                return basicBlock;
+
+            } else {
+                // WeightItemBlock 생성 로직
+                return new WeightItemBlock();
+            }
         } else {
             // 일반 블록 선택 로직 (10줄이 삭제되지 않았을 때)
             return basicBlock;

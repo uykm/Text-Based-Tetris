@@ -8,7 +8,8 @@ public enum BlockType {
     SBlock,
     TBlock,
     ZBlock,
-    NullBlock;
+    NullBlock,
+    WeightItemBlock;
     public static BlockType getBlockTypeByIndex(int index) {
         return values()[index];
     }

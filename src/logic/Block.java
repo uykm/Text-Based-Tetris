@@ -11,6 +11,7 @@ public abstract class Block {
     protected int[][] shape;
     protected Color[] colors;
     private final SettingController settingController;
+    public boolean isActive;
 
     public Block(int[][] shape, Color[] colors) {
         settingController = new SettingController();
@@ -84,6 +85,7 @@ public abstract class Block {
             case TBlock -> new TBlock();
             case ZBlock -> new ZBlock();
             case NullBlock -> new NullBlock();
+            case WeightItemBlock -> new WeightItemBlock();
         };
     }
 }

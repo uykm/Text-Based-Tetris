@@ -1,6 +1,7 @@
 package logic;
 
 import model.Direction;
+import model.WeightItemBlock;
 import ui.*;
 
 import javax.swing.*;
@@ -80,7 +81,7 @@ public class GameController implements PauseScreenCallback {
         frame.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                // Use the custom key codes for controls
+                // Use the custom key codes for control
                 if (e.getKeyCode() == LEFT) {
                     boardController.moveBlock(Direction.LEFT);
                 } else if (e.getKeyCode() == RIGHT) {

@@ -191,7 +191,7 @@ public class InGameScreen extends JPanel {
                     g.setColor(Color.WHITE); // 'X' 문자를 흰색으로 그림
                     g.drawString("X", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
                     break;
-                case 1,2, 4, 6,7:
+                case 1,2,4,6,7:
                     // 다른 블록 타입에 대한 처리
                     g.setColor(Block.getBlock(BlockType.getBlockTypeByIndex(content-1)).getColor());
                     charWidth = metrics.stringWidth("ㅁ");
@@ -207,6 +207,12 @@ public class InGameScreen extends JPanel {
                     charWidth = metrics.stringWidth("L");
                     g.drawString("L", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
                     break;
+                case 9: // 무게추 아이템
+                    g.setColor(Color.DARK_GRAY);
+                    charWidth = metrics.stringWidth("ㅇ");
+                    g.drawString("ㅇ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                    break;
+
             }
         }
 
