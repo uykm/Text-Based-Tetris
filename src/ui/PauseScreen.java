@@ -17,18 +17,20 @@ import static java.lang.System.exit;
 
 public class PauseScreen extends JFrame implements ActionListener{
     SettingController settingController = new SettingController();
-
+    String screenSize;
     JButton btnBack = createBtn("Back", "back", this);
     JButton btnReplay = createBtn("Replay", "replay", this);
     JButton btnMainMenu = createBtn("Menu", "mainMenu", this);
     JButton btnQuit = createBtn("Quit", "quit", this);
-    private boolean isItem;
+    private final boolean isItem;
 
 
     public PauseScreen(boolean isItem) {
 
         // 노말모드 vs 아이템 모드
         this.isItem = isItem;
+
+        screenSize = settingController.getScreenSize("screenSize", "small");
 
         setTitle("Tetris");
         String screenSize = settingController.getScreenSize("screenSize", "small");
@@ -58,8 +60,9 @@ public class PauseScreen extends JFrame implements ActionListener{
         btnMainMenu.addKeyListener(new MyKeyListener());
         btnQuit.addKeyListener(new MyKeyListener());
 
-        pausePannel.add(createPanel("Pause", new JButton[]{btnBack, btnReplay, btnMainMenu, btnQuit}));
+        pausePannel.add(createPanel("Pause", new JButton[]{btnBack, btnReplay, btnMainMenu, btnQuit}, screenSize));
         add(pausePannel);
+
         setVisible(true);
     }
 
