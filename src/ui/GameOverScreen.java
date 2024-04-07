@@ -58,6 +58,12 @@ public class GameOverScreen extends JFrame implements ActionListener {
         add(gameOverLabel, BorderLayout.NORTH);
         add(Box.createVerticalStrut(10));
 
+        // 점수 표시 레이블
+        JLabel scoreLabel = new JLabel("Your Score : " + score, SwingConstants.CENTER);
+        scoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        add(scoreLabel);
+        add(Box.createVerticalStrut(20));
+
         // 스코어 보드 표시
         JPanel scorePanel = createScorePanel(isItem);
         add(scorePanel, BorderLayout.CENTER);
