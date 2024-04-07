@@ -72,17 +72,17 @@ public class GameOverScreen extends JFrame implements ActionListener {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout()); // 버튼들이 나란하게 배치되도록 FlowLayout 사용
 
-        btnMenu = createLogoBtnUp("Menu", "menu", this, "src/image/menu.png");
+        btnMenu = createLogoBtnUp("Menu", "menu", this, screenSize,"src/image/menu.png");
         btnMenu.setPreferredSize((new Dimension(100, 100)));
         btnMenu.setFocusable(true);
         bottomPanel.add(btnMenu);
 
-        btnReplay = createLogoBtnUp("Replay", "replay", this, "src/image/replay.png");
+        btnReplay = createLogoBtnUp("Replay", "replay", this, screenSize,"src/image/replay.png");
         btnReplay.setPreferredSize((new Dimension(100, 100)));
         btnReplay.setFocusable(true);
         bottomPanel.add(btnReplay);
 
-        btnExit = createLogoBtnUp("Exit", "exit", this, "src/image/exit_logo.png");
+        btnExit = createLogoBtnUp("Exit", "exit", this, screenSize,"src/image/exit_logo.png");
         btnExit.setPreferredSize((new Dimension(100, 100)));
         btnExit.setFocusable(true);
         bottomPanel.add(btnExit);
