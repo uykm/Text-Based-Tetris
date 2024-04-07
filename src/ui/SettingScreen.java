@@ -55,7 +55,7 @@ SettingScreen extends JFrame implements ActionListener {
         btnSize1.addKeyListener(new MyKeyListener());
         btnSize2.addKeyListener(new MyKeyListener());
         btnSize3.addKeyListener(new MyKeyListener());
-        settingsPanel.add(createPanel("Screen Size", new JButton[]{btnSize1, btnSize2, btnSize3}));
+        settingsPanel.add(createPanel("Screen Size", new JButton[]{btnSize1, btnSize2, btnSize3}, screenSize));
 
         // Key Setting
         btnKeySetting = createBtn("Key Setting", "keySetting", this);
@@ -64,7 +64,7 @@ SettingScreen extends JFrame implements ActionListener {
         btnInitializeKeySetting = createBtn("Initialize", "initializeKey", this);
         btnInitializeKeySetting.addKeyListener(new MyKeyListener());
 
-        settingsPanel.add(createPanel("Key Setting", new JButton[]{btnKeySetting, btnInitializeKeySetting}));
+        settingsPanel.add(createPanel("Key Setting", new JButton[]{btnKeySetting, btnInitializeKeySetting}, screenSize));
 
         // Initialize Scoreboard
         btnInitializeNormalScore = createBtn("Normal", "scoreNormal", this); // Normal
@@ -73,7 +73,7 @@ SettingScreen extends JFrame implements ActionListener {
         btnInitializeItemScore = createBtn("Item", "scoreItem", this); // Item
         btnInitializeItemScore.addKeyListener(new MyKeyListener());
 
-        settingsPanel.add(createPanel("Initialize Score Board", new JButton[]{btnInitializeNormalScore, btnInitializeItemScore}));
+        settingsPanel.add(createPanel("Initialize Score Board", new JButton[]{btnInitializeNormalScore, btnInitializeItemScore}, screenSize));
 
         // Colorblind Mode
         btnColorBlind0 = createBtn("Default", "default", this);
@@ -84,12 +84,12 @@ SettingScreen extends JFrame implements ActionListener {
         btnColorBlind1.addKeyListener(new MyKeyListener());
         btnColorBlind2.addKeyListener(new MyKeyListener());
         btnColorBlind3.addKeyListener(new MyKeyListener());
-        settingsPanel.add(createPanel("Colorblind Mode", new JButton[]{btnColorBlind0, btnColorBlind1, btnColorBlind2, btnColorBlind3}));
+        settingsPanel.add(createPanel("Colorblind Mode", new JButton[]{btnColorBlind0, btnColorBlind1, btnColorBlind2, btnColorBlind3}, screenSize));
 
         // Initialize Setting
         btnInitializeSetting = createBtn("Initialize", "initialize", this);
         btnInitializeSetting.addKeyListener(new MyKeyListener());
-        settingsPanel.add(createPanel("Initialize Setting", new JButton[]{btnInitializeSetting}));
+        settingsPanel.add(createPanel("Initialize Setting", new JButton[]{btnInitializeSetting}, screenSize));
 
         // Back to Main Menu
         // btnMenu = createBtn("Menu", "back", this);
@@ -123,15 +123,19 @@ SettingScreen extends JFrame implements ActionListener {
     }
 
     private void applySetting() {
+
         if (btnSize1.isFocusOwner()) {
-            setWidthHeight(400, 550, this);
             settingController.saveSettings("screenSize", "small");
+            setVisible(false);
+            new SettingScreen();
         } else if (btnSize2.isFocusOwner()) {
-            setWidthHeight(600, 750, this);
             settingController.saveSettings("screenSize", "medium");
+            setVisible(false);
+            new SettingScreen();
         } else if (btnSize3.isFocusOwner()) {
-            setWidthHeight(800, 950, this);
             settingController.saveSettings("screenSize", "big");
+            setVisible(false);
+            new SettingScreen();
         } else if (btnKeySetting.isFocusOwner()) {
             setVisible(false);
             // keySetting 창을 위한 컨트롤러를 하나 만들어야 할 듯
@@ -167,14 +171,17 @@ SettingScreen extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command.equals("small")) {
-            setWidthHeight(400, 550, this);
             settingController.saveSettings("screenSize", "small");
+            setVisible(false);
+            new SettingScreen();
         } else if (command.equals("medium")) {
-            setWidthHeight(600, 750, this);
             settingController.saveSettings("screenSize", "medium");
+            setVisible(false);
+            new SettingScreen();
         } else if (command.equals("big")) {
-            setWidthHeight(800, 950, this);
             settingController.saveSettings("screenSize", "big");
+            setVisible(false);
+            new SettingScreen();
         } else if (command.equals("keySetting")) {
             setVisible(false);
             // keySetting 창을 위한 컨트롤러를 하나 만들어야 할 듯

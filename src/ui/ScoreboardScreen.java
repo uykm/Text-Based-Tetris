@@ -1,5 +1,6 @@
 package ui;
 
+import component.ScreenSize;
 import logic.Score;
 import logic.ScoreController;
 import logic.SettingController;
@@ -21,12 +22,13 @@ public class ScoreboardScreen extends JFrame implements ActionListener {
     SettingController settingController = new SettingController();
     ScoreController scoreController = new ScoreController();
     JButton menuBtn;
+    private final String screenSize;
 
-    // 일반적인 스코어 보드
+    // 메인메뉴의 스코어 보드
     public ScoreboardScreen() {
 
         setTitle("Tetris - Ranking"); // 창의 제목 설정
-        String screenSize = settingController.getScreenSize("screenSize", "small");
+        screenSize = settingController.getScreenSize("screenSize", "small");
         switch (screenSize) {
             case "small":
                 setWidthHeight(390, 420, this);
@@ -47,13 +49,13 @@ public class ScoreboardScreen extends JFrame implements ActionListener {
 
         // 노말 모드 스코어 보드 패널을 포함할 패널
         JPanel normalWrapperPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JPanel normalPanel = createScorePanel(false);
+        JPanel normalPanel = createScorePanel(false, screenSize);
         normalWrapperPanel.add(normalPanel);
         mainPanel.add(normalWrapperPanel); // 메인 패널에 추가
 
         // 아이템 모드 스코어 보드 패널을 포함할 패널
         JPanel itemWrapperPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JPanel itemPanel = createScorePanel(true);
+        JPanel itemPanel = createScorePanel(true, screenSize);
         itemWrapperPanel.add(itemPanel);
         mainPanel.add(itemWrapperPanel); // 메인 패널에 추가
 
@@ -73,17 +75,30 @@ public class ScoreboardScreen extends JFrame implements ActionListener {
 
         // 설정이 끝난 패널을 JFrame에 추가
         add(contentPanel);
+
         setVisible(true);
     }
 
-    private JPanel createScorePanel(boolean isItem) {
+    private JPanel createScorePanel(boolean isItem, String screenSize) {
+
+        int titleSize = switch (screenSize) {
+            case "small" -> 26;
+            case "big" -> 65;
+            default -> 45;
+        };
+
+        int fontSize = switch (screenSize) {
+            case "small" -> 13;
+            case "big" -> 25;
+            default -> 18;
+        };
 
         JPanel scorePanel = new JPanel();
         scorePanel.setLayout(new GridLayout(11, 1)); // 제목 행(1칸) + 10개의 스코어(10칸)
 
         String mode = isItem ? "ITEM" : "NORMAL";
         JLabel title = new JLabel(mode, SwingConstants.CENTER); // 가운데 정렬
-        title.setFont(new Font(title.getFont().getName(), Font.BOLD, 24)); // 제목의 폰트 설정
+        title.setFont(new Font(title.getFont().getName(), Font.BOLD, titleSize)); // 제목의 폰트 설정
         scorePanel.add(title);
 
         // 예시 데이터 추가
@@ -93,6 +108,7 @@ public class ScoreboardScreen extends JFrame implements ActionListener {
         for (int i = 0; i < topScores.size(); i++) {
             Score score = topScores.get(i);
             JLabel scoreLabel = new JLabel((i + 1) + ". " + score.getPlayerName() + " - " + score.getScore(), SwingConstants.CENTER);
+            scoreLabel.setFont(new Font(title.getFont().getName(), Font.PLAIN, fontSize));
             scorePanel.add(scoreLabel);
         }
         return scorePanel;
@@ -102,7 +118,8 @@ public class ScoreboardScreen extends JFrame implements ActionListener {
     public ScoreboardScreen(Score currScore, boolean isItem) {
 
         setTitle("Tetris - ScoreBoard"); // 창의 제목 설정
-        String screenSize = settingController.getScreenSize("screenSize", "small");
+
+        screenSize = settingController.getScreenSize("screenSize", "small");
         switch (screenSize) {
             case "small":
                 setWidthHeight(390, 420, this);
@@ -122,7 +139,7 @@ public class ScoreboardScreen extends JFrame implements ActionListener {
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
         // 스코어 보드 패널
-        JPanel scorePanel = createScorePanel(currScore, isItem);
+        JPanel scorePanel = createScorePanel(currScore, isItem, screenSize);
         scorePanel.repaint();
         mainPanel.add(scorePanel);
 
@@ -138,14 +155,27 @@ public class ScoreboardScreen extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    private JPanel createScorePanel(Score currScore, boolean isItem) {
+    // 새로 등록한 점수를 강조할 스코어 패널
+    private JPanel createScorePanel(Score currScore, boolean isItem, String screenSize) {
+
+        int titleSize = switch (screenSize) {
+            case "small" -> 26;
+            case "big" -> 65;
+            default -> 45;
+        };
+
+        int fontSize = switch (screenSize) {
+            case "small" -> 13;
+            case "big" -> 25;
+            default -> 18;
+        };
 
         JPanel scorePanel = new JPanel();
         scorePanel.setLayout(new GridLayout(11, 1)); // 제목 행(1칸) + 10개의 스코어(10칸)
 
         String mode = isItem ? "ITEM" : "NORMAL";
         JLabel title = new JLabel(mode, SwingConstants.CENTER); // 가운데 정렬
-        title.setFont(new Font(title.getFont().getName(), Font.BOLD, 24)); // 제목의 폰트 설정
+        title.setFont(new Font(title.getFont().getName(), Font.BOLD, titleSize)); // 제목의 폰트 설정
         scorePanel.add(title);
 
         // 예시 데이터 추가
@@ -157,6 +187,7 @@ public class ScoreboardScreen extends JFrame implements ActionListener {
             Score score = topScores.get(i);
             JLabel scoreLabel = new JLabel((i + 1) + ". " + score.getPlayerName() + " - " + score.getScore(), SwingConstants.CENTER);
 
+            scoreLabel.setFont(new Font(title.getFont().getName(), Font.PLAIN, fontSize));
             if (score.equals(currScore)) {
                 scoreLabel.setForeground(Color.BLUE);
             }
