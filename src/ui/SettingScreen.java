@@ -148,19 +148,15 @@ SettingScreen extends JFrame implements ActionListener {
         } else if (btnColorBlind0.isFocusOwner()) {
             // 기본
             settingController.setColorBlindMode("default");
-            settingController.saveSettings("colorBlindMode", "default");
         } else if (btnColorBlind1.isFocusOwner()) {
             // 적색맹
             settingController.setColorBlindMode("protanopia");
-            settingController.saveSettings("colorBlindMode", "protanopia");
         } else if (btnColorBlind2.isFocusOwner()) {
             // 녹색맹
             settingController.setColorBlindMode("deuteranopia");
-            settingController.saveSettings("colorBlindMode", "deuteranopia");
         } else if (btnColorBlind3.isFocusOwner()) {
             // 청색맹
             settingController.setColorBlindMode("tritanopia");
-            settingController.saveSettings("colorBlindMode", "tritanopia");
         } else if (btnMenu.isFocusOwner()) {
             setVisible(false);
             new MainMenuScreen();
@@ -198,19 +194,15 @@ SettingScreen extends JFrame implements ActionListener {
         } else if (command.equals("default")) {
             // 기본
             settingController.setColorBlindMode("default");
-            settingController.saveSettings("colorBlindMode", "default");
         } else if (command.equals("colorBlind1")) {
             // 적색맹
             settingController.setColorBlindMode("protanopia");
-            settingController.saveSettings("colorBlindMode", "protanopia");
         } else if (command.equals("colorBlind2")) {
             // 녹색맹
             settingController.setColorBlindMode("deuteranopia");
-            settingController.saveSettings("colorBlindMode", "deuteranopia");
         } else if (command.equals("colorBlind3")) {
             // 청색맹
             settingController.setColorBlindMode("tritanopia");
-            settingController.saveSettings("colorBlindMode", "tritanopia");
         }
     }
 

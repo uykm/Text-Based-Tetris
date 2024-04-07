@@ -171,39 +171,44 @@ public class InGameScreen extends JPanel {
     }
 
     // 셀을 그리는 메소드
-    private void drawCell(Graphics g, int x, int y, int content) {
-        Font font = new Font("Arial", Font.BOLD, blockSize); // 폰트 설정
-        FontMetrics metrics = g.getFontMetrics(font);
-        g.setFont(font);
-        int charWidth = metrics.stringWidth("X");
-        int charHeight = metrics.getHeight();
+        private void drawCell(Graphics g, int x, int y, int content) {
+            Font font = new Font("Arial", Font.BOLD, blockSize); // 폰트 설정
+            FontMetrics metrics = g.getFontMetrics(font);
+            g.setFont(font);
+            int charWidth = metrics.stringWidth("X");
+            int charHeight = metrics.getHeight();
 
-        switch (content) {
-            default:
-                g.setColor(Color.BLACK); // 검정색으로 배경을 채움
-                g.fillRect(x, y, cellSize, cellSize);
-                break;
-            case -1:
-                g.setColor(Color.GRAY); // 회색으로 테두리를 그림
-                g.fillRect(x, y, cellSize, cellSize);
-                break;
-            case 10:
-                g.setColor(Color.WHITE); // 'X' 문자를 흰색으로 그림
-                g.drawString("X", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
-                break;
-            case 1,2, 4, 6,7:
-                // 다른 블록 타입에 대한 처리
-                g.setColor(Block.getBlock(BlockType.getBlockTypeByIndex(content-1)).getColor());
-                charWidth = metrics.stringWidth("ㅁ");
-                g.drawString("ㅁ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
-                break;
-            case 3,5:
-                g.setColor(Block.getBlock(BlockType.getBlockTypeByIndex(content-1)).getColor());
-                charWidth = metrics.stringWidth("ㅇ");
-                g.drawString("ㅇ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
-                break;
+            switch (content) {
+                default:
+                    g.setColor(Color.BLACK); // 검정색으로 배경을 채움
+                    g.fillRect(x, y, cellSize, cellSize);
+                    break;
+                case -1:
+                    g.setColor(Color.GRAY); // 회색으로 테두리를 그림
+                    g.fillRect(x, y, cellSize, cellSize);
+                    break;
+                case 10:
+                    g.setColor(Color.WHITE); // 'X' 문자를 흰색으로 그림
+                    g.drawString("X", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                    break;
+                case 1,2, 4, 6,7:
+                    // 다른 블록 타입에 대한 처리
+                    g.setColor(Block.getBlock(BlockType.getBlockTypeByIndex(content-1)).getColor());
+                    charWidth = metrics.stringWidth("ㅁ");
+                    g.drawString("ㅁ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                    break;
+                case 3,5:
+                    g.setColor(Block.getBlock(BlockType.getBlockTypeByIndex(content-1)).getColor());
+                    charWidth = metrics.stringWidth("ㅇ");
+                    g.drawString("ㅇ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                    break;
+                case 8: // 줄삭제 아이템
+                    g.setColor(Color.WHITE); // "L" 문자를 위한 색상 지정
+                    charWidth = metrics.stringWidth("L");
+                    g.drawString("L", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                    break;
+            }
         }
-    }
 
     private void drawBorderLine(Graphics g, int x, int y, int width, int height) {
         g.setColor(Color.DARK_GRAY); // 선의 색상 설정
