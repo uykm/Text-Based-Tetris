@@ -14,12 +14,14 @@ public class BoardController {
     // 게임 보드의 너비, 높이
     final private int WIDTH;
     final private int HEIGHT;
+    private int erasedLineCount;
+    private boolean isItemMode;
     // 현재 블록, 다음 블록
     private Block currentBlock;
-    private Block nextBlock = rwSelection.selectBlock();
+    private Block nextBlock = rwSelection.selectBlock(isItemMode, erasedLineCount);
     // stopCount: 조작이 없으면 1씩 증가,
     private int stopCount = 0;
-    // limitCount: 블록이 바닥에 닿은 순간 1씩 증가, 5 초과시 블록을 고정.
+    // limitCount: 블록이 바닥에 닿은 순간 1씩 증가, 2 초과시 블록을 고정.
     // 블록이 moveDown => 0으로 초기화
     private int limitCount = 0;
 
@@ -33,10 +35,8 @@ public class BoardController {
 
     private int placedBlockCount;
 
-    private int erasedLineCount;
-
     final int BLOCK_COUNT_TO_SPEED_UP = 10;
-    final int LINE_COUNT_TO_SPEED_UP = 5;
+    final int LINE_COUNT_TO_SPEED_UP = 10;
     final int BLOCK_SPEED_UP_THRESHOLD = 10;
     final int LINE_SPEED_UP_THRESHOLD = 20;
 
@@ -47,8 +47,7 @@ public class BoardController {
 
             gameController.speedUp(BLOCK_SPEED_UP_THRESHOLD);
         }
-        if(erasedLineCount >= LINE_COUNT_TO_SPEED_UP) {
-            erasedLineCount = erasedLineCount - LINE_COUNT_TO_SPEED_UP;
+        if(erasedLineCount % LINE_COUNT_TO_SPEED_UP == 0 && erasedLineCount != 0) {
             gameController.speedUp(LINE_SPEED_UP_THRESHOLD);
         }
     }
@@ -70,7 +69,8 @@ public class BoardController {
     // 블록의 초기 좌표
     int x, y;
 
-    public BoardController(GameController gameController) {
+    public BoardController(GameController gameController, Boolean isItemMode) {
+        this.isItemMode = isItemMode;
         this.grid = new Board();
         this.WIDTH = grid.getWidth();
         this.HEIGHT = grid.getHeight();
@@ -158,7 +158,7 @@ public class BoardController {
     public void placeNewBlock() {
         placedBlockCount++;
         this.currentBlock = this.nextBlock;
-        this.nextBlock = rwSelection.selectBlock();
+        this.nextBlock = rwSelection.selectBlock(isItemMode, erasedLineCount);
         if(collisionCheck(6, 2, currentBlock)){
             checkSpeedUp();
             x = 6; y = 2;
@@ -168,6 +168,7 @@ public class BoardController {
         }
     }
 
+
     // 블록을 게임 보드에 배치
     public void placeBlock() {
         for(int j=0; j<currentBlock.height(); j++) {
@@ -175,7 +176,9 @@ public class BoardController {
                 grid.getBoard()[y+j][x+i] += currentBlock.getShape(i, j);
             }
         }
+
     }
+
 
     // 충돌 검사, 충돌하지 않으면 true 반환
     public boolean collisionCheck(int newX, int newY, Block newBlock) {
@@ -204,12 +207,18 @@ public class BoardController {
             for(int j=3; j< WIDTH+3; j++) {
                 if(grid.getBoard()[i][j] == 0) {
                     canErase = false;
+                }
+                if(grid.getBoard()[i][j] == 8) {
+                    // 줄 삭제 아이템이 있는 경우
+                    canErase = true;
+                    addScoreMessage("Event: Line Erased");
                     break;
                 }
             }
             if(canErase) {
                 eraseLine(i);
                 lineCount++;
+                erasedLineCount++;
             }
         }
         if(lineCount > 0) {
@@ -273,7 +282,7 @@ public class BoardController {
                     limitCount++;
                     placeBlock();
                     //2틱 동안 움직임 없거나 충돌 후 5틱이 지나면 블록을 고정시킴
-                    if(stopCount > 1 || limitCount > 3) {
+                    if(stopCount > 1 || limitCount > 1) {
                         checkGameOver();
                         lineCheck();
                         placeNewBlock();

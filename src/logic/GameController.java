@@ -34,7 +34,7 @@ public class GameController implements PauseScreenCallback {
         this.isItem = isItem;
 
         initUI();
-        this.boardController = new BoardController(this);
+        this.boardController = new BoardController(this, isItem);
         this.inGameScreen = new InGameScreen(this.boardController);
         this.scoreController = new ScoreController();
 

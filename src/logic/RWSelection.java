@@ -3,6 +3,8 @@ package logic;
 import jdk.jfr.Description;
 import model.*;
 
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class RWSelection {
@@ -92,9 +94,10 @@ public class RWSelection {
     }
 
     //select for the block
-    public Block selectBlock() {
+    public Block selectBlock(boolean isItem, int eraseLineCount){
         int blockType = select();
-        return switch (blockType) {
+        Random random = new Random();
+        Block basicBlock = switch (blockType) {
             case 0 -> new IBlock();
             case 1 -> new JBlock();
             case 2 -> new LBlock();
@@ -102,7 +105,30 @@ public class RWSelection {
             case 4 -> new SBlock();
             case 5 -> new TBlock();
             case 6 -> new ZBlock();
-            default -> throw new IllegalArgumentException("Invalid block type: " + blockType);
+            default -> throw new IllegalArgumentException("Invalid block type.");
         };
+        // 10줄이 삭제될 때마다 아이템 블록 생성
+        if (isItem && eraseLineCount % 10 == 0 && eraseLineCount != 0) {
+            // 값이 0보다 큰 인덱스들을 저장할 리스트 생성
+            ArrayList<Point> greaterThanZeroIndices = new ArrayList<>();
+            for (int y = 0; y < basicBlock.shape.length; y++) {
+                for (int x = 0; x < basicBlock.shape[y].length; x++) {
+                    if (basicBlock.shape[y][x] > 0) {
+                        greaterThanZeroIndices.add(new Point(x, y));
+                    }
+                }
+            }
+
+            // 리스트 내 랜덤 인덱스 선택하여 해당 값 8로 변경
+            if (!greaterThanZeroIndices.isEmpty()) {
+                Point selectedPoint = greaterThanZeroIndices.get(random.nextInt(greaterThanZeroIndices.size()));
+                basicBlock.shape[selectedPoint.y][selectedPoint.x] = 8;
+            }
+
+            return basicBlock;
+        } else {
+            // 일반 블록 선택 로직 (10줄이 삭제되지 않았을 때)
+            return basicBlock;
+        }
     }
 }
