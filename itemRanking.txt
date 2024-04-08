@@ -1,3 +1,4 @@
+ ad:1403
 kwon:777
 hyun:770
 shin:750
@@ -7,4 +8,3 @@ woogie:444
 gyuu:345
 seokk:333
 Please register playerName:162
-Please register playerName:139

@@ -8,18 +8,17 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class BoardController {
-    SettingController settingController = new SettingController();
-    RWSelection rwSelection = new RWSelection(settingController.getDifficulty());
     // 게임 보드
     final private Board grid;
     // 게임 보드의 너비, 높이
     final private int WIDTH;
     final private int HEIGHT;
     private int erasedLineCount = 0;
+    public static int erasedLintCountForItem = 0;
     private boolean isItemMode;
     // 현재 블록, 다음 블록
     private Block currentBlock;
-    private Block nextBlock = rwSelection.selectBlock(isItemMode, erasedLineCount);
+    private Block nextBlock = new NullBlock();
     // stopCount: 조작이 없으면 1씩 증가,
     private int stopCount = 0;
     // limitCount: 블록이 바닥에 닿은 순간 1씩 증가, 2 초과시 블록을 고정.
@@ -84,11 +83,10 @@ public class BoardController {
         this.gameController = gameController;
         this.lastLineEraseTime = 0;
         this.canMoveSide = true;
+        this.nextBlock = nextBlock.selectBlock(isItemMode, erasedLineCount);
         // 초기 블록 배치
         placeNewBlock();
     }
-
-    // 점수 로직
 
     // 점수 추가
     private void addScore(int score) {
@@ -146,7 +144,6 @@ public class BoardController {
         Messages.add(message);
     }
 
-
     // InGameScreen 에서 다음 블록 띄우기 위해서 추가
     public Block getNextBlock() {
         return nextBlock;
@@ -161,9 +158,9 @@ public class BoardController {
     // nextBlock을 currentBlock으로 옮기고 새로운 nextBlock을 생성
     public void placeNewBlock() {
         placedBlockCount++;
-        this.currentBlock = this.nextBlock;
+        this.currentBlock = nextBlock;
         canMoveSide = true;
-        this.nextBlock = rwSelection.selectBlock(isItemMode, erasedLineCount);
+        this.nextBlock = nextBlock.selectBlock(isItemMode, erasedLineCount);
         if(collisionCheck(6, 2)){
             checkSpeedUp();
             x = 6; y = 2;
@@ -171,6 +168,7 @@ public class BoardController {
             canPlaceBlock = false;
             this.currentBlock = new NullBlock();
         }
+        // addScoreMessage(Block.getErasedLineCountForItem() + "");
     }
 
 
