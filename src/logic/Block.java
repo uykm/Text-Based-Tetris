@@ -127,7 +127,7 @@ public abstract class Block {
 
             // 50% 확률로 기존 아이템 블록 또는 WeightItemBlock을 선택
             if (random.nextBoolean()) {
-                // 기존 아이템 블록 로직
+                // 라인 삭제 아이템 블록 로직
                 ArrayList<Point> greaterThanZeroIndices = new ArrayList<>();
                 for (int y = 0; y < basicBlock.shape.length; y++) {
                     for (int x = 0; x < basicBlock.shape[y].length; x++) {
