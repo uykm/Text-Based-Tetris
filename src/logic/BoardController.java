@@ -432,24 +432,24 @@ public class BoardController {
     //물 블록 좌우 흐름
     private void flowSide(int x, int y) {
         for(int i=x; i<=12; i++) {
-            if(canFlowSide(x, y, Direction.RIGHT)) {
+            if(canFlowSide(i, y, Direction.RIGHT)) {
                 for(int j=i; j>=x; j--) {
                     eraseOneBlock(j, y);
                     placeOneBlock(j + 1, y, 10);
                 }
-                eraseOneBlock(x, y+1);
+                eraseOneBlock(x, y-1);
                 placeOneBlock(x, y, 10);
                 waterBlockMoved = true;
                 return;
             }
         }
         for(int i=x; i>=3; i--) {
-            if(canFlowSide(x, y, Direction.LEFT)) {
+            if(canFlowSide(i, y, Direction.LEFT)) {
                 for(int j=i; j<=x; j++) {
                     eraseOneBlock(j, y);
                     placeOneBlock(j - 1, y, 10);
                 }
-                eraseOneBlock(x, y+1);
+                eraseOneBlock(x, y-1);
                 placeOneBlock(x, y, 10);
                 waterBlockMoved = true;
                 return;
@@ -461,8 +461,8 @@ public class BoardController {
     private void flowWaterBlock() {
         do {
             waterBlockMoved = false;
-            for (int height = 3; height <= 22; height++) {
-                for (int width = 3; width <= 12; width++) {
+            for (int height = 3; height < 23; height++) {
+                for (int width = 3; width < 13; width++) {
                     if (grid.getBoard()[height][width] == 10) {  // 물 블록 발견
                         // 아래로 흐를 수 있는지 확인
                         if (grid.getBoard()[height + 1][width] == 0) {
@@ -472,7 +472,7 @@ public class BoardController {
                         } else {
                             if (grid.getBoard()[height + 1][width] == 10) {
                                 // 옆으로 흐를 수 있는지 확인
-                                flowSide(width, height);
+                                flowSide(width, height + 1);
                             }
                         }
                         lineCheck();
