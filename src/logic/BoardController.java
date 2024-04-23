@@ -9,6 +9,7 @@ import java.util.Queue;
 
 public class BoardController {
     // 게임 보드
+    boolean waterBlockMoved = false;
     final private Board grid;
     // 게임 보드의 너비, 높이
     final private int WIDTH;
@@ -157,6 +158,7 @@ public class BoardController {
 
     // nextBlock을 currentBlock으로 옮기고 새로운 nextBlock을 생성
     public void placeNewBlock() {
+        flowWaterBlock();
         placedBlockCount++;
         this.currentBlock = nextBlock;
         canMoveSide = true;
@@ -275,6 +277,21 @@ public class BoardController {
                 }
             }
         }
+    }
+
+    private void eraseOneBlock(int x, int y) {
+        grid.getBoard()[y][x] = 0;
+    }
+
+    private void placeOneBlock(int x, int y, int blockType) {
+        grid.getBoard()[y][x] = blockType;
+    }
+
+    private boolean collisionCheckForOneBlock(int x, int y) {
+        if(grid.getBoard()[y][x] != 0) {
+            return false;
+        }
+        return true;
     }
 
     // 블록을 이동시킴
@@ -399,5 +416,69 @@ public class BoardController {
         limitCount = 0;
         y++;
         placeBlock();
+    }
+
+    //물 블록 좌우 흐름 가능 여부
+    private boolean canFlowSide(int x, int y, Direction direction) {
+        // 현재 위치에서 방향을 따른 옆 칸이 보드 안에 있는지 확인
+        if (direction == Direction.LEFT && (x - 1 >= 3)) {
+            return grid.getBoard()[y][x - 1] == 0;  // 왼쪽으로 확장 가능한지 확인
+        } else if (direction == Direction.RIGHT && (x + 1 <= 12)) {
+            return grid.getBoard()[y][x + 1] == 0;  // 오른쪽으로 확장 가능한지 확인
+        }
+        return false;
+    }
+
+    //물 블록 좌우 흐름
+    private void flowSide(int x, int y) {
+        for(int i=x; i<=12; i++) {
+            if(canFlowSide(i, y, Direction.RIGHT)) {
+                for(int j=i; j>=x; j--) {
+                    eraseOneBlock(j, y);
+                    placeOneBlock(j + 1, y, 10);
+                }
+                eraseOneBlock(x, y-1);
+                placeOneBlock(x, y, 10);
+                waterBlockMoved = true;
+                return;
+            }
+        }
+        for(int i=x; i>=3; i--) {
+            if(canFlowSide(i, y, Direction.LEFT)) {
+                for(int j=i; j<=x; j++) {
+                    eraseOneBlock(j, y);
+                    placeOneBlock(j - 1, y, 10);
+                }
+                eraseOneBlock(x, y-1);
+                placeOneBlock(x, y, 10);
+                waterBlockMoved = true;
+                return;
+            }
+        }
+    }
+
+    //물 블록 흐름
+    private void flowWaterBlock() {
+        do {
+            waterBlockMoved = false;
+            for (int height = 3; height < 23; height++) {
+                for (int width = 3; width < 13; width++) {
+                    if (grid.getBoard()[height][width] == 10) {  // 물 블록 발견
+                        // 아래로 흐를 수 있는지 확인
+                        if (grid.getBoard()[height + 1][width] == 0) {
+                            eraseOneBlock(width, height);
+                            placeOneBlock(width, height + 1, 10);
+                            waterBlockMoved = true;
+                        } else {
+                            if (grid.getBoard()[height + 1][width] == 10) {
+                                // 옆으로 흐를 수 있는지 확인
+                                flowSide(width, height + 1);
+                            }
+                        }
+                        lineCheck();
+                    }
+                }
+            }
+        } while (waterBlockMoved);  // 블록이 이동하는 동안 계속 반복
     }
 }
