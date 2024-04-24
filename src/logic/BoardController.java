@@ -415,7 +415,7 @@ public class BoardController {
     public boolean checkGameOver() {
 
         for (int i = 3; i < WIDTH + 3; i++) {
-            if ((grid.getBoard()[2][i] > 10) || !canPlaceBlock) {
+            if ((grid.getBoard()[2][i] > 20) || !canPlaceBlock) {
 
                 return true;
             }
