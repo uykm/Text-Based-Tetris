@@ -23,7 +23,8 @@ public class GameController implements PauseScreenCallback {
     private JFrame frame;
     private Timer timer;
 
-    final int MAX_SPEED = 500;
+
+    final int MAX_SPEED = 200;
 
     private int currentSpeed;
     private boolean isItem;
@@ -111,12 +112,19 @@ public class GameController implements PauseScreenCallback {
 
         timer = new Timer(currentSpeed, e -> {
             boolean blink = boardController.blinkCheck();
-
-            while (blink){
-                blink = boardController.blinkCheck();
-                inGameScreen.updateBoard();
+            if(blink) {
+                while (blink) {
+                    inGameScreen.updateBoard();
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    blink = boardController.blinkCheck();
+                }
             }
 
+            inGameScreen.updateBoard();
             if(boardController.getNewBlockState()) boardController.placeNewBlock();
             boardController.moveBlock(Direction.DOWN);
             inGameScreen.updateBoard();
@@ -137,6 +145,9 @@ public class GameController implements PauseScreenCallback {
 
     public void speedUp(int speed) {
         if (currentSpeed >= MAX_SPEED) {
+            if(settingController.getDifficulty()==0) speed = (int)(speed * 0.8);
+            if(settingController.getDifficulty()==2) speed = (int)(speed * 1.2);
+
             currentSpeed -= speed;
             timer.setDelay(currentSpeed);
             boardController.addScoreMessage("Speed up! \nCurrent Delay " + currentSpeed);

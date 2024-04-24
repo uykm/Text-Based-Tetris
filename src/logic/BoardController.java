@@ -39,10 +39,10 @@ public class BoardController {
     private int placedBlockCount;
     private boolean canMoveSide;
 
-    final int BLOCK_COUNT_TO_SPEED_UP = 10;
-    final int LINE_COUNT_TO_SPEED_UP = 10;
-    final int BLOCK_SPEED_UP_THRESHOLD = 10;
-    final int LINE_SPEED_UP_THRESHOLD = 20;
+    final int BLOCK_COUNT_TO_SPEED_UP = 8;
+    final int LINE_COUNT_TO_SPEED_UP = 4;
+    final int BLOCK_SPEED_UP_THRESHOLD = 20;
+    final int LINE_SPEED_UP_THRESHOLD = 40;
 
     private boolean needNewBlock = false;
 
@@ -227,7 +227,7 @@ public class BoardController {
         for (int i = 3; i < HEIGHT + 3; i++) {
             boolean canErase = true;
             for (int j = 3; j < WIDTH + 3; j++) {
-                if (grid.getBoard()[i][j] == 0) {
+                if (grid.getBoard()[i][j] == 0 || grid.getBoard()[i][j] == -2){
                     canErase = false;
                 }
                 if (grid.getBoard()[i][j] == 8) {

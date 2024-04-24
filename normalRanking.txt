@@ -1,10 +1,10 @@
-kwon:7170
-hyun:1646
-seokk:1640
-wook:1301
-shin:1168
-eigoow:896
-kim:779
-jeon:777
-eigoow:777
-Please register playerName:527
+Player11:100
+Player10:90
+Player9:80
+Player8:70
+Player7:60
+Player6:50
+Player5:40
+Player4:30
+Player3:20
+Player2:10
