@@ -1,5 +1,6 @@
 package logic;
 
+import model.BombItemBlock;
 import model.Direction;
 import model.NullBlock;
 import model.WeightItemBlock;
@@ -249,24 +250,6 @@ public class BoardController {
         }
     }
 
-    private void blinkLine(int line) {
-        for (int i = 3; i < WIDTH + 3; i++) {
-            grid.getBoard()[line][i] = -2;
-        }
-    }
-
-    public boolean blinkCheck() {
-        boolean blink = false;
-
-        for (int i = 3; i < HEIGHT + 3; i++) {
-            if (grid.getBoard()[i][3] == -2) {
-                eraseLine(i);
-                blink = true;
-            }
-        }
-
-        return blink;
-    }
 
     // 라인을 지우고 위에 있는 블록들을 내림
     public void eraseLine(int line) {
@@ -276,28 +259,7 @@ public class BoardController {
         }
     }
 
-    // 무게 추로 아래 블럭 지우기
-    private void breakBlocks(int x, int y, int length) {
 
-        if (x <= 2 || x >= WIDTH + 3 || y <= 2 || y >= HEIGHT + 2) {
-            placeBlock();
-            lineCheck();
-            setNewBlockState(true);
-            stopCount = 0;
-            limitCount = 0;
-            return;
-        }
-
-        for (int i = x; i < x + length; i++) {
-            grid.getBoard()[y + 1][i] = 0;
-        }
-
-        for (int i = y; i > 3; i--) {
-            System.arraycopy(grid.getBoard()[i - 1], x, grid.getBoard()[i], x, length);
-        }
-
-        this.y += 1;
-    }
 
     // 현재 배열에서 블록을 지움, 블록을 회전하거나 이동하기 전에 사용
     private void eraseCurrentBlock() {
@@ -354,6 +316,7 @@ public class BoardController {
                     placeDown();
                     addScoreOnBlockMoveDown(); // 한 칸 내릴 때마다 1점 추가
                 } else { // 충돌!
+
                     if (currentBlock instanceof WeightItemBlock) {
                         canMoveSide = false;
                         breakBlocks(x, y + currentBlock.height() - 1, currentBlock.width());
@@ -362,8 +325,12 @@ public class BoardController {
                         limitCount++;
                     }
                     placeBlock();
+
                     // 2틱 동안 움직임 없거나 충돌 후 2틱이 지나면 블록을 고정시킴
                     if (stopCount > 1 || limitCount > 1) {
+                        if (currentBlock instanceof BombItemBlock) {
+                            excludeBomb();
+                        }
                         checkGameOver();
                         lineCheck();
                         setNewBlockState(true);
@@ -442,7 +409,6 @@ public class BoardController {
         return false;
     }
 
-    // TODO: 3/24/24 : 점수 계산 로직 추가 필요
 
     public int getScore() {
         return score;
@@ -454,6 +420,54 @@ public class BoardController {
         y++;
         placeBlock();
     }
+
+    // ToDo: 줄 삭제 이벤트 로직
+    private void blinkLine(int line) {
+        for (int i = 3; i < WIDTH + 3; i++) {
+            grid.getBoard()[line][i] = -2;
+        }
+    }
+
+    public boolean blinkCheck() {
+        boolean blink = false;
+
+        for (int i = 3; i < HEIGHT + 3; i++) {
+            if (grid.getBoard()[i][3] == -2) {
+                eraseLine(i);
+                blink = true;
+            }
+        }
+
+        return blink;
+    }
+
+
+    // ToDo: 무게 추 블럭 로직
+
+    private void breakBlocks(int x, int y, int length) {
+
+        if (x <= 2 || x >= WIDTH + 3 || y <= 2 || y >= HEIGHT + 2) {
+            placeBlock();
+            lineCheck();
+            setNewBlockState(true);
+            stopCount = 0;
+            limitCount = 0;
+            return;
+        }
+
+        for (int i = x; i < x + length; i++) {
+            grid.getBoard()[y + 1][i] = 0;
+        }
+
+        for (int i = y; i > 3; i--) {
+            System.arraycopy(grid.getBoard()[i - 1], x, grid.getBoard()[i], x, length);
+        }
+
+        this.y += 1;
+    }
+
+
+    // TODO: 물 블럭 로직
 
     //물 블록 좌우 흐름 가능 여부
     private boolean canFlowSide(int x, int y, Direction direction) {
@@ -518,4 +532,24 @@ public class BoardController {
             }
         } while (waterBlockMoved);  // 블록이 이동하는 동안 계속 반복
     }
+
+
+    // ToDo: 폭탄 블럭 로직
+    private void excludeBomb() {
+        // 폭탄 블록 주변 8칸을 지운다
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                int targetX = x + j;
+                int targetY = y + i;
+                if (targetX < 3 || targetX >= WIDTH + 3 || targetY < 3 || targetY >= HEIGHT + 3) {
+                    continue;
+                }
+                if (grid.getBoard()[targetX][targetY] != 0) {
+                    eraseOneBlock(targetX, targetY);
+                }
+            }
+        }
+
+    }
+
 }
