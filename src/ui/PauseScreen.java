@@ -17,14 +17,21 @@ import static java.lang.System.exit;
 
 public class PauseScreen extends JFrame implements ActionListener{
     SettingController settingController = new SettingController();
-
+    String screenSize;
     JButton btnBack = createBtn("Back", "back", this);
     JButton btnReplay = createBtn("Replay", "replay", this);
-    JButton btnMainMenu = createBtn("Main Menu", "mainMenu", this);
-//    JButton btnSetting = createBtn("Setting", "setting", this);
-    JButton btnQuit = createBtn("Quit Game", "quit", this);
+    JButton btnMainMenu = createBtn("Menu", "mainMenu", this);
+    JButton btnQuit = createBtn("Quit", "quit", this);
+    private final boolean isItem;
 
-    public PauseScreen() {
+
+    public PauseScreen(boolean isItem) {
+
+        // 노말모드 vs 아이템 모드
+        this.isItem = isItem;
+
+        screenSize = settingController.getScreenSize("screenSize", "small");
+
         setTitle("Tetris");
         String screenSize = settingController.getScreenSize("screenSize", "small");
         switch (screenSize) {
@@ -53,8 +60,9 @@ public class PauseScreen extends JFrame implements ActionListener{
         btnMainMenu.addKeyListener(new MyKeyListener());
         btnQuit.addKeyListener(new MyKeyListener());
 
-        pausePannel.add(createPanel("Pause", new JButton[]{btnBack, btnReplay, btnMainMenu, btnQuit}));
+        pausePannel.add(createPanel("Pause", new JButton[]{btnBack, btnReplay, btnMainMenu, btnQuit}, screenSize));
         add(pausePannel);
+
         setVisible(true);
     }
 
@@ -108,7 +116,7 @@ public class PauseScreen extends JFrame implements ActionListener{
             setVisible(false);
             callback.onResumeGame();
         } else if (btnReplay.isFocusOwner()) {
-            new GameController();
+            new GameController(isItem);
             callback.onHideFrame();
         } else if (btnMainMenu.isFocusOwner()) {
             new MainMenuScreen();
@@ -125,7 +133,7 @@ public class PauseScreen extends JFrame implements ActionListener{
         if (command.equals("back")) {
             callback.onResumeGame();
         } else if (command.equals("replay")) {
-            new GameController();
+            new GameController(isItem);
             callback.onHideFrame();
         } else if (command.equals("mainMenu")) {
             new MainMenuScreen();

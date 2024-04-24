@@ -1,6 +1,7 @@
 package logic;
 
 import model.Direction;
+import model.WeightItemBlock;
 import ui.*;
 
 import javax.swing.*;
@@ -12,21 +13,33 @@ public class GameController implements PauseScreenCallback {
     private BoardController boardController;
     private InGameScreen inGameScreen;
     private final ScoreController scoreController;
+    private final SettingController settingController = new SettingController();
+    private final int[] keyCodes = settingController.getKeyCodes();
+    private int ROTATE = keyCodes[0];
+    private int LEFT = keyCodes[1];
+    private int RIGHT = keyCodes[2];
+    private int DOWN = keyCodes[3];
+    private int DROP = keyCodes[4];
     private JFrame frame;
     private Timer timer;
 
     final int MAX_SPEED = 500;
 
     private int currentSpeed;
+    private boolean isItem;
 
     // 게임 컨트롤러 생성자
-    public GameController() {
+    public GameController(boolean isItem) {
+
+        // 노말 모드 vs 아이템 모드
+        this.isItem = isItem;
+
         initUI();
-        this.boardController = new BoardController(this);
+        this.boardController = new BoardController(this, isItem);
         this.inGameScreen = new InGameScreen(this.boardController);
         this.scoreController = new ScoreController();
 
-        startGame();
+        startGame(isItem);
     }
 
     // 게임 UI 초기화
@@ -63,54 +76,50 @@ public class GameController implements PauseScreenCallback {
     // 키보드 이벤트 처리
     // TODO: 3/24/24 : 효정이가 KeyListener 구현 하면 바꿀 예정
     private void setupKeyListener(JFrame frame) {
-
         // Create the PauseScreen instance once during initialization
 
         frame.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_LEFT:
-                        boardController.moveBlock(Direction.LEFT);
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        boardController.moveBlock(Direction.RIGHT);
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        boardController.moveBlock(Direction.DOWN);
-                        inGameScreen.updateBoard();
-                        break;
-                    case KeyEvent.VK_UP:
-                        boardController.moveBlock(Direction.UP);
-                        break;
-                    case KeyEvent.VK_SPACE:
-                        boardController.moveBlock(Direction.SPACE);
-                        inGameScreen.updateBoard();
-                        break;
-                    //esc 누르면 게임 중지, 한번 더 누르면 다시 실행
-                    case KeyEvent.VK_ESCAPE:
-                        timer.stop();
-                        PauseScreen pauseScreen = new PauseScreen();
-                        pauseScreen.setCallback(GameController.this); // Set the callback
-                        pauseScreen.setVisible(true); // Show the PauseScreen
-                        break;
+                // Use the custom key codes for control
+                if (e.getKeyCode() == LEFT) {
+                    boardController.moveBlock(Direction.LEFT);
+                } else if (e.getKeyCode() == RIGHT) {
+                    boardController.moveBlock(Direction.RIGHT);
+                } else if (e.getKeyCode() == DOWN) {
+                    boardController.moveBlock(Direction.DOWN);
+                    inGameScreen.updateBoard();
+                } else if (e.getKeyCode() == ROTATE) {
+                    boardController.moveBlock(Direction.UP); // Consider renaming Direction.UP to ROTATE for clarity
+                } else if (e.getKeyCode() == DROP) {
+                    boardController.moveBlock(Direction.SPACE); // Consider renaming Direction.SPACE to DROP for clarity
+                    inGameScreen.updateBoard();
+                } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    timer.stop();
+                    PauseScreen pauseScreen = new PauseScreen(isItem);
+                    pauseScreen.setCallback(GameController.this); // Set the callback
+                    pauseScreen.setVisible(true); // Show the PauseScreen
                 }
                 inGameScreen.repaint();
             }
         });
     }
 
-    private void startGame() {
+    private void startGame(boolean isItem) {
         currentSpeed = 1000;
         timer = new Timer(currentSpeed, e -> {
+            boardController.blinkCheck();
+            inGameScreen.updateBoard();
             boardController.moveBlock(Direction.DOWN);
             inGameScreen.updateBoard(); // Assuming InGameScreen has a method to update the UI based on the current game state
+
+
             if(boardController.checkGameOver()){
                 frame.dispose();
-                if(scoreController.isScoreInTop10(boardController.getScore())){
-                    new RegisterScoreScreen(boardController.getScore());
+                if(scoreController.isScoreInTop10(boardController.getScore(), isItem)){
+                    new RegisterScoreScreen(boardController.getScore(), isItem);
                 } else {
-                    new GameOverScreen(boardController.getScore());
+                    new GameOverScreen(boardController.getScore(), isItem);
                 }
                 timer.stop();
             }

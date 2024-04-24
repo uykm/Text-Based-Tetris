@@ -8,10 +8,8 @@ public enum BlockType {
     SBlock,
     TBlock,
     ZBlock,
-    NullBlock;
-    public static BlockType getRandomBlockType() {
-        return values()[(int) (Math.random() * (values().length-1))];
-    }
+    NullBlock,
+    WeightItemBlock;
     public static BlockType getBlockTypeByIndex(int index) {
         return values()[index];
     }

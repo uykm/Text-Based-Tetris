@@ -1,6 +1,5 @@
 package ui;
 
-import logic.GameController;
 import logic.SettingController;
 
 import javax.swing.*;
@@ -10,7 +9,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import static component.Button.*;
+import static component.Button.createLogoBtnNext;
+import static component.Button.createLogoBtnUp;
 import static component.ScreenSize.setWidthHeight;
 import static java.lang.System.exit;
 
@@ -23,18 +23,51 @@ public class MainMenuScreen extends JFrame implements ActionListener {
     JButton btnExit;
     SettingController settingController = new SettingController();
 
+    private String screenSize;
+
+    private int playWidth; // 플레이 버튼 가로
+    private int playHeight; // 플레이 버튼 세로
+
+    private int menuWidth; // 메뉴 버튼 가로
+    private int menuHeight; // 메뉴 버튼 세로
+
+    private int titleFontSize;
+
     public MainMenuScreen() {
         setTitle("Tetris");
-        String screenSize = settingController.getScreenSize("screenSize", "small");
+        screenSize = settingController.getScreenSize("screenSize", "small");
+
         switch (screenSize) {
             case "small":
                 setWidthHeight(390, 420, this);
+                playWidth = 150;
+                playHeight = 80;
+
+                menuWidth = 100;
+                menuHeight = 100;
+
+                titleFontSize = 70;
+
                 break;
             case "big":
                 setWidthHeight(910, 940, this);
+                playWidth = 400;
+                playHeight = 200;
+
+                menuWidth = 270;
+                menuHeight = 200;
+
+                titleFontSize = 150;
                 break;
             default:
                 setWidthHeight(650, 680, this);
+                playWidth = 250;
+                playHeight = 130;
+
+                menuWidth = 170;
+                menuHeight = 140;
+
+                titleFontSize = 110;
                 break;
         }
         setLocationRelativeTo(null); // Centered window
@@ -45,7 +78,7 @@ public class MainMenuScreen extends JFrame implements ActionListener {
 
         // 상단에 Tetris 제목 레이블 추가
         JLabel titleLabel = new JLabel("TETRIS", SwingConstants.CENTER);
-        titleLabel.setFont(new Font(titleLabel.getFont().getName(), Font.BOLD, 50));
+        titleLabel.setFont(new Font(titleLabel.getFont().getName(), Font.BOLD, titleFontSize));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(titleLabel, BorderLayout.NORTH);
         add(Box.createVerticalStrut(20));
@@ -53,16 +86,14 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         // 중앙 패널에 Play 버튼 추가
         JPanel centerPanel = new JPanel();
         add(Box.createVerticalStrut(10));
-        btnPlay = createLogoBtnNext("Play", "play", this, "src/image/play_logo.png");
-        btnPlay.setPreferredSize(new Dimension(150, 80));
-        btnPlay.setFont(new Font("Serif", Font.BOLD, 20));
+        btnPlay = createLogoBtnNext("PLAY", "play", this, screenSize, "src/image/play_logo.png");
+        btnPlay.setPreferredSize(new Dimension(playWidth, playHeight)); // (150, 80) & (250, 130) & (400, 200)
         btnPlay.setFocusable(true);
         centerPanel.add(btnPlay);
 
         // btnItem 버튼 추가
-        btnItem = createLogoBtnNext("Item", "item", this, "src/image/itemMode.png");
-        btnItem.setPreferredSize(new Dimension(150, 80)); // btnPlay와 동일한 크기 설정
-        btnItem.setFont(new Font("Serif", Font.BOLD, 20)); // 폰트 설정
+        btnItem = createLogoBtnNext("ITEM", "item", this, screenSize,"src/image/mario.png");
+        btnItem.setPreferredSize(new Dimension(playWidth, playHeight));
         btnItem.setFocusable(true);
         centerPanel.add(btnItem);
 
@@ -73,18 +104,18 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout()); // 버튼들이 나란하게 배치되도록 FlowLayout 사용
 
-        btnSetting = createLogoBtnUp("Setting", "setting", this, "src/image/setting_logo.png");
-        btnSetting.setPreferredSize((new Dimension(100, 100)));
+        btnSetting = createLogoBtnUp("Setting", "setting", this, screenSize,"src/image/setting_logo.png");
+        btnSetting.setPreferredSize((new Dimension(menuWidth, menuHeight))); // (100, 100) & (170, 140) & (270, 200)
         btnSetting.setFocusable(true);
         bottomPanel.add(btnSetting);
 
-        btnRanking = createLogoBtnUp("Ranking", "ranking", this, "src/image/medal.png");
-        btnRanking.setPreferredSize((new Dimension(100, 100)));
+        btnRanking = createLogoBtnUp("Rank", "ranking", this, screenSize,"src/image/ranking.png");
+        btnRanking.setPreferredSize((new Dimension(menuWidth, menuHeight)));
         btnRanking.setFocusable(true);
         bottomPanel.add(btnRanking);
 
-        btnExit = createLogoBtnUp("Exit", "exit", this, "src/image/exit_logo.png");
-        btnExit.setPreferredSize((new Dimension(100, 100)));
+        btnExit = createLogoBtnUp("Exit", "exit", this, screenSize,"src/image/door.png");
+        btnExit.setPreferredSize((new Dimension(menuWidth, menuHeight)));
         btnExit.setFocusable(true);
         bottomPanel.add(btnExit);
 
@@ -107,17 +138,21 @@ public class MainMenuScreen extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command.equals("play")) {
+            // TODO : 난이도 선택 화면으로 넘어가서 GameController 실행
             setVisible(false);
-            new GameController();
-            setVisible(false);
+            new DifficultyScreen(false);
+            setLocationRelativeTo(null); // Centered window
         } else if (command.equals("item")) {
-            // TODO : 아이템 모드 게임 로직 구현
-            System.out.println("아이템 모드 플레이!");
+            // TODO : 난이도 선택 화면으로 넘어가서 GameController 실행
+            new DifficultyScreen(true);
+            setLocationRelativeTo(null); // Centered window
         } else if (command.equals("setting")) {
             new SettingScreen();
+            setLocationRelativeTo(null); // Centered window
             setVisible(false);
         } else if (command.equals("ranking")) {
             new ScoreboardScreen();
+            setLocationRelativeTo(null); // Centered window
             setVisible(false);
         } else if (command.equals("exit")) {
             System.exit(0);
@@ -148,10 +183,11 @@ public class MainMenuScreen extends JFrame implements ActionListener {
     private void moveScreen() {
         setVisible(false);
         if (btnPlay.isFocusOwner()) {
-            new GameController();
+            // TODO : 난이도 선택 화면으로 넘어가서 GameController 실행
+            new DifficultyScreen(false);
         } else if (btnItem.isFocusOwner()) {
-            // TODO : 아이템 모드 게임 로직 구현
-            System.out.println("아이템 모드 플레이!");
+            // TODO : 난이도 선택 화면으로 넘어가서 GameController 실행
+            new DifficultyScreen(true);
         } else if (btnSetting.isFocusOwner()) {
             new SettingScreen();
         } else if (btnRanking.isFocusOwner()) {

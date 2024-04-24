@@ -1,5 +1,6 @@
 package ui;
 
+import logic.GameController;
 import logic.Score;
 import logic.ScoreController;
 import logic.SettingController;
@@ -24,19 +25,33 @@ public class GameOverScreen extends JFrame implements ActionListener {
     JButton btnReplay;
     JButton btnMenu;
     JButton btnExit;
+    boolean isItem;
 
-    public GameOverScreen(int score) {
+    private final int titleSize;
+    private final int btnSize;
+
+    public GameOverScreen(int score, boolean isItem) {
+
+        // 노말모드 vs 아이템모드
+        this.isItem = isItem;
+
         setTitle("Tetris - GameOver");
         String screenSize = settingController.getScreenSize("screenSize", "small");
         switch (screenSize) {
             case "small":
-                setWidthHeight(390, 420, this);
+                setWidthHeight(400, 550, this);
+                titleSize = 20;
+                btnSize = 90;
                 break;
             case "big":
-                setWidthHeight(910, 940, this);
+                setWidthHeight(900, 900, this);
+                titleSize = 50;
+                btnSize = 120;
                 break;
             default:
-                setWidthHeight(650, 680, this);
+                setWidthHeight(600, 600, this);
+                titleSize = 30;
+                btnSize = 100;
                 break;
         }
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -46,32 +61,39 @@ public class GameOverScreen extends JFrame implements ActionListener {
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         // 'Game Over' 문구 레이블
-        JLabel gameOverLabel = new JLabel("Game Over", SwingConstants.CENTER);
-        gameOverLabel.setFont(new Font(gameOverLabel.getFont().getName(), Font.BOLD, 50));
-        gameOverLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(gameOverLabel, BorderLayout.NORTH);
-        add(Box.createVerticalStrut(10));
+        // JLabel gameOverLabel = new JLabel("Game Over", SwingConstants.CENTER);
+        // gameOverLabel.setFont(new Font(gameOverLabel.getFont().getName(), Font.BOLD, titleSize));
+        // gameOverLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // add(gameOverLabel, BorderLayout.NORTH);
+        // add(Box.createVerticalStrut(10));
+
+        // 점수 표시 레이블
+        JLabel scoreLabel = new JLabel("Your Score : " + score, SwingConstants.CENTER);
+        scoreLabel.setFont(new Font(scoreLabel.getFont().getName(), Font.BOLD, titleSize));
+        scoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        add(scoreLabel);
+        add(Box.createVerticalStrut(20));
 
         // 스코어 보드 표시
-        JPanel scorePanel = createScorePanel();
+        JPanel scorePanel = createScorePanel(isItem, screenSize);
         add(scorePanel, BorderLayout.CENTER);
 
         // 하단 패널에 Setting, Ranking, Exit 버튼 추가
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout()); // 버튼들이 나란하게 배치되도록 FlowLayout 사용
 
-        btnMenu = createLogoBtnUp("Menu", "menu", this, "src/image/menu.png");
-        btnMenu.setPreferredSize((new Dimension(100, 100)));
+        btnMenu = createLogoBtnUp("Menu", "menu", this, screenSize,"src/image/menu.png");
+        btnMenu.setPreferredSize((new Dimension(btnSize, btnSize)));
         btnMenu.setFocusable(true);
         bottomPanel.add(btnMenu);
 
-        btnReplay = createLogoBtnUp("Replay", "replay", this, "src/image/replay.png");
-        btnReplay.setPreferredSize((new Dimension(100, 100)));
+        btnReplay = createLogoBtnUp("Replay", "replay", this, screenSize,"src/image/replay.png");
+        btnReplay.setPreferredSize((new Dimension(btnSize, btnSize)));
         btnReplay.setFocusable(true);
         bottomPanel.add(btnReplay);
 
-        btnExit = createLogoBtnUp("Exit", "exit", this, "src/image/exit_logo.png");
-        btnExit.setPreferredSize((new Dimension(100, 100)));
+        btnExit = createLogoBtnUp("Exit", "exit", this, screenSize,"src/image/exit_logo.png");
+        btnExit.setPreferredSize((new Dimension(btnSize, btnSize)));
         btnExit.setFocusable(true);
         bottomPanel.add(btnExit);
 
@@ -88,22 +110,36 @@ public class GameOverScreen extends JFrame implements ActionListener {
         btnExit.addKeyListener(new MyKeyListener());
     }
 
-    private JPanel createScorePanel() {
+    private JPanel createScorePanel(boolean isItem, String screenSize) {
+
+        int titleSize = switch (screenSize) {
+            case "small" -> 20;
+            case "big" -> 50;
+            default -> 30;
+        };
+
+        int fontSize = switch (screenSize) {
+            case "small" -> 13;
+            case "big" -> 20;
+            default -> 15;
+        };
 
         JPanel scorePanel = new JPanel();
         scorePanel.setLayout(new GridLayout(11, 1)); // 제목 행(1칸) + 10개의 스코어(10칸)
 
         JLabel title = new JLabel("Ranking", SwingConstants.CENTER); // 가운데 정렬
-        title.setFont(new Font(title.getFont().getName(), Font.BOLD, 24)); // 제목의 폰트 설정
+        title.setFont(new Font(title.getFont().getName(), Font.BOLD, titleSize));
         scorePanel.add(title);
 
         // 예시 데이터 추가
-        List<Score> topScores = scoreController.getScores();
+        List<Score> topScores = scoreController.getScores(isItem);
 
         // 상위 10개 스코어 표시
         for (int i = 0; i < topScores.size(); i++) {
             Score score = topScores.get(i);
             JLabel scoreLabel = new JLabel((i + 1) + ". " + score.getPlayerName() + " - " + score.getScore(), SwingConstants.CENTER);
+
+            scoreLabel.setFont(new Font(title.getFont().getName(), Font.PLAIN, fontSize));
             scorePanel.add(scoreLabel);
         }
         return scorePanel;
@@ -117,6 +153,7 @@ public class GameOverScreen extends JFrame implements ActionListener {
             new MainMenuScreen();
         } else if (command.equals("replay")) {
             // TODO : 게임 재개 로직 구현
+            new GameController(isItem);
         } else if (command.equals("exit")) {
             exit(0);
         }
@@ -145,6 +182,7 @@ public class GameOverScreen extends JFrame implements ActionListener {
             new MainMenuScreen();
         } else if (btnReplay.isFocusOwner()) {
             // TODO : 게임 재개 로직 구현
+            new GameController(isItem);
         } else if (btnExit.isFocusOwner()) {
             exit(0);
         }
@@ -173,7 +211,7 @@ public class GameOverScreen extends JFrame implements ActionListener {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new GameOverScreen(100);
+                new GameOverScreen(100, false);
             }
         });
     }
