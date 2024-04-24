@@ -217,6 +217,11 @@ public class InGameScreen extends JPanel {
                     charWidth = metrics.stringWidth("~");
                     g.drawString("~", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
                     break;
+                case 11:
+                    g.setColor(Color.WHITE);
+                    charWidth = metrics.stringWidth("B");
+                    g.drawString("B", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                    break;
             }
         }
 

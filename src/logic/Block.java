@@ -133,6 +133,22 @@ public abstract class Block {
         };
 
         // 10줄이 삭제될 때마다 아이템 블록 생성 로직
+        // 10줄이 삭제될 때마다 아이템 블록 생성 로직
+//        if (isItem && erasedLineCount % 3 == 0 && getErasedLineCountForItem() < erasedLineCount) {
+//            setErasedLineCountForItem(erasedLineCount);
+//
+//            // 50% 확률로 기존 아이템 블록 또는 WeightItemBlock을 선택
+//            if (random.nextBoolean()) {
+//                // 라인 삭제 아이템 블록 로직
+//                ArrayList<Point> greaterThanZeroIndices = new ArrayList<>();
+//                for (int y = 0; y < basicBlock.shape.length; y++) {
+//                    public Block selectBlock(boolean isItem, int erasedLineCount) {
+//                        return basicBlock;
+//
+//                    } else {
+//                        // WeightItemBlock 생성 로직
+//                        return new WeightItemBlock();
+
         if (true) {
             setErasedLineCountForItem(erasedLineCount);
 
