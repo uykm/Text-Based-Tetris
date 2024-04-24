@@ -121,7 +121,7 @@ public class KeySettingScreen extends JFrame {
             public void keyPressed(KeyEvent e) {
                 int keyCode = e.getKeyCode();
                 String keyString = KeyEvent.getKeyText(keyCode);
-                
+
                 // Disallowing certain keys
                 if (keyCode == KeyEvent.VK_ESCAPE || keyCode == KeyEvent.VK_ENTER ||
                         keyCode == KeyEvent.VK_WINDOWS || keyCode == KeyEvent.VK_CONTROL ||
