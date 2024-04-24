@@ -43,6 +43,16 @@ public class BoardController {
     final int BLOCK_SPEED_UP_THRESHOLD = 10;
     final int LINE_SPEED_UP_THRESHOLD = 20;
 
+    private boolean needNewBlock = false;
+
+    public boolean getNewBlockState() {
+        return needNewBlock;
+    }
+
+    private void setNewBlockState(boolean state) {
+        needNewBlock=state;
+    }
+
     // 블록의 초기 좌표
     int x, y;
 
@@ -87,8 +97,6 @@ public class BoardController {
         this.lastLineEraseTime = 0;
         this.canMoveSide = true;
         this.nextBlock = nextBlock.selectBlock(isItemMode, erasedLineCount);
-        // 초기 블록 배치
-        placeNewBlock();
     }
 
     // 점수 추가
@@ -173,6 +181,7 @@ public class BoardController {
             canPlaceBlock = false;
             this.currentBlock = new NullBlock();
         }
+        setNewBlockState(false);
         // addScoreMessage(Block.getErasedLineCountForItem() + "");
     }
 
@@ -244,13 +253,17 @@ public class BoardController {
         }
     }
 
-    public void blinkCheck() {
+    public boolean blinkCheck() {
+        boolean blink = false;
 
         for (int i = 3; i < HEIGHT + 3; i++) {
             if (grid.getBoard()[i][3] == -2) {
                 eraseLine(i);
+                blink = true;
             }
         }
+
+        return blink;
     }
 
     // 라인을 지우고 위에 있는 블록들을 내림
@@ -267,7 +280,7 @@ public class BoardController {
         if (x <= 2 || x >= WIDTH + 3 || y <= 2 || y >= HEIGHT + 2) {
             placeBlock();
             lineCheck();
-            placeNewBlock();
+            setNewBlockState(true);
             stopCount = 0;
             limitCount = 0;
             return;
@@ -312,6 +325,9 @@ public class BoardController {
 
     // 블록을 이동시킴
     public void moveBlock(Direction direction) {
+        if (needNewBlock) {
+            return;
+        }
         eraseCurrentBlock();
         if (!canPlaceBlock) {
             return;
@@ -348,7 +364,7 @@ public class BoardController {
                     if (stopCount > 1 || limitCount > 1) {
                         checkGameOver();
                         lineCheck();
-                        placeNewBlock();
+                        setNewBlockState(true);
                         stopCount = 0;
                         limitCount = 0;
                     }
@@ -371,7 +387,8 @@ public class BoardController {
                 }
 
                 lineCheck();
-                placeNewBlock();
+
+                setNewBlockState(true);
                 limitCount = 0;
             }
             default -> placeBlock();
