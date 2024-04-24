@@ -7,4 +7,4 @@ eigoow:896
 kim:779
 jeon:777
 eigoow:777
-legend:388
+Please register playerName:527

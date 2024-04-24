@@ -4,14 +4,14 @@ import logic.Block;
 
 import java.awt.*;
 
-public class BombBlock extends Block {
+public class BombItemBlock extends Block {
     // 움직여도 되는지
-    public BombBlock() {
+    public BombItemBlock() {
         super(new int[][] {
                 {0, 0, 0, 0},
                 {0, 11, 11, 0},
-                {11, 11, 11, 11},
                 {0, 11, 11, 0},
+                {0, 0, 0, 0},
         }, new Color[]{Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE}); // 색상은 예시, 실제 게임에 맞게 조정
     }
 
