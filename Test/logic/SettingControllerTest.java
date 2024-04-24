@@ -52,25 +52,73 @@ class SettingControllerTest {
     }
 
     @Test
-    void getCellSize() {
+    void getCellSize_small() {
         int cellSize = settingController.getCellSize("small");
         assertEquals(15, cellSize, "Cell size for 'small' should be 15.");
     }
 
     @Test
-    void getScoreSize() {
+    void getCellSize_medium() {
+        int cellSize = settingController.getCellSize("medium");
+        assertEquals(25, cellSize, "Cell size for 'medium' should be 25.");
+    }
+
+    @Test
+    void getCellSize_big() {
+        int cellSize = settingController.getCellSize("big");
+        assertEquals(35, cellSize, "Cell size for 'big' should be 35.");
+    }
+
+    @Test
+    void getScoreSize_small() {
+        int scoreSize = settingController.getScoreSize("small");
+        assertEquals(20, scoreSize, "Score size for 'big' should be 20.");
+    }
+
+    @Test
+    void getScoreSize_medium() {
+        int scoreSize = settingController.getScoreSize("medium");
+        assertEquals(40, scoreSize, "Score size for 'medium' should be 40.");
+    }
+
+    @Test
+    void getScoreSize_big() {
         int scoreSize = settingController.getScoreSize("big");
         assertEquals(60, scoreSize, "Score size for 'big' should be 60.");
     }
 
     @Test
-    void getMessageSize() {
+    void getMessageSize_small() {
+        int messageSize = settingController.getMessageSize("small");
+        assertEquals(12, messageSize, "Message size for 'medium' should be 12.");
+    }
+
+    @Test
+    void getMessageSize_medium() {
         int messageSize = settingController.getMessageSize("medium");
         assertEquals(17, messageSize, "Message size for 'medium' should be 17.");
     }
 
     @Test
-    void getBlockSize() {
+    void getMessageSize_big() {
+        int messageSize = settingController.getMessageSize("big");
+        assertEquals(22, messageSize, "Message size for 'medium' should be 22.");
+    }
+
+    @Test
+    void getBlockSize_small() {
+        int blockSize = settingController.getBlockSize("small");
+        assertEquals(22, blockSize, "Block size for 'big' should be 22.");
+    }
+
+    @Test
+    void getBlockSize_medium() {
+        int blockSize = settingController.getBlockSize("medium");
+        assertEquals(36, blockSize, "Block size for 'big' should be 36.");
+    }
+
+    @Test
+    void getBlockSize_big() {
         int blockSize = settingController.getBlockSize("big");
         assertEquals(48, blockSize, "Block size for 'big' should be 48.");
     }
