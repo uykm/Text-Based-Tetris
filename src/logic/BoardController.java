@@ -51,6 +51,9 @@ public class BoardController {
 
     private void setNewBlockState(boolean state) {
         needNewBlock=state;
+        if(state){
+            flowWaterBlock();
+        }
     }
 
     // 블록의 초기 좌표
@@ -168,7 +171,6 @@ public class BoardController {
 
     // nextBlock을 currentBlock으로 옮기고 새로운 nextBlock을 생성
     public void placeNewBlock() {
-        flowWaterBlock();
         placedBlockCount++;
         this.currentBlock = nextBlock;
         canMoveSide = true;
@@ -493,7 +495,7 @@ public class BoardController {
     }
 
     //물 블록 흐름
-    private void flowWaterBlock() {
+    public void flowWaterBlock() {
         do {
             waterBlockMoved = false;
             for (int height = 3; height < 23; height++) {

@@ -111,14 +111,15 @@ public class GameController implements PauseScreenCallback {
 
         timer = new Timer(currentSpeed, e -> {
             boolean blink = boardController.blinkCheck();
-            if(boardController.getNewBlockState()) boardController.placeNewBlock();
 
-            inGameScreen.updateBoard();
-
-            if (!blink) {
-                boardController.moveBlock(Direction.DOWN);
+            while (blink){
+                blink = boardController.blinkCheck();
                 inGameScreen.updateBoard();
             }
+
+            if(boardController.getNewBlockState()) boardController.placeNewBlock();
+            boardController.moveBlock(Direction.DOWN);
+            inGameScreen.updateBoard();
 
             if (boardController.checkGameOver()) {
                 frame.dispose();
