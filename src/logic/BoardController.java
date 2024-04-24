@@ -1,9 +1,6 @@
 package logic;
 
-import model.BombItemBlock;
-import model.Direction;
-import model.NullBlock;
-import model.WeightItemBlock;
+import model.*;
 import ui.InGameScreen;
 
 import java.util.LinkedList;
@@ -46,6 +43,19 @@ public class BoardController {
 
     private boolean needNewBlock = false;
 
+    // TODO: 지우기
+    public Block getCurrentBlock() {
+        return currentBlock;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
     public boolean getNewBlockState() {
         return needNewBlock;
     }
@@ -53,6 +63,7 @@ public class BoardController {
     private void setNewBlockState(boolean state) {
         needNewBlock=state;
         if(state){
+            excludeBomb();
             flowWaterBlock();
         }
     }
@@ -227,7 +238,7 @@ public class BoardController {
         for (int i = 3; i < HEIGHT + 3; i++) {
             boolean canErase = true;
             for (int j = 3; j < WIDTH + 3; j++) {
-                if (grid.getBoard()[i][j] == 0 || grid.getBoard()[i][j] == -2){
+                if (grid.getBoard()[i][j] == 0 || grid.getBoard()[i][j] == -2 || grid.getBoard()[i][j] == 11) {
                     canErase = false;
                 }
                 if (grid.getBoard()[i][j] == 8) {
@@ -253,12 +264,13 @@ public class BoardController {
 
     // 라인을 지우고 위에 있는 블록들을 내림
     public void eraseLine(int line) {
-
+        for(int i=3; i<WIDTH+3; i++) {
+            grid.getBoard()[line][i] = 0;
+        }
         for (int i = line; i > 3; i--) {
             System.arraycopy(grid.getBoard()[i - 1], 3, grid.getBoard()[i], 3, WIDTH);
         }
     }
-
 
 
     // 현재 배열에서 블록을 지움, 블록을 회전하거나 이동하기 전에 사용
@@ -316,7 +328,6 @@ public class BoardController {
                     placeDown();
                     addScoreOnBlockMoveDown(); // 한 칸 내릴 때마다 1점 추가
                 } else { // 충돌!
-
                     if (currentBlock instanceof WeightItemBlock) {
                         canMoveSide = false;
                         breakBlocks(x, y + currentBlock.height() - 1, currentBlock.width());
@@ -328,9 +339,6 @@ public class BoardController {
 
                     // 2틱 동안 움직임 없거나 충돌 후 2틱이 지나면 블록을 고정시킴
                     if (stopCount > 1 || limitCount > 1) {
-                        if (currentBlock instanceof BombItemBlock) {
-                            excludeBomb();
-                        }
                         checkGameOver();
                         lineCheck();
                         setNewBlockState(true);
@@ -537,15 +545,29 @@ public class BoardController {
     // ToDo: 폭탄 블럭 로직
     private void excludeBomb() {
         // 폭탄 블록 주변 8칸을 지운다
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-                int targetX = x + j;
-                int targetY = y + i;
-                if (targetX < 3 || targetX >= WIDTH + 3 || targetY < 3 || targetY >= HEIGHT + 3) {
-                    continue;
+        int[] dx = {0, 1, 1, 1, 0, -1, -1, -1};
+        int[] dy = {-1, -1, 0, 1, 1, 1, 0, -1};
+        boolean[][] toRemove = new boolean[26][16];
+        for (int height = 3; height < 23; height++) {
+            for (int width = 3; width < 13; width++) {
+
+                if (grid.getBoard()[height][width] == 11) {  // 물 블록 발견
+                    toRemove[height][width] = true;
+                    for(int i = 0; i < 8; ++i) {
+                        int nx = width + dx[i];
+                        int ny = height + dy[i];
+                        if(nx >= 3 && nx < 13 && ny >= 3 && ny < 23) {
+                            toRemove[ny][nx] = true;
+                        }
+                    }
                 }
-                if (grid.getBoard()[targetX][targetY] != 0) {
-                    eraseOneBlock(targetX, targetY);
+            }
+        }
+
+        for (int height = 3; height < 23; height++) {
+            for (int width = 3; width < 13; width++) {
+                if (toRemove[height][width]) {  // 물 블록 발견
+                    eraseOneBlock(width, height);
                 }
             }
         }

@@ -5,6 +5,7 @@ import logic.Block;
 import logic.BoardController;
 import logic.SettingController;
 import model.BlockType;
+import model.WeightItemBlock;
 
 import javax.swing.*;
 import java.awt.*;
@@ -221,6 +222,7 @@ public class InGameScreen extends JPanel {
                 g.setColor(Color.WHITE);
                 charWidth = metrics.stringWidth("B");
                 g.drawString("B", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                break;
             case -2: // 한 줄이 꽉 차서 지워지기 전
                 g.setColor(Color.CYAN);
                 g.fillRect(x, y, cellSize, cellSize);
