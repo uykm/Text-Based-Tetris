@@ -119,8 +119,8 @@ public class SettingController {
         try (FileInputStream fis = new FileInputStream(configPath)) {
             properties.load(fis);
         } catch (IOException e) {
-            // 파일이 존재하지 않을 경우 초기 설정을 사용할 수 있습니다.
-            System.out.println("No existing settings, use default settings.");
+            initializeSettings();
+            initializeKeySettings();
         }
     }
 

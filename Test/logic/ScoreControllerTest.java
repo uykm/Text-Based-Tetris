@@ -36,6 +36,28 @@ class ScoreControllerTest {
     }
 
     @Test
+    void addScore_largerThen10(){
+        // Add scores to create a Top 10 list
+        for (int i = 0; i < 10; i++) {
+            scoreController.addScore("Player" + (i + 1), i * 10, false);
+        }
+
+        // Add a score that would be in the Top 10
+        scoreController.addScore("Player11", 100, false);
+
+        // Ensure the score was added to the normal scores
+        List<Score> normalScores = scoreController.getScores(false);
+        assertEquals(10, normalScores.size(), "Normal scores should have 10 items.");
+        assertEquals("Player11:100", normalScores.get(0).toString(), "Added score should be at the top.");
+
+        // Add a score that would not be in the Top 10
+        scoreController.addScore("Player12", 5, false);
+
+        // Ensure the score was not added to the normal scores
+        assertEquals(10, normalScores.size(), "Normal scores should still have 10 items.");
+    }
+
+    @Test
     void resetScores() {
         // Add some scores
         scoreController.addScore("Player1", 100, false);
@@ -76,5 +98,11 @@ class ScoreControllerTest {
         // Check if a score would be in the Top 10
         assertTrue(scoreController.isScoreInTop10(100, false), "100 should be in the Top 10.");
         assertFalse(scoreController.isScoreInTop10(0, false), "0 should not be in the Top 10.");
+    }
+
+    @Test
+    void isScoreInTop10_withLessThen10Scores(){
+        // Check if a score would be in the Top 10 when there are less than 10 scores
+        assertTrue(scoreController.isScoreInTop10(100, false), "100 should be in the Top 10.");
     }
 }
