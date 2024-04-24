@@ -23,6 +23,7 @@ public class GameController implements PauseScreenCallback {
     private JFrame frame;
     private Timer timer;
 
+
     final int MAX_SPEED = 200;
 
     private int currentSpeed;
@@ -144,6 +145,9 @@ public class GameController implements PauseScreenCallback {
 
     public void speedUp(int speed) {
         if (currentSpeed >= MAX_SPEED) {
+            if(settingController.getDifficulty()==0) speed = (int)(speed * 0.8);
+            if(settingController.getDifficulty()==2) speed = (int)(speed * 1.2);
+
             currentSpeed -= speed;
             timer.setDelay(currentSpeed);
             boardController.addScoreMessage("Speed up! \nCurrent Delay " + currentSpeed);
