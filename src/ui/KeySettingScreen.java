@@ -9,9 +9,8 @@ import java.awt.event.*;
 import static component.Button.createBtn;
 
 public class KeySettingScreen extends JFrame {
-    private JLabel[] labels = new JLabel[5];
-    private JTextField[] textFields = new JTextField[5];
-    private JButton btnBack = createBtn("Back", "back", this::actionPerformed);
+    private JLabel[] labels = new JLabel[6];
+    private JTextField[] textFields = new JTextField[6];
     private SettingController settingController = new SettingController();
     private final int[] keyCodes = new int[5];
     private final String[] keyShape = settingController.getKeyShape();
@@ -42,6 +41,8 @@ public class KeySettingScreen extends JFrame {
             } else if (i == 4) {
                 labels[i].setText("Go down at once");
                 textFields[i] = new JTextField(keyShape[i], 5);
+            } else {
+                textFields[i] = new JTextField("Back");
             }
             textFields[i].setEditable(false);
             textFields[i].setBackground(Color.WHITE);
@@ -53,10 +54,8 @@ public class KeySettingScreen extends JFrame {
             add(panel);
         }
 
-        btnBack.addKeyListener(new MyKeyListener());
 
         add(Box.createVerticalStrut(20));
-        add(btnBack);
 
         updateFocus();
 
@@ -93,23 +92,6 @@ public class KeySettingScreen extends JFrame {
         setVisible(true);
     }
 
-    class MyKeyListener extends KeyAdapter {
-        public void keyPressed(KeyEvent e) {
-            int keyCode = e.getKeyCode();
-            if (keyCode == KeyEvent.VK_ENTER) {
-                applySetting();
-            }
-        }
-    }
-
-    private void applySetting() {
-        if (btnBack.isFocusOwner()) {
-            setVisible(false);
-            new MainMenuScreen();
-        }
-    }
-
-
     private void updateFocus() {
         for (int i = 0; i < textFields.length; i++) {
             if (i == focusedIndex) {
@@ -120,16 +102,14 @@ public class KeySettingScreen extends JFrame {
         }
     }
 
-    public void actionPerformed(ActionEvent e) {
-        String command = e.getActionCommand();
-
-        if (command.equals("back")) {
-            setVisible(false);
-            new SettingScreen();
-        }
-    }
-
     private void enterInputMode() {
+
+        if (focusedIndex == textFields.length - 1) { // If "Back" text field is focused
+            setVisible(false);
+            new MainMenuScreen();
+            return; // Exit the method early
+        }
+
         JDialog inputDialog = new JDialog(this, "Input Key", true);
         inputDialog.setLayout(new FlowLayout());
         inputDialog.setSize(300, 100);
@@ -141,7 +121,7 @@ public class KeySettingScreen extends JFrame {
             public void keyPressed(KeyEvent e) {
                 int keyCode = e.getKeyCode();
                 String keyString = KeyEvent.getKeyText(keyCode);
-
+                
                 // Disallowing certain keys
                 if (keyCode == KeyEvent.VK_ESCAPE || keyCode == KeyEvent.VK_ENTER ||
                         keyCode == KeyEvent.VK_WINDOWS || keyCode == KeyEvent.VK_CONTROL ||
