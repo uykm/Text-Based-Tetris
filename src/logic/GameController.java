@@ -108,8 +108,12 @@ public class GameController implements PauseScreenCallback {
     private void startGame(boolean isItem) {
         currentSpeed = 1000;
         timer = new Timer(currentSpeed, e -> {
+            boardController.blinkCheck();
+            inGameScreen.updateBoard();
             boardController.moveBlock(Direction.DOWN);
             inGameScreen.updateBoard(); // Assuming InGameScreen has a method to update the UI based on the current game state
+
+
             if(boardController.checkGameOver()){
                 frame.dispose();
                 if(scoreController.isScoreInTop10(boardController.getScore(), isItem)){
