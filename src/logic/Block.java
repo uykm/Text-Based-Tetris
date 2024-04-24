@@ -29,6 +29,17 @@ public abstract class Block {
         return shape[y][x];
     }
 
+    public int getBlockType() {
+        for (int i = 0; i < shape.length; i++) {
+            for (int j = 0; j < shape[i].length; j++) {
+                if (shape[i][j] > 0) {
+                    return shape[i][j];
+                }
+            }
+        }
+        return 0;
+    }
+
     public Color getColor() {
         String mode = settingController.getColorMode(COLOR_BLIND_MODE, DEFAULT_COLOR_MODE);
 
@@ -122,12 +133,12 @@ public abstract class Block {
         };
 
         // 10줄이 삭제될 때마다 아이템 블록 생성 로직
-        if (isItem && erasedLineCount % 3 == 0 && getErasedLineCountForItem() < erasedLineCount) {
+        if (true) {
             setErasedLineCountForItem(erasedLineCount);
 
             // 50% 확률로 기존 아이템 블록 또는 WeightItemBlock을 선택
-            if (random.nextBoolean()) {
-                // 기존 아이템 블록 로직
+            if (false) {
+                // 라인 삭제 아이템 블록 로직
                 ArrayList<Point> greaterThanZeroIndices = new ArrayList<>();
                 for (int y = 0; y < basicBlock.shape.length; y++) {
                     for (int x = 0; x < basicBlock.shape[y].length; x++) {
@@ -145,8 +156,16 @@ public abstract class Block {
                 return basicBlock;
 
             } else {
-                // WeightItemBlock 생성 로직
-                return new WeightItemBlock();
+                for (int y = 0; y < basicBlock.shape.length; y++) {
+                    for (int x = 0; x < basicBlock.shape[y].length; x++) {
+                        if (basicBlock.shape[y][x] > 0) {
+                            basicBlock.shape[y][x] = 10;
+                        }
+                    }
+                }
+                return basicBlock;
+//                // WeightItemBlock 생성 로직
+//                return new WeightItemBlock();
             }
         } else {
             // 일반 블록 선택 로직 (10줄이 삭제되지 않았을 때)
