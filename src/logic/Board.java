@@ -25,7 +25,7 @@ public class Board {
         for(int i=2; i<height+4; i++) {
             for(int j=2; j<width+4; j++) {
                 if(i == 2 || i == height+3 || j == 2 || j == width+3) {
-                    board[i][j] = 10;
+                    board[i][j] = 20;
                 } else {
                     board[i][j] = 0;
                 }

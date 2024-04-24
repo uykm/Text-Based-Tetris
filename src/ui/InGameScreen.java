@@ -187,7 +187,7 @@ public class InGameScreen extends JPanel {
                     g.setColor(Color.GRAY); // 회색으로 테두리를 그림
                     g.fillRect(x, y, cellSize, cellSize);
                     break;
-                case 10:
+                case 20:
                     g.setColor(Color.WHITE); // 'X' 문자를 흰색으로 그림
                     g.drawString("X", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
                     break;
@@ -212,7 +212,11 @@ public class InGameScreen extends JPanel {
                     charWidth = metrics.stringWidth("ㅇ");
                     g.drawString("ㅇ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
                     break;
-
+                case 10:
+                    g.setColor(Color.BLUE);
+                    charWidth = metrics.stringWidth("~");
+                    g.drawString("~", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                    break;
             }
         }
 
