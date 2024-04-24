@@ -217,6 +217,10 @@ public class InGameScreen extends JPanel {
                 charWidth = metrics.stringWidth("~");
                 g.drawString("~", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
                 break;
+            case 11: // 폭탄 아이템
+                g.setColor(Color.WHITE);
+                charWidth = metrics.stringWidth("B");
+                g.drawString("B", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
             case -2: // 한 줄이 꽉 차서 지워지기 전
                 g.setColor(Color.CYAN);
                 g.fillRect(x, y, cellSize, cellSize);
