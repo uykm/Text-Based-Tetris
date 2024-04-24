@@ -21,14 +21,12 @@ public class RWSelection {
             case 2:
                 this.fitness = new double[]{8, 10, 10, 10, 10, 10, 10};
                 break;
+            case 3:
+                this.fitness = new double[]{10, 10, 10, 10, 10};
+                break;
             default:
                 throw new IllegalArgumentException("Invalid Difficulty: " + difficulty);
         }
-        this.random = new Random();
-    }
-
-    public RWSelection() {
-        this.fitness = new double[]{0};
         this.random = new Random();
     }
 
@@ -54,41 +52,6 @@ public class RWSelection {
             }
         }
         return max;
-    }
-
-    private boolean test(int testCount) {
-        int N = fitness.length;
-        int[] count = new int[N];
-        for (int i = 0; i < testCount; i++) {
-            count[select()]++;
-        }
-
-        double sumOfFitness = 0;
-        for (double f : fitness) {
-            sumOfFitness += f;
-        }
-
-        for (int i = 0; i < N; i++) {
-            double expectedRate = (fitness[i] / sumOfFitness) * 100;
-            double actualRate = (double) count[i] / testCount * 100;
-            double lowerBound = expectedRate * 0.95;
-            double upperBound = expectedRate * 1.05;
-
-            if (actualRate < lowerBound || actualRate > upperBound) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean testAll(int testCount) {
-        for (int difficulty = 0; difficulty <= 2; difficulty++) {
-            RWSelection rwSelection = new RWSelection(difficulty);
-            if (!rwSelection.test(testCount)) {
-                return false; // Return false if any difficulty fails
-            }
-        }
-        return true; // All tests passed
     }
 
 }
