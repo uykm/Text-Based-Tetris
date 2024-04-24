@@ -16,6 +16,7 @@ import static java.lang.System.exit;
 
 public class MainMenuScreen extends JFrame implements ActionListener {
 
+
     JButton btnPlay;
     JButton btnItem;
     JButton btnSetting;
@@ -34,6 +35,17 @@ public class MainMenuScreen extends JFrame implements ActionListener {
     private int titleFontSize;
 
     public MainMenuScreen() {
+
+        try {
+            // Set the icon image
+            Image iconImage = Toolkit.getDefaultToolkit().getImage("path/to/icon.png"); // Provide the path to your icon file
+            setIconImage(iconImage);
+        } catch (Exception e) {
+            System.err.println("Error loading icon image: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+
         setTitle("Tetris");
         screenSize = settingController.getScreenSize("screenSize", "small");
 
