@@ -59,17 +59,17 @@ public class InGameScreen extends JPanel {
         // 다음 블록 영역 테두리 그리기
         for (int i = 0; i < NEXT_BLOCK_BOARD_HEIGHT; i++) {
             for (int j = 0; j < NEXT_BLOCK_BOARD_WIDTH; j++) {
-                if (i == 0 || i == NEXT_BLOCK_BOARD_HEIGHT-1
-                        || j == 0 || j == NEXT_BLOCK_BOARD_WIDTH-1) {
+                if (i == 0 || i == NEXT_BLOCK_BOARD_HEIGHT - 1
+                        || j == 0 || j == NEXT_BLOCK_BOARD_WIDTH - 1) {
                     nextBlockBoard[i][j] = -1; // 테두리
                 }
             }
         }
         // 다음 블록 영역에 블록 그리기
         // TODO: 3/24/24 : 블록이 정확히 가운데에 위치하면 좋을 것 같다
-        for(int i=2; i<6; i++){
-            for(int j=2; j<6; j++){
-                nextBlockBoard[i][j] = nextBlock.getShape(j-2, i-2);
+        for (int i = 2; i < 6; i++) {
+            for (int j = 2; j < 6; j++) {
+                nextBlockBoard[i][j] = nextBlock.getShape(j - 2, i - 2);
             }
         }
     }
@@ -171,59 +171,53 @@ public class InGameScreen extends JPanel {
     }
 
     // 셀을 그리는 메소드
-        private void drawCell(Graphics g, int x, int y, int content) {
-            Font font = new Font("Arial", Font.BOLD, blockSize); // 폰트 설정
-            FontMetrics metrics = g.getFontMetrics(font);
-            g.setFont(font);
-            int charWidth = metrics.stringWidth("X");
-            int charHeight = metrics.getHeight();
+    private void drawCell(Graphics g, int x, int y, int content) {
+        Font font = new Font("Arial", Font.BOLD, blockSize); // 폰트 설정
+        FontMetrics metrics = g.getFontMetrics(font);
+        g.setFont(font);
+        int charWidth = metrics.stringWidth("X");
+        int charHeight = metrics.getHeight();
 
-            switch (content) {
-                default:
-                    g.setColor(Color.BLACK); // 검정색으로 배경을 채움
-                    g.fillRect(x, y, cellSize, cellSize);
-                    break;
-                case -1:
-                    g.setColor(Color.GRAY); // 회색으로 테두리를 그림
-                    g.fillRect(x, y, cellSize, cellSize);
-                    break;
-                case 20:
-                    g.setColor(Color.WHITE); // 'X' 문자를 흰색으로 그림
-                    g.drawString("X", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
-                    break;
-                case 1,2,4,6,7:
-                    // 다른 블록 타입에 대한 처리
-                    g.setColor(Block.getBlock(BlockType.getBlockTypeByIndex(content-1)).getColor());
-                    charWidth = metrics.stringWidth("ㅁ");
-                    g.drawString("ㅁ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
-                    break;
-                case 3,5:
-                    g.setColor(Block.getBlock(BlockType.getBlockTypeByIndex(content-1)).getColor());
-                    charWidth = metrics.stringWidth("ㅇ");
-                    g.drawString("ㅇ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
-                    break;
-                case 8: // 줄삭제 아이템
-                    g.setColor(Color.WHITE); // "L" 문자를 위한 색상 지정
-                    charWidth = metrics.stringWidth("L");
-                    g.drawString("L", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
-                    break;
-                case 9: // 무게추 아이템
-                    g.setColor(Color.DARK_GRAY);
-                    charWidth = metrics.stringWidth("ㅇ");
-                    g.drawString("ㅇ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
-                    break;
-                case 10:
-                    g.setColor(Color.BLUE);
-                    charWidth = metrics.stringWidth("~");
-                    g.drawString("~", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
-                    break;
-                case 11:
-                    g.setColor(Color.WHITE);
-                    charWidth = metrics.stringWidth("B");
-                    g.drawString("B", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
-                    break;
-            }
+        switch (content) {
+            default:
+                g.setColor(Color.BLACK); // 검정색으로 배경을 채움
+                g.fillRect(x, y, cellSize, cellSize);
+                break;
+            case -1:
+                g.setColor(Color.GRAY); // 회색으로 테두리를 그림
+                g.fillRect(x, y, cellSize, cellSize);
+                break;
+            case 10:
+                g.setColor(Color.WHITE); // 'X' 문자를 흰색으로 그림
+                g.drawString("X", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                break;
+            case 1, 2, 4, 6, 7:
+                // 다른 블록 타입에 대한 처리
+                g.setColor(Block.getBlock(BlockType.getBlockTypeByIndex(content - 1)).getColor());
+                charWidth = metrics.stringWidth("ㅁ");
+                g.drawString("ㅁ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                break;
+            case 3, 5:
+                g.setColor(Block.getBlock(BlockType.getBlockTypeByIndex(content - 1)).getColor());
+                charWidth = metrics.stringWidth("ㅇ");
+                g.drawString("ㅇ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                break;
+            case 8: // 줄삭제 아이템
+                g.setColor(Color.WHITE); // "L" 문자를 위한 색상 지정
+                charWidth = metrics.stringWidth("L");
+                g.drawString("L", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                break;
+            case 9: // 무게추 아이템
+                g.setColor(Color.DARK_GRAY);
+                charWidth = metrics.stringWidth("ㅇ");
+                g.drawString("ㅇ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                break;
+            case -2: // 한 줄이 꽉 차서 지워지기 전
+                g.setColor(Color.CYAN);
+                g.fillRect(x, y, cellSize, cellSize);
+                break;
         }
+    }
 
     private void drawBorderLine(Graphics g, int x, int y, int width, int height) {
         g.setColor(Color.DARK_GRAY); // 선의 색상 설정
@@ -237,7 +231,7 @@ public class InGameScreen extends JPanel {
     }
 
     // 게임 보드 업데이트 메소드 nextBlockBoard를 업데이트 하기 위함
-    public void updateBoard(){
+    public void updateBoard() {
         initNextBlockBoard();
         repaint();
     }
