@@ -115,4 +115,4 @@ replay_pid*
 .text-based-tetris.iml
 
 ./ranking.txt
-./config.properties
+config.properties
