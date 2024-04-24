@@ -107,15 +107,24 @@ public class GameController implements PauseScreenCallback {
 
     private void startGame(boolean isItem) {
         currentSpeed = 1000;
-        timer = new Timer(currentSpeed, e -> {
-            boardController.blinkCheck();
-            inGameScreen.updateBoard();
-            boardController.moveBlock(Direction.DOWN);
-            inGameScreen.updateBoard(); // Assuming InGameScreen has a method to update the UI based on the current game state
+        boardController.placeNewBlock();
 
-            if(boardController.checkGameOver()){
+        timer = new Timer(currentSpeed, e -> {
+            boolean blink = boardController.blinkCheck();
+
+            while (blink){
+                blink = boardController.blinkCheck();
+                inGameScreen.updateBoard();
+            }
+
+            if(boardController.getNewBlockState()) boardController.placeNewBlock();
+            boardController.moveBlock(Direction.DOWN);
+            inGameScreen.updateBoard();
+
+
+            if (boardController.checkGameOver()) {
                 frame.dispose();
-                if(scoreController.isScoreInTop10(boardController.getScore(), isItem)){
+                if (scoreController.isScoreInTop10(boardController.getScore(), isItem)) {
                     new RegisterScoreScreen(boardController.getScore(), isItem);
                 } else {
                     new GameOverScreen(boardController.getScore(), isItem);
@@ -126,8 +135,8 @@ public class GameController implements PauseScreenCallback {
         timer.start();
     }
 
-    public void speedUp(int speed){
-        if(currentSpeed >= MAX_SPEED){
+    public void speedUp(int speed) {
+        if (currentSpeed >= MAX_SPEED) {
             currentSpeed -= speed;
             timer.setDelay(currentSpeed);
             boardController.addScoreMessage("Speed up! \nCurrent Delay " + currentSpeed);

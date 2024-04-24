@@ -187,7 +187,7 @@ public class InGameScreen extends JPanel {
                 g.setColor(Color.GRAY); // 회색으로 테두리를 그림
                 g.fillRect(x, y, cellSize, cellSize);
                 break;
-            case 10:
+            case 20:
                 g.setColor(Color.WHITE); // 'X' 문자를 흰색으로 그림
                 g.drawString("X", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
                 break;
@@ -212,10 +212,10 @@ public class InGameScreen extends JPanel {
                 charWidth = metrics.stringWidth("ㅇ");
                 g.drawString("ㅇ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
                 break;
-            case 11: // 폭탄 아이템
-                g.setColor(Color.WHITE);
-                charWidth = metrics.stringWidth("B");
-                g.drawString("B", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+            case 10:
+                g.setColor(Color.BLUE);
+                charWidth = metrics.stringWidth("~");
+                g.drawString("~", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
                 break;
             case -2: // 한 줄이 꽉 차서 지워지기 전
                 g.setColor(Color.CYAN);

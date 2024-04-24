@@ -89,12 +89,12 @@ public class SettingController {
     }
 
     public String[] getKeyShape() {
-        String[] keyShape = new String[7];
-        keyShape[0] = properties.getProperty("key_rotate_shape", "\\u2191");
-        keyShape[1] = properties.getProperty("key_left_shape", "\\u2190");
-        keyShape[2] = properties.getProperty("key_right_shape", "\\u2192");
-        keyShape[3] = properties.getProperty("key_down_shape", "\\u2193");
-        keyShape[4] = properties.getProperty("key_drop_shape", "\\u2423");
+        String[] keyShape = new String[5];
+        keyShape[0] = properties.getProperty("key_rotate_shape", "Up");
+        keyShape[1] = properties.getProperty("key_left_shape", "Left");
+        keyShape[2] = properties.getProperty("key_right_shape", "Right");
+        keyShape[3] = properties.getProperty("key_down_shape", "Down");
+        keyShape[4] = properties.getProperty("key_drop_shape", "Space");
         return keyShape;
     }
 
@@ -139,8 +139,9 @@ public class SettingController {
 
     public void initializeSettings() {
 
-        saveSettings("screenSize", "small");
+        saveSettings("screenSize", "medium");
         saveSettings("colorBlindMode", "default");
+        saveSettings("difficulty", "1");
         initializeKeySettings();
     }
 
