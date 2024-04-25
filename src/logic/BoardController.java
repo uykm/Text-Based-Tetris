@@ -257,7 +257,6 @@ public class BoardController {
         }
     }
 
-
     // 라인을 지우고 위에 있는 블록들을 내림
     public void eraseLine(int line) {
         for(int i=3; i<WIDTH+3; i++) {
@@ -286,13 +285,6 @@ public class BoardController {
 
     private void placeOneBlock(int x, int y, int blockType) {
         grid.getBoard()[y][x] = blockType;
-    }
-
-    private boolean collisionCheckForOneBlock(int x, int y) {
-        if(grid.getBoard()[y][x] != 0) {
-            return false;
-        }
-        return true;
     }
 
     // 블록을 이동시킴

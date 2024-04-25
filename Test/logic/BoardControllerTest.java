@@ -99,10 +99,9 @@ class BoardControllerTest {
     }
 
     @Test
-    @DisplayName("블럭이 10번 생성될 때마다 지워진 줄이 없으면 5점 감소한다..")
+    @DisplayName("블럭이 10번 생성될 때마다 지워진 줄이 없으면 50점 감소한다..")
     void lineCheckInTenTimes() {
         // given
-        int[][] board = boardController.getBoard();
         // 블럭이 10번 생성될 때마다 지워진 줄이 없을 때,
         for(int i = 0; i < 10; ++i) boardController.lineCheck();
         int score = boardController.getScore();
@@ -112,6 +111,12 @@ class BoardControllerTest {
 
         // 11개 블록째에도 라인이 지워지지 못하면 5가 감소한다.
         assertTrue(score - 50 == boardController.getScore());
+    }
+
+    @Test
+    @DisplayName("블록을 회전시키고, 충돌 시 회전하지 않는다.")
+    void rotateBlock() {
+
 
     }
 
