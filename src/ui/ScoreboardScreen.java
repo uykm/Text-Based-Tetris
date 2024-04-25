@@ -210,8 +210,8 @@ public class ScoreboardScreen extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command.equals("menu")) {
-            new MainMenuScreen();
             setVisible(false);
+            new MainMenuScreen();
         }
     }
 }
