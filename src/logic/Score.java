@@ -3,30 +3,16 @@ package logic;
 import java.util.Objects;
 
 public class Score implements Comparable<Score> {
-    private String playerName;
-    private int score;
-    private String difficulty;
+    private final String playerName;
+    private final int score;
+    private final String difficulty;
 
     SettingController settingController = new SettingController();
 
-    public Score(String playerName, int score) {
+    public Score(String playerName, int score, String difficulty) {
         this.playerName = playerName;
         this.score = score;
-        setDifficultyFromCode(settingController.getDifficulty());
-    }
-
-    private void setDifficultyFromCode(int difficultyCode) {
-        switch (difficultyCode) {
-            case 0:
-                this.difficulty = "Easy";
-                break;
-            case 2:
-                this.difficulty = "Hard";
-                break;
-            default:
-                this.difficulty = "Normal";
-                break;
-        }
+        this.difficulty = difficulty;
     }
 
     public String getPlayerName() {
