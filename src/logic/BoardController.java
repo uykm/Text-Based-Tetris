@@ -46,19 +46,6 @@ public class BoardController {
 
     private boolean needNewBlock = false;
 
-    // TODO: 지우기
-    public Block getCurrentBlock() {
-        return currentBlock;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
     public boolean getNewBlockState() {
         return needNewBlock;
     }
