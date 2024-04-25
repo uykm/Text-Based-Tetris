@@ -7,6 +7,10 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class BoardController {
+    public static final int BOMB_BODY = 11;
+    public static final int BOMB_EVENT = 13;
+    public static final int EXTEND_BLOCK = 14;
+    public static final int EXTEND_BLOCK_EVENT = 15;
     // 게임 보드
     boolean waterBlockMoved = false;
     final private Board grid;
@@ -239,7 +243,9 @@ public class BoardController {
         for (int i = 3; i < HEIGHT + 3; i++) {
             boolean canErase = true;
             for (int j = 3; j < WIDTH + 3; j++) {
-                if (grid.getBoard()[i][j] == 0 || grid.getBoard()[i][j] == -2 || grid.getBoard()[i][j] == 11) {
+                if (grid.getBoard()[i][j] == 0 || grid.getBoard()[i][j] == -2
+                        // 폭탄 블럭은 라인체크에 반영 X
+                        || grid.getBoard()[i][j] == BOMB_BODY || grid.getBoard()[i][j] == BOMB_EVENT) {
                     canErase = false;
                 }
                 if (grid.getBoard()[i][j] == 8) {
@@ -354,6 +360,14 @@ public class BoardController {
                 placeBlock();
             }
             case SPACE -> {
+
+                // space바 누르면 바로 터지게
+                if (currentBlock instanceof BombItemBlock) {
+                    placeBlock();
+                    setNewBlockState(true);
+                    break;
+                }
+
                 while (collisionCheck(x, y + 1)) {
                     y++;
                     addScoreOnBlockMoveDown(); // 한 칸 내릴 때마다 1점 추가
@@ -444,6 +458,13 @@ public class BoardController {
             if (grid.getBoard()[i][3] == -2) {
                 eraseLine(i);
                 blink = true;
+            }
+
+            // 폭탄 이벤트 제거
+            for (int j = 3; j < WIDTH + 3; j++) {
+                if (grid.getBoard()[i][j] == 13) {
+                    eraseOneBlock(j, i);
+                }
             }
         }
 
@@ -545,20 +566,32 @@ public class BoardController {
 
     // ToDo: 폭탄 블럭 로직
     private void excludeBomb() {
-        // 폭탄 블록 주변 8칸을 지운다
+        // 폭탄 블록 주변 8칸을 지우기 위한 방향 배열
         int[] dx = {0, 1, 1, 1, 0, -1, -1, -1};
         int[] dy = {-1, -1, 0, 1, 1, 1, 0, -1};
+
+        // 상하 좌우로 한 칸씩 더 지우기 위한 방향 배열
+        int[] dx2 = {0, 1, 2, 1, 0, -1, -2, -1};
+        int[] dy2 = {-2, -1, 0, 1, 2, 1, 0, -1};
+
         boolean[][] toRemove = new boolean[26][16];
         for (int height = 3; height < 23; height++) {
             for (int width = 3; width < 13; width++) {
 
-                if (grid.getBoard()[height][width] == 11) {  // 폭탄 블록 발견
+                if (grid.getBoard()[height][width] == BOMB_BODY) {  // 폭탄 블록 발견
                     toRemove[height][width] = true;
                     for(int i = 0; i < 8; ++i) {
                         int nx = width + dx[i];
                         int ny = height + dy[i];
                         if(nx >= 3 && nx < 13 && ny >= 3 && ny < 23) {
                             toRemove[ny][nx] = true;
+                        }
+
+                        // 상하좌우로 한 칸을 더 탐색하여 블럭 지우기
+                        int nx2 = width + dx2[i];
+                        int ny2 = height + dy2[i];
+                        if(nx2 >= 3 && nx2 < 13 && ny2 >= 3 && ny2 < 23) {
+                            toRemove[ny2][nx2] = true;
                         }
                     }
                 }
@@ -568,7 +601,8 @@ public class BoardController {
         for (int height = 3; height < 23; height++) {
             for (int width = 3; width < 13; width++) {
                 if (toRemove[height][width]) {  // 폭탄 블록 발견
-                    eraseOneBlock(width, height);
+                    grid.getBoard()[height][width] = 13;
+                    // eraseOneBlock(width, height);
                 }
             }
         }
@@ -582,7 +616,7 @@ public class BoardController {
         for (int height = 3; height < 23; height++) {
             for (int width = 3; width < 13; width++) {
 
-                if (grid.getBoard()[height][width] == 12) {  // 확장 아이템 블록 발견
+                if (grid.getBoard()[height][width] == EXTEND_BLOCK) {  // 확장 아이템 블록 발견
                     toCreate[height][width] = true;
                     for(int i = 0; i < 8; ++i) {
                         int nx = width + dx[i];
@@ -598,8 +632,8 @@ public class BoardController {
         for (int height = 3; height < 23; height++) {
             for (int width = 3; width < 13; width++) {
                 if (toCreate[height][width]
-                        && (grid.getBoard()[height][width] == 0 || grid.getBoard()[height][width] == 12)) {  // 확장 아이템 블록 발견
-                    grid.getBoard()[height][width] = 13;
+                        && (grid.getBoard()[height][width] == 0 || grid.getBoard()[height][width] == EXTEND_BLOCK)) {  // 확장 아이템 블록 발견
+                    grid.getBoard()[height][width] = EXTEND_BLOCK_EVENT;
                     toCreate[height][width] = false;
                 }
             }
