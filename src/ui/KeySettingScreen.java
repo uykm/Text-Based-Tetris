@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import static component.Button.createBtn;
+import static component.ScreenSize.setWidthHeight;
 
 public class KeySettingScreen extends JFrame {
     private JLabel[] labels = new JLabel[6];
@@ -16,16 +17,44 @@ public class KeySettingScreen extends JFrame {
     private final String[] keyShape = settingController.getKeyShape();
 
     private int focusedIndex = 0;
+    private int fontSize;
+    private int fieldWidth;
+    private int textFieldLength;
+    private int textFieldHeight;
 
     public KeySettingScreen() {
+
         setTitle("Key Setting");
-        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        String screenSize = settingController.getScreenSize("screenSize", "medium");
+        switch (screenSize) {
+            case "small":
+                setWidthHeight(390, 420, this);
+                fontSize = 15;
+                break;
+            case "big":
+                setWidthHeight(910, 940, this);
+                fontSize = 25;
+                break;
+            default:
+                setWidthHeight(650, 680, this);
+                fontSize = 20;
+                break;
+        }
+
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+
+        JPanel keySettingPanel = new JPanel();
+        keySettingPanel.setLayout(new BoxLayout(keySettingPanel, BoxLayout.Y_AXIS));
 
         // Initialize labels and text fields
         for (int i = 0; i < textFields.length; i++) {
             JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
             labels[i] = new JLabel();
+            labels[i].setFont(new Font(labels[i].getFont().getName(), Font.BOLD, fontSize));
+
             if (i == 0) {
                 labels[i].setText("Change Shape");
                 textFields[i] = new JTextField(keyShape[i], 5);
@@ -44,6 +73,7 @@ public class KeySettingScreen extends JFrame {
             } else {
                 textFields[i] = new JTextField("Back");
             }
+            // textFields[i].setSize(20, 20);
             textFields[i].setEditable(false);
             textFields[i].setBackground(Color.WHITE);
             textFields[i].setHorizontalAlignment(JTextField.CENTER);
@@ -51,9 +81,9 @@ public class KeySettingScreen extends JFrame {
             panel.add(labels[i]);
             panel.add(textFields[i]);
 
-            add(panel);
+            keySettingPanel.add(panel);
+            repaint();
         }
-
 
         add(Box.createVerticalStrut(20));
 
@@ -87,7 +117,7 @@ public class KeySettingScreen extends JFrame {
             }
         });
 
-        pack();
+        add(keySettingPanel, BorderLayout.CENTER);
         setLocationRelativeTo(null);
         setVisible(true);
     }
