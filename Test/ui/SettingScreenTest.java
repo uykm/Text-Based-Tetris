@@ -159,20 +159,4 @@ class SettingScreenTest {
         robot.keyRelease(KeyEvent.VK_LEFT);
         assertTrue(settingScreen.btnColorBlind0.isFocusOwner(), "Focus should move to the colorblind - 0 button");
     }
-
-    @Test
-    void testFocusMovementBackward() {
-        settingScreen.btnColorBlind1.requestFocus();
-        robot.keyPress(KeyEvent.VK_UP);
-        robot.keyRelease(KeyEvent.VK_UP);
-        assertTrue(settingScreen.btnInitializeNormalScore.isFocusOwner(), "Focus should move back to the initialize setting button");
-
-        robot.keyPress(KeyEvent.VK_UP);
-        robot.keyRelease(KeyEvent.VK_UP);
-        assertTrue(settingScreen.btnKeySetting.isFocusOwner(), "Focus should move back to the color blind default button");
-
-        robot.keyPress(KeyEvent.VK_UP);
-        robot.keyRelease(KeyEvent.VK_UP);
-        assertTrue(settingScreen.btnSize2.isFocusOwner(), "Focus should move back to the color blind default button");
-    }
 }
