@@ -40,8 +40,8 @@ public class BoardController {
     private int placedBlockCount;
     private boolean canMoveSide;
 
-    final int BLOCK_COUNT_TO_SPEED_UP = 8;
-    final int LINE_COUNT_TO_SPEED_UP = 4;
+    final int BLOCK_COUNT_TO_SPEED_UP = 15;
+    final int LINE_COUNT_TO_SPEED_UP = 8;
     final int BLOCK_SPEED_UP_THRESHOLD = 20;
     final int LINE_SPEED_UP_THRESHOLD = 40;
 
