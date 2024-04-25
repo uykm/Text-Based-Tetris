@@ -104,7 +104,7 @@ public class PauseScreen extends JFrame implements ActionListener{
         }
     }
 
-    private PauseScreenCallback callback;
+    PauseScreenCallback callback;
 
     public void setCallback(PauseScreenCallback callback) {
         this.callback = callback;
