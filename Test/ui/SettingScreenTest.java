@@ -12,50 +12,41 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SettingScreenTest {
-
-    private SettingScreen settingScreen;
     private SettingController settingController;
+    private SettingScreen settingScreen;
+
+    @BeforeEach
+    void setUp() {
+        settingController = new SettingController();
+        settingScreen = new SettingScreen();
+    }
 
     @Test
     void testScreenSizeButtonSmall() {
         // Simulate clicking the "Small" button
-        SettingScreen settingScreen = new SettingScreen();
-        SettingController settingController = new SettingController();
-        ActionEvent smallEvent = new ActionEvent(settingScreen.btnSize1, ActionEvent.ACTION_PERFORMED, "small");
-
-        // Act
-        settingScreen.actionPerformed(smallEvent);
+        settingScreen.actionPerformed(new ActionEvent(settingScreen.btnSize1, ActionEvent.ACTION_PERFORMED, "small"));
 
         // Check if the setting controller saved the correct screen size
-        assertEquals("small", settingController.getScreenSize("screenSize", "medium"));
+        assertEquals("small", settingController.getScreenSize("screenSize", "default"));
     }
 
     @Test
     void testScreenSizeButtonMedium() {
         // Simulate clicking the "Medium" button
-        SettingScreen settingScreen = new SettingScreen();
-        SettingController settingController = new SettingController();
-        ActionEvent mediumEvent = new ActionEvent(settingScreen.btnSize2, ActionEvent.ACTION_PERFORMED, "medium");
-
-        // Act
-        settingScreen.actionPerformed(mediumEvent);
+        settingScreen.actionPerformed(new ActionEvent(settingScreen.btnSize2, ActionEvent.ACTION_PERFORMED, "medium"));
 
         // Check if the setting controller saved the correct screen size
-        assertEquals("medium", settingController.getScreenSize("screenSize", "medium"));
+        assertEquals("medium", settingController.getScreenSize("screenSize", "default"));
     }
 
     @Test
     void testScreenSizeButtonBig() {
         // Simulate clicking the "Big" button
-        SettingScreen settingScreen = new SettingScreen();
-        SettingController settingController = new SettingController();
-        ActionEvent bigEvent = new ActionEvent(settingScreen.btnSize3, ActionEvent.ACTION_PERFORMED, "big");
-
-        // Act
-        settingScreen.actionPerformed(bigEvent);
+        settingScreen.actionPerformed(new ActionEvent(settingScreen.btnSize3, ActionEvent.ACTION_PERFORMED, "big"));
 
         // Check if the setting controller saved the correct screen size
-        assertEquals("big", settingController.getScreenSize("screenSize", "medium"));
+        assertEquals("big", settingController.getScreenSize("screenSize", "default"));
     }
 
+    // Add more tests for other UI elements and their corresponding actions
 }
