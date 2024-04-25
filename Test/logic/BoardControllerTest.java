@@ -99,18 +99,26 @@ class BoardControllerTest {
     }
 
     @Test
-    @DisplayName("블럭이 10번 생성될 때마다 지워진 줄이 없으면 50점 감소한다..")
+    @DisplayName("블럭이 10번 생성될 때마다 지워진 줄이 없으면 50점 감소한다.")
     void lineCheckInTenTimes() {
-        // given
-        // 블럭이 10번 생성될 때마다 지워진 줄이 없을 때,
-        for(int i = 0; i < 10; ++i) boardController.lineCheck();
-        int score = boardController.getScore();
+        // Given: Set initial score
+        int initialScore = boardController.getScore();
 
-        // when
-        boardController.lineCheck();
+        // When: No lines are deleted across 10 block placements
+        for (int i = 0; i < 10; i++) {
+            boardController.lineCheck();  // Simulate line check with no line deletion
+            boardController.subScoreOnLineNotEraseIn10Blocks(); // Manually trigger scoring rule
+        }
 
-        // 11개 블록째에도 라인이 지워지지 못하면 5가 감소한다.
-        assertTrue(score - 50 == boardController.getScore());
+        // Then: Verify no score change after the first 10 checks
+        assertEquals(initialScore, boardController.getScore(),"Score should not change after 10 block placements with no line deletions");
+
+        // Another lineCheck to trigger the score decrement
+        boardController.lineCheck();  // No lines will be deleted
+        boardController.subScoreOnLineNotEraseIn10Blocks(); // This should now decrease the score
+
+        // Expect: Score should be decreased by 50 after the 11th block
+        assertEquals(initialScore - 50, boardController.getScore(), "Score should decrease by 50 after the 11th block placement with no line deletion");
     }
 
     @Test

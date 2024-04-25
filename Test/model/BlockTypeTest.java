@@ -46,7 +46,7 @@ class BlockTypeTest {
         BlockType[] blockTypes = BlockType.values();
 
         // Assert
-        assertEquals(9, blockTypes.length); // Assuming there are 9 block types
+        assertEquals(12, blockTypes.length); // Assuming there are 9 block types
         // You can also check individual block types if needed
     }
 

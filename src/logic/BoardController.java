@@ -34,6 +34,8 @@ public class BoardController {
 
     private long lastLineEraseTime;
 
+
+
     private int blockCountWithNoLineErase;
 
     private int placedBlockCount;
@@ -146,7 +148,7 @@ public class BoardController {
         }
     }
 
-    private void subScoreOnLineNotEraseIn10Blocks() {
+    public void subScoreOnLineNotEraseIn10Blocks() {
         if (blockCountWithNoLineErase > 10) {
             addScore(-50);
             blockCountWithNoLineErase = 0;
