@@ -126,14 +126,24 @@ public class RegisterScoreScreen extends JFrame implements ActionListener {
         setVisible(false);
         if (command.equals("submit")) {
             String name = !nameField.getText().isEmpty() ? nameField.getText() : "익명";
+            String difficulty = setDifficultyFromCode(settingController.getDifficulty());
 
-            Score currScore = new Score(name, playerScore); // 이번 게임에 얻은 점수
-            scoreController.addScore(name, playerScore, isItem);
+
+            Score currScore = new Score(name, playerScore, difficulty); // 이번 게임에 얻은 점수
+            scoreController.addScore(currScore, isItem);
             setVisible(false);
 
             // TODO : 등록한 점수에 대해서 강조 표시하는 스코어보드 출력
             new ScoreboardScreen(currScore, isItem);
         }
+    }
+
+    private String setDifficultyFromCode(int difficultyCode) {
+        return switch (difficultyCode) {
+            case 0 -> "Easy";
+            case 2 -> "Hard";
+            default -> "Normal";
+        };
     }
 
     private void setKeyBindings() {
@@ -170,8 +180,9 @@ public class RegisterScoreScreen extends JFrame implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String name = !nameField.getText().isEmpty() ? nameField.getText() : "익명";
-                Score currScore = new Score(name, playerScore); // 이번 게임에 얻은 점수
-                scoreController.addScore(name, playerScore, isItem);
+                String difficulty = setDifficultyFromCode(settingController.getDifficulty());
+                Score currScore = new Score(name, playerScore, difficulty); // 이번 게임에 얻은 점수
+                scoreController.addScore(currScore, isItem);
                 setVisible(false);
                 new ScoreboardScreen(currScore, isItem);
             }
