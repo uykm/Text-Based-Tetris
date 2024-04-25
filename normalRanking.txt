@@ -1,0 +1,10 @@
+Player11:Easy:100
+Player10:Easy:90
+Player9:Easy:80
+Player8:Easy:70
+Player7:Easy:60
+Player6:Easy:50
+Player5:Easy:40
+Player4:Easy:30
+Player3:Easy:20
+Player2:Easy:10

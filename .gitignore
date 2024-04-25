@@ -106,4 +106,16 @@ replay_pid*
 
 # Gradle
 .idea/**/gradle.xml
+<<<<<<< HEAD
 .idea/**/libraries
+=======
+.idea/**/libraries
+
+.idea/misc.xml
+.idea/vcs.xml
+.idea/workspace.xml
+text-based-tetris.iml
+
+ranking.txt
+config.properties
+>>>>>>> develop
