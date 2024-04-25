@@ -19,7 +19,6 @@ public class ScoreController {
         loadScores(itemFilePath, itemScores); // item 점수 로드
     }
 
-    // 파일로부터 점수를 불러오는 메소드, filePath와 scores 리스트를 매개변수로 받습니다.
     private void loadScores(String filePath, List<Score> scores) {
         File file = new File(filePath);
 
@@ -36,8 +35,12 @@ public class ScoreController {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(":");
-                if (parts.length == 2) {
-                    scores.add(new Score(parts[0], Integer.parseInt(parts[1])));
+                // 현재 파일 포맷에 맞게 수정: playerName:difficulty:score
+                if (parts.length == 3) {
+                    String playerName = parts[0];
+                    String difficulty = parts[1];
+                    int score = Integer.parseInt(parts[2]);
+                    scores.add(new Score(playerName, score));
                 }
             }
             Collections.sort(scores); // 점수를 내림차순으로 정렬합니다.
