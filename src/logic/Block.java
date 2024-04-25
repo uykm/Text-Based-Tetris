@@ -29,17 +29,6 @@ public abstract class Block {
         return shape[y][x];
     }
 
-    public int getBlockType() {
-        for (int i = 0; i < shape.length; i++) {
-            for (int j = 0; j < shape[i].length; j++) {
-                if (shape[i][j] > 0) {
-                    return shape[i][j];
-                }
-            }
-        }
-        return 0;
-    }
-
     public int[][] getShape() {
         return shape;
     }
@@ -119,6 +108,9 @@ public abstract class Block {
             case ZBlock -> new ZBlock();
             case NullBlock -> new NullBlock();
             case WeightItemBlock -> new WeightItemBlock();
+            case BombItemBlock -> new BombItemBlock();
+            case ExtensionItemBlock -> new ExtensionItemBlock();
+            case ItemBlock -> new ItemBlock();
         };
     }
 

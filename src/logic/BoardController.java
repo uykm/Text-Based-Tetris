@@ -148,9 +148,9 @@ public class BoardController {
 
     private void subScoreOnLineNotEraseIn10Blocks() {
         if (blockCountWithNoLineErase > 10) {
-            addScore(-5);
+            addScore(-50);
             blockCountWithNoLineErase = 0;
-            addScoreMessage("-5: No line erased in 10 blocks");
+            addScoreMessage("-50: No line erased in 10 blocks");
         }
     }
 
@@ -175,6 +175,7 @@ public class BoardController {
     // nextBlock을 currentBlock으로 옮기고 새로운 nextBlock을 생성
     public void placeNewBlock() {
         placedBlockCount++;
+        blockCountWithNoLineErase++;
         this.currentBlock = nextBlock;
         canMoveSide = true;
         this.nextBlock = nextBlock.selectBlock(isItemMode, erasedLineCount);
@@ -229,6 +230,7 @@ public class BoardController {
         for (int i = 3; i < HEIGHT + 3; i++) {
             boolean canErase = true;
             for (int j = 3; j < WIDTH + 3; j++) {
+                // 블럭이 배치되어 있지 않거나 애니메이션 중인 블럭인 경우
                 if (grid.getBoard()[i][j] == 0 || grid.getBoard()[i][j] == -2
                         // 폭탄 블럭은 라인체크에 반영 X
                         || grid.getBoard()[i][j] == BOMB_BODY || grid.getBoard()[i][j] == BOMB_EVENT) {
@@ -248,6 +250,7 @@ public class BoardController {
             }
         }
         if (lineCount > 0) {
+            blockCountWithNoLineErase = 0;
             addScoreOnLineEraseWithBonus(lineCount);
         } else {
             subScoreOnLineNotEraseIn10Blocks();
@@ -631,5 +634,38 @@ public class BoardController {
 
         lineCheck();
     }
+
+    public Block getCurrentBlock() {
+        return currentBlock;
+    }
+
+    public int getStopCount() {
+        return stopCount;
+    }
+
+    public int getLimitCount() {
+        return limitCount;
+    }
+
+    public boolean isCanPlaceBlock() {
+        return canPlaceBlock;
+    }
+
+    public int getPlacedBlockCount() {
+        return placedBlockCount;
+    }
+
+    public boolean isCanMoveSide() {
+        return canMoveSide;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
 
 }
