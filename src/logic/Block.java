@@ -133,7 +133,7 @@ public abstract class Block {
     //select for the block
     public Block selectBlock(boolean isItem, int erasedLineCount) {
         // 10줄이 삭제될 때마다 아이템 블록 생성 로직
-        if (isItem && erasedLineCount % 1 == 0 && getErasedLineCountForItem() < erasedLineCount) {
+        if (isItem && erasedLineCount % 10 == 0 && getErasedLineCountForItem() < erasedLineCount) {
             setErasedLineCountForItem(erasedLineCount);
             return selectItemBlock();
         } else {
@@ -156,11 +156,11 @@ public abstract class Block {
     public Block selectItemBlock() {
         RWSelection rwSelection = new RWSelection(3);
         return switch (rwSelection.select()) {
-//            case 0 -> new ItemBlock().waterBlock();
-//            case 1 -> new ItemBlock().lineBlock();
-//            case 2 -> new BombItemBlock();
-//            case 3 -> new ExtensionItemBlock();
-            default -> new ExtensionItemBlock();
+            case 0 -> new ItemBlock().waterBlock();
+            case 1 -> new ItemBlock().lineBlock();
+            case 2 -> new BombItemBlock();
+            case 3 -> new ExtensionItemBlock();
+            default -> new WeightItemBlock();
         };
     }
 }

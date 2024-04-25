@@ -18,7 +18,6 @@ public class BoardController {
     final private int WIDTH;
     final private int HEIGHT;
     private int erasedLineCount = 0;
-    public static int erasedLintCountForItem = 0;
     private boolean isItemMode;
     // 현재 블록, 다음 블록
     private Block currentBlock;
@@ -335,10 +334,12 @@ public class BoardController {
                     placeDown();
                     addScoreOnBlockMoveDown(); // 한 칸 내릴 때마다 1점 추가
                 } else { // 충돌!
+                    // 무게추 블럭인 경우
                     if (currentBlock instanceof WeightItemBlock) {
                         canMoveSide = false;
                         breakBlocks(x, y + currentBlock.height() - 1, currentBlock.width());
                     } else {
+                        // 무게추 블럭이 아닌 경우
                         stopCount++;
                         limitCount++;
                     }
@@ -374,6 +375,7 @@ public class BoardController {
                 }
                 placeBlock();
 
+                // 무게 추 블럭인 경우 새로운 다음 블럭을 불러오면 안됌
                 if (currentBlock instanceof WeightItemBlock) {
                     break;
                 }
@@ -475,13 +477,10 @@ public class BoardController {
     // ToDo: 무게 추 블럭 로직
 
     private void breakBlocks(int x, int y, int length) {
-
+        // 경계선에 닿은 경우
         if (x <= 2 || x >= WIDTH + 3 || y <= 2 || y >= HEIGHT + 2) {
-            placeBlock();
-            lineCheck();
-            setNewBlockState(true);
-            stopCount = 0;
-            limitCount = 0;
+            stopCount = 2;
+            limitCount = 2;
             return;
         }
 
