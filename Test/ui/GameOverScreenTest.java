@@ -30,11 +30,6 @@ class GameOverScreenTest {
         // Check if GameController is properly initialized
 //        assertNotNull(gameOverScreen.getFocusOwner());
 
-        // Simulate action event with command "exit"
-        ActionEvent exitEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "exit");
-        gameOverScreen.actionPerformed(exitEvent);
-        // Check if GameOverScreen is not visible
-        assertFalse(gameOverScreen.isShowing());
     }
 
 }

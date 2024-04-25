@@ -1,5 +1,4 @@
 Player11:100
-Test Player:100
 Player10:90
 Player9:80
 Player8:70
@@ -8,3 +7,4 @@ Player6:50
 Player5:40
 Player4:30
 Player3:20
+Player2:10
