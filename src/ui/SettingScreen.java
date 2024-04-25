@@ -276,4 +276,10 @@ SettingScreen extends JFrame implements ActionListener {
             btnColorBlind0.requestFocusInWindow();
         }
     }
+
+    // 테스트 코드 작성을 위한 메서드
+    public SettingController getSettingController() {
+
+        return this.settingController;
+    }
 }
