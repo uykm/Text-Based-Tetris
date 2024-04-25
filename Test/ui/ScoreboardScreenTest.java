@@ -32,7 +32,7 @@ class ScoreboardScreenTest {
     @Test
     void actionPerformed_Game() {
         // Create Instance
-        Score newScore = new Score("Player1", 100);
+        Score newScore = new Score("Player1", 100,"Easy");
         ScoreboardScreen scoreboardScreen = new ScoreboardScreen(newScore, false);
         scoreboardScreen.setVisible(true);  // 화면에 보이게 설정
         MainMenuScreen mainMenuScreen = new MainMenuScreen();
@@ -67,7 +67,7 @@ class ScoreboardScreenTest {
     @Test
     void keyListener_Game() {
         // Create Instance
-        Score newScore = new Score("Player1", 100);
+        Score newScore = new Score("Player1", 100,"Easy");
         ScoreboardScreen scoreboardScreen = new ScoreboardScreen(newScore, false);
         MainMenuScreen mainMenuScreen = new MainMenuScreen();
         scoreboardScreen.setVisible(true);  // 화면에 보이게 설정
