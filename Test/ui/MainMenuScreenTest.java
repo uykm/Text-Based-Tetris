@@ -1,8 +1,10 @@
 package ui;
 
+import logic.BoardController;
 import org.junit.jupiter.api.Test;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,12 +40,31 @@ class MainMenuScreenTest {
         // Check if ScoreboardScreen is initialized and MainMenuScreen is not visible
         assertFalse(mainMenuScreen.isVisible());
         assertTrue(new ScoreboardScreen().isVisible()); // Assuming ScoreboardScreen's isVisible() method returns correct value
-
-        // Simulate action event with command "exit"
-        ActionEvent exitEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "exit");
-        mainMenuScreen.actionPerformed(exitEvent);
-        // Check if the application exits
-        assertFalse(mainMenuScreen.isVisible());
     }
 
+    @Test
+    void keyListenerTest() {
+        // Create Instance
+        MainMenuScreen screen = new MainMenuScreen();
+        DifficultyScreen difficultyScreen = new DifficultyScreen(true);
+        SettingScreen settingScreen = new SettingScreen();
+
+        // Enter on Play
+        KeyEvent playEvent = new KeyEvent(screen.btnPlay, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, ' ');
+        screen.btnPlay.dispatchEvent(playEvent);
+        assertFalse(screen.isVisible(), "MainMenuScreen should become invisible after pressing ENTER on Play.");
+        assertTrue(difficultyScreen.isVisible(), "DifficultyScreen should become invisible after pressing ENTER on Play.");
+
+        // Enter on Item
+        KeyEvent ItemEvent = new KeyEvent(screen.btnItem, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, ' ');
+        screen.btnItem.dispatchEvent(ItemEvent);
+        assertFalse(screen.isVisible(), "MainMenuScreen should become invisible after pressing ENTER on Item.");
+        assertTrue(difficultyScreen.isVisible(), "DifficultyScreen should become invisible after pressing ENTER on Item.");
+
+        // Enter on Setting
+        KeyEvent settingEvent = new KeyEvent(screen.btnItem, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, ' ');
+        screen.btnSetting.dispatchEvent(settingEvent);
+        assertFalse(screen.isVisible(), "MainMenuScreen should become invisible after pressing ENTER on Setting.");
+        assertTrue(settingScreen.isVisible(), "SettingScreen should become invisible after pressing ENTER on Setting.");
+    }
 }

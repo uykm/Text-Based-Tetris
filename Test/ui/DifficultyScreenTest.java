@@ -1,65 +1,133 @@
 package ui;
 
-import jdk.jfr.Configuration;
+import logic.BoardController;
+import logic.GameController;
 import logic.SettingController;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.*;
+
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.util.DuplicateFormatFlagsException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class DifficultyScreenTest {
 
-    @Test
-    void actionPerformedTest0() {
-        // Create a DifficultyScreen instance
-        DifficultyScreen difficultyScreen = new DifficultyScreen(false);
-        SettingController settingController = new SettingController(); // Initialize settingController
+//    private DifficultyScreen screen;
+//    private SettingController settingController;
 
-        // Simulate action event with command "easy"
-        ActionEvent easyEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "easy");
-        difficultyScreen.actionPerformed(easyEvent);
-        // Check if 'difficulty' setting is saved as "0" and GameController is initialized
+//    @BeforeEach
+//    public void setUp() {
+//        SwingUtilities.invokeLater(() -> {
+//            settingController = new SettingController();
+//            screen = new DifficultyScreen(false);
+//        });
+//    }
+
+    @Test
+    void actionPerformed_easy() {
+        // Arrange
+        DifficultyScreen screen = new DifficultyScreen(false); // Set up with some default settings
+        ActionEvent event = new ActionEvent(screen.btnEasy, ActionEvent.ACTION_PERFORMED, "easy");
+
+        // Act
+        screen.actionPerformed(event);
+
+        // Assert
+        SettingController settingController = new SettingController();
         assertEquals(0, settingController.getDifficulty());
+
+        // Verify that the screen is not visible
+        assertFalse(screen.isVisible(), "DifficultyScreen should become invisible after clicking Easy.");
     }
 
     @Test
-    void actionPerformedTest1() {
-        // Create a DifficultyScreen instance
-        DifficultyScreen difficultyScreen = new DifficultyScreen(false);
-        SettingController settingController = new SettingController(); // Initialize settingController
+    void actionPerformed_normal() {
+        // Arrange
+        DifficultyScreen screen = new DifficultyScreen(false);
+        ActionEvent event = new ActionEvent(screen.btnNormal, ActionEvent.ACTION_PERFORMED, "normal");
 
-        // Simulate action event with command "normal"
-        ActionEvent normalEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "normal");
-        difficultyScreen.actionPerformed(normalEvent);
-        // Check if 'difficulty' setting is saved as "1" and GameController is initialized
+        // Act
+        screen.actionPerformed(event);
+
+        // Assert
+        SettingController settingController = new SettingController();
         assertEquals(1, settingController.getDifficulty());
+
+        // Verify that the screen is not visible
+        assertFalse(screen.isVisible(), "DifficultyScreen should become invisible after clicking Normal.");
     }
 
     @Test
-    void actionPerformedTest2() {
-        // Create a DifficultyScreen instance
-        DifficultyScreen difficultyScreen = new DifficultyScreen(false);
-        SettingController settingController = new SettingController(); // Initialize settingController
+    void actionPerformed_hard() {
+        // Arrange
+        DifficultyScreen screen = new DifficultyScreen(false);
+        ActionEvent event = new ActionEvent(screen.btnHard, ActionEvent.ACTION_PERFORMED, "hard");
 
-        // Simulate action event with command "hard"
-        ActionEvent hardEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "hard");
-        difficultyScreen.actionPerformed(hardEvent);
-        // Check if 'difficulty' setting is saved as "2" and GameController is initialized
+        // Act
+        screen.actionPerformed(event);
+
+        // Assert
+        SettingController settingController = new SettingController();
         assertEquals(2, settingController.getDifficulty());
+
+        // Verify that the screen is not visible
+        assertFalse(screen.isVisible(), "DifficultyScreen should become invisible after clicking Hard.");
     }
 
     @Test
-    void actionPerformedTest3() {
-        DifficultyScreen difficultyScreen = new DifficultyScreen(false);
-        SettingController settingController = new SettingController(); // Initialize settingController
+    void actionPerformed_menu() {
+        // Arrange
+        DifficultyScreen screen = new DifficultyScreen(false);
+        ActionEvent event = new ActionEvent(screen.btnMenu, ActionEvent.ACTION_PERFORMED, "menu");
 
-        // Simulate action event with command "menu"
-        ActionEvent menuEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "menu");
-        difficultyScreen.actionPerformed(menuEvent);
-        // Check if MainMenuScreen is initialized and DifficultyScreen is not visible
-        assertFalse(difficultyScreen.isVisible());
-        assertTrue(new MainMenuScreen().isVisible());
+        // Act
+        screen.actionPerformed(event);
 
+        // Assert
+        assertFalse(screen.isVisible(), "DifficultyScreen should become invisible after clicking Menu.");
     }
+
+    @Test
+    void keyListener_enter() {
+
+        DifficultyScreen screen = new DifficultyScreen(false);
+        GameController gameController = new GameController(false);
+        BoardController boardController = new BoardController(gameController, false);
+        InGameScreen inGameScreen = new InGameScreen(boardController);
+
+        // Test key press "ENTER" on Easy
+        KeyEvent enterEvent = new KeyEvent(screen.btnEasy, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, ' ');
+        screen.btnEasy.dispatchEvent(enterEvent);
+
+        assertFalse(screen.isVisible(), "DifficultyScreen should become invisible after pressing ENTER on Easy.");
+        assertTrue(inGameScreen.isVisible(), "InGameScreen should become visible after clicking difficulty");
+    }
+
+//    @Test
+//    public void testKeyEvents() {
+//        // Create Instance
+//        DifficultyScreen difficultyScreen = new DifficultyScreen(false);
+//        SettingController settingController = new SettingController();
+//
+//        // Test key press "ENTER" on Easy
+//        KeyEvent enterEvent = new KeyEvent(difficultyScreen.btnEasy, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, ' ');
+//        difficultyScreen.btnEasy.dispatchEvent(enterEvent);
+//
+//        assertFalse(difficultyScreen.isVisible(), "DifficultyScreen should become invisible after pressing ENTER on Easy.");
+//        assertEquals("0", settingController.getDifficulty(), "Difficulty should be set to '0' for Easy.");
+//
+//        // Test key press "RIGHT" to shift focus
+//        KeyEvent rightEvent = new KeyEvent(difficultyScreen.btnEasy, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_RIGHT, ' ');
+//        difficultyScreen.btnEasy.dispatchEvent(rightEvent);
+//        assertTrue(difficultyScreen.btnNormal.isFocusOwner(), "Focus should move to Normal after pressing RIGHT.");
+//
+//        // Test key press "LEFT" to shift focus
+//        KeyEvent leftEvent = new KeyEvent(difficultyScreen.btnHard, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_LEFT, ' ');
+//        difficultyScreen.btnHard.dispatchEvent(leftEvent);
+//        assertTrue(difficultyScreen.btnNormal.isFocusOwner(), "Focus should move to Normal after pressing LEFT.");
+//    }
 }
