@@ -70,7 +70,7 @@ public class RegisterScoreScreen extends JFrame implements ActionListener {
         // 중앙 : 이름 입력 칸 + 제출 버튼
         JPanel inputPanel = new JPanel();
 
-        nameField = new JTextField("Please register playerName", 20);
+        nameField = new JTextField(20);
         nameField.setHorizontalAlignment(JTextField.CENTER);
         nameField.setForeground(Color.GRAY);
         inputPanel.add(nameField);
@@ -89,7 +89,6 @@ public class RegisterScoreScreen extends JFrame implements ActionListener {
             public void focusLost(FocusEvent e) {
                 if (nameField.getText().isEmpty()) {
                     nameField.setForeground(Color.GRAY);
-                    nameField.setText("Please register playerName");
                 }
             }
         });
