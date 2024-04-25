@@ -186,8 +186,6 @@ public class MainMenuScreen extends JFrame implements ActionListener {
             } else if (keyCode == KeyEvent.VK_ENTER) {
                 moveScreen();
             }
-
-            System.out.println("KeyPressed");
         }
     }
 

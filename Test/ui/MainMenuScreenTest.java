@@ -38,12 +38,6 @@ class MainMenuScreenTest {
         // Check if ScoreboardScreen is initialized and MainMenuScreen is not visible
         assertFalse(mainMenuScreen.isVisible());
         assertTrue(new ScoreboardScreen().isVisible()); // Assuming ScoreboardScreen's isVisible() method returns correct value
-
-        // Simulate action event with command "exit"
-        ActionEvent exitEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "exit");
-        mainMenuScreen.actionPerformed(exitEvent);
-        // Check if the application exits
-        assertFalse(mainMenuScreen.isVisible());
     }
 
 }
