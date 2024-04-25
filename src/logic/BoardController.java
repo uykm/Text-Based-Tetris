@@ -504,7 +504,8 @@ public class BoardController {
         // 현재 위치에서 방향을 따른 옆 칸이 보드 안에 있는지 확인
         if (direction == Direction.LEFT && (x - 1 >= 3)) {
             return grid.getBoard()[y][x - 1] == 0;  // 왼쪽으로 확장 가능한지 확인
-        } else if (direction == Direction.RIGHT && (x + 1 <= 12)) {
+        }
+        else if (direction == Direction.RIGHT && (x + 1 <= 12)) {
             return grid.getBoard()[y][x + 1] == 0;  // 오른쪽으로 확장 가능한지 확인
         }
         return false;
@@ -512,29 +513,32 @@ public class BoardController {
 
     //물 블록 좌우 흐름
     private void flowSide(int x, int y) {
-        for(int i=x; i<=12; i++) {
-            if(canFlowSide(i, y, Direction.RIGHT)) {
-                for(int j=i; j>=x; j--) {
-                    eraseOneBlock(j, y);
-                    placeOneBlock(j + 1, y, 10);
-                }
-                eraseOneBlock(x, y-1);
-                placeOneBlock(x, y, 10);
-                waterBlockMoved = true;
-                return;
-            }
+        int newX = x;
+        while (grid.getBoard()[y][newX + 1] == 10){
+            newX++;
         }
-        for(int i=x; i>=3; i--) {
-            if(canFlowSide(i, y, Direction.LEFT)) {
-                for(int j=i; j<=x; j++) {
-                    eraseOneBlock(j, y);
-                    placeOneBlock(j - 1, y, 10);
-                }
-                eraseOneBlock(x, y-1);
-                placeOneBlock(x, y, 10);
-                waterBlockMoved = true;
-                return;
+        if(canFlowSide(newX, y, Direction.RIGHT)) {
+            for(int j=newX; j>=x; j--) {
+                eraseOneBlock(j, y);
+                placeOneBlock(j + 1, y, 10);
             }
+            eraseOneBlock(x, y-1);
+            placeOneBlock(x, y, 10);
+            waterBlockMoved = true;
+            return;
+        }
+        newX = x;
+        while (grid.getBoard()[y][newX - 1] == 10){
+            newX--;
+        }
+        if(canFlowSide(newX, y, Direction.LEFT)) {
+            for(int j=newX; j<=x; j++) {
+                eraseOneBlock(j, y);
+                placeOneBlock(j - 1, y, 10);
+            }
+            eraseOneBlock(x, y-1);
+            placeOneBlock(x, y, 10);
+            waterBlockMoved = true;
         }
     }
 
@@ -556,11 +560,11 @@ public class BoardController {
                                 flowSide(width, height + 1);
                             }
                         }
-                        lineCheck();
                     }
                 }
             }
         } while (waterBlockMoved);  // 블록이 이동하는 동안 계속 반복
+        lineCheck();
     }
 
 
