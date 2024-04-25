@@ -158,9 +158,9 @@ public abstract class Block {
         return switch (rwSelection.select()) {
 //            case 0 -> new ItemBlock().waterBlock();
 //            case 1 -> new ItemBlock().lineBlock();
-            case 0 -> new BombItemBlock();
-            case 1 -> new BombItemBlock();
-            default -> new BombItemBlock();
+//            case 2 -> new ExtensionItemBlock();
+            case 3 -> new ExtensionItemBlock();
+            default -> new ExtensionItemBlock();
         };
     }
 }
