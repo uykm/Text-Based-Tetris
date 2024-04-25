@@ -6,5 +6,3 @@ Player7:60
 Player6:50
 Player5:40
 Player4:30
-Player3:20
-Player2:10
