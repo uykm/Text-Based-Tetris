@@ -83,7 +83,7 @@ class SettingScreenTest {
     }
 
     @Test
-    void testFocusMovementRight() throws InterruptedException {
+    void testFocusMovement() throws InterruptedException {
         settingScreen.btnSize1.requestFocus();
         robot.keyPress(KeyEvent.VK_RIGHT);
         robot.keyRelease(KeyEvent.VK_RIGHT);
