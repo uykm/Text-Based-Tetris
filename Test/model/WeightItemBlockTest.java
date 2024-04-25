@@ -7,10 +7,30 @@ import static org.junit.jupiter.api.Assertions.*;
 class WeightItemBlockTest {
 
     @Test
-    void rotate() {
+    void rotate_doesNothing() {
+        // Arrange
+        WeightItemBlock weightItemBlock = new WeightItemBlock();
+        int[][] initialShape = weightItemBlock.getShape();
+
+        // Act
+        weightItemBlock.rotate();
+        int[][] shapeAfterRotate = weightItemBlock.getShape();
+
+        // Assert
+        assertArrayEquals(initialShape, shapeAfterRotate);
     }
 
     @Test
-    void rotateBack() {
+    void rotateBack_doesNothing() {
+        // Arrange
+        WeightItemBlock weightItemBlock = new WeightItemBlock();
+        int[][] initialShape = weightItemBlock.getShape();
+
+        // Act
+        weightItemBlock.rotateBack();
+        int[][] shapeAfterRotateBack = weightItemBlock.getShape();
+
+        // Assert
+        assertArrayEquals(initialShape, shapeAfterRotateBack);
     }
 }
