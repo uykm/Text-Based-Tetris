@@ -213,18 +213,28 @@ public class InGameScreen extends JPanel {
                 charWidth = metrics.stringWidth("ㅇ");
                 g.drawString("ㅇ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
                 break;
-            case 10:
+            case 10: // 물 아이템
                 g.setColor(Color.BLUE);
                 charWidth = metrics.stringWidth("~");
                 g.drawString("~", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
                 break;
             case 11: // 폭탄 아이템
-                g.setColor(Color.WHITE);
+                g.setColor(Color.RED);
                 charWidth = metrics.stringWidth("B");
                 g.drawString("B", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
                 break;
-            case -2: // 한 줄이 꽉 차서 지워지기 전
+            case 12: // 확장 아이템(확장 전)
+                g.setColor(Color.WHITE);
+                charWidth = metrics.stringWidth("ꕥ");
+                g.drawString("✵", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                break;
+            case 13: // 확장 아이템(확장 후)
                 g.setColor(Color.CYAN);
+                charWidth = metrics.stringWidth("ꕥ");
+                g.drawString("✵", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                break;
+            case -2: // 한 줄이 꽉 차서 지워지기 전
+                g.setColor(Color.YELLOW);
                 g.fillRect(x, y, cellSize, cellSize);
                 break;
         }

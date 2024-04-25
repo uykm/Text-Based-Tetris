@@ -64,6 +64,7 @@ public class BoardController {
         needNewBlock=state;
         if(state){
             excludeBomb();
+            extendBlocks();
             flowWaterBlock();
         }
     }
@@ -340,8 +341,8 @@ public class BoardController {
                     // 2틱 동안 움직임 없거나 충돌 후 2틱이 지나면 블록을 고정시킴
                     if (stopCount > 1 || limitCount > 1) {
                         checkGameOver();
-                        lineCheck();
                         setNewBlockState(true);
+                        lineCheck();
                         stopCount = 0;
                         limitCount = 0;
                     }
@@ -363,9 +364,9 @@ public class BoardController {
                     break;
                 }
 
+                setNewBlockState(true);
                 lineCheck();
 
-                setNewBlockState(true);
                 limitCount = 0;
             }
             default -> placeBlock();
@@ -551,7 +552,7 @@ public class BoardController {
         for (int height = 3; height < 23; height++) {
             for (int width = 3; width < 13; width++) {
 
-                if (grid.getBoard()[height][width] == 11) {  // 물 블록 발견
+                if (grid.getBoard()[height][width] == 11) {  // 폭탄 블록 발견
                     toRemove[height][width] = true;
                     for(int i = 0; i < 8; ++i) {
                         int nx = width + dx[i];
@@ -566,12 +567,45 @@ public class BoardController {
 
         for (int height = 3; height < 23; height++) {
             for (int width = 3; width < 13; width++) {
-                if (toRemove[height][width]) {  // 물 블록 발견
+                if (toRemove[height][width]) {  // 폭탄 블록 발견
                     eraseOneBlock(width, height);
                 }
             }
         }
+    }
 
+    // ToDo: 확장 블럭 로직
+    private void extendBlocks() {
+        int[] dx = {0, 1, 1, 1, 0, -1, -1, -1};
+        int[] dy = {-1, -1, 0, 1, 1, 1, 0, -1};
+        boolean[][] toCreate = new boolean[26][16];
+        for (int height = 3; height < 23; height++) {
+            for (int width = 3; width < 13; width++) {
+
+                if (grid.getBoard()[height][width] == 12) {  // 확장 아이템 블록 발견
+                    toCreate[height][width] = true;
+                    for(int i = 0; i < 8; ++i) {
+                        int nx = width + dx[i];
+                        int ny = height + dy[i];
+                        if(nx >= 3 && nx < 13 && ny >= 3 && ny < 23) {
+                            toCreate[ny][nx] = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        for (int height = 3; height < 23; height++) {
+            for (int width = 3; width < 13; width++) {
+                if (toCreate[height][width]
+                        && (grid.getBoard()[height][width] == 0 || grid.getBoard()[height][width] == 12)) {  // 확장 아이템 블록 발견
+                    grid.getBoard()[height][width] = 13;
+                    toCreate[height][width] = false;
+                }
+            }
+        }
+
+        lineCheck();
     }
 
 }
