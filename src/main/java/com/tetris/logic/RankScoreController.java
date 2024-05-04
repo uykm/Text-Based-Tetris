@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ScoreController {
+public class RankScoreController {
     // 파일 경로를 2개로 나눕니다.
     private final String normalFilePath = "normalRanking.txt";
     private final String itemFilePath = "itemRanking.txt";
     private List<Score> normalScores;
     private List<Score> itemScores;
 
-    public ScoreController() {
+    public RankScoreController() {
         normalScores = new ArrayList<>();
         itemScores = new ArrayList<>();
         loadScores(normalFilePath, normalScores); // normal 점수 로드

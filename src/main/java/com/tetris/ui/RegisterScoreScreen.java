@@ -1,7 +1,7 @@
 package com.tetris.ui;
 
 import com.tetris.logic.Score;
-import com.tetris.logic.ScoreController;
+import com.tetris.logic.RankScoreController;
 import com.tetris.logic.SettingController;
 
 import javax.swing.*;
@@ -16,7 +16,7 @@ import static com.tetris.component.ScreenSize.setWidthHeight;
 
 public class RegisterScoreScreen extends JFrame implements ActionListener {
 
-    ScoreController scoreController = new ScoreController();
+    RankScoreController rankScoreController = new RankScoreController();
     SettingController settingController = new SettingController();
 
     JTextField nameField;
@@ -130,7 +130,7 @@ public class RegisterScoreScreen extends JFrame implements ActionListener {
 
 
             Score currScore = new Score(name, playerScore, difficulty); // 이번 게임에 얻은 점수
-            scoreController.addScore(currScore, isItem);
+            rankScoreController.addScore(currScore, isItem);
             setVisible(false);
 
             // TODO : 등록한 점수에 대해서 강조 표시하는 스코어보드 출력
@@ -182,7 +182,7 @@ public class RegisterScoreScreen extends JFrame implements ActionListener {
                 String name = !nameField.getText().isEmpty() ? nameField.getText() : "익명";
                 String difficulty = setDifficultyFromCode(settingController.getDifficulty());
                 Score currScore = new Score(name, playerScore, difficulty); // 이번 게임에 얻은 점수
-                scoreController.addScore(currScore, isItem);
+                rankScoreController.addScore(currScore, isItem);
                 setVisible(false);
                 new ScoreboardScreen(currScore, isItem);
             }

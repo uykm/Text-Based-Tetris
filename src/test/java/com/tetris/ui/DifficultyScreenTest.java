@@ -2,6 +2,7 @@ package com.tetris.ui;
 
 import com.tetris.logic.BoardController;
 import com.tetris.logic.GameController;
+import com.tetris.logic.InGameScoreController;
 import com.tetris.logic.SettingController;
 import org.junit.jupiter.api.Test;
 
@@ -92,8 +93,9 @@ class DifficultyScreenTest {
 
         DifficultyScreen screen = new DifficultyScreen(false);
         GameController gameController = new GameController(false);
-        BoardController boardController = new BoardController(gameController, false);
-        InGameScreen inGameScreen = new InGameScreen(boardController);
+        InGameScoreController inGameScoreController = new InGameScoreController();
+        BoardController boardController = new BoardController(gameController, inGameScoreController, false);
+        InGameScreen inGameScreen = new InGameScreen(boardController, inGameScoreController);
 
         // Test key press "ENTER" on Easy
         KeyEvent enterEvent = new KeyEvent(screen.btnEasy, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, ' ');

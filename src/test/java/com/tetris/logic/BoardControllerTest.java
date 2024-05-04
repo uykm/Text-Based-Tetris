@@ -8,12 +8,13 @@ class BoardControllerTest {
     boolean isItemMode;
     GameController gameController;
     BoardController boardController;
+    InGameScoreController inGameScoreController;
 
     @BeforeEach
     void setUp() {
         isItemMode = true;
         gameController = new GameController(isItemMode);
-        boardController = new BoardController(gameController, isItemMode);
+        boardController = new BoardController(gameController, inGameScoreController, isItemMode);
     }
 
     @Test
@@ -65,7 +66,7 @@ class BoardControllerTest {
         int row = 5;
         // row번째 줄이 모두 채워졌을 때,
         for(int i = 3; i <= 13; ++i) board[row][i] = 1;
-        int score = boardController.getScore();
+        int score = inGameScoreController.getScore();
 
         // when
         boardController.lineCheck();
@@ -73,7 +74,7 @@ class BoardControllerTest {
         // blinkLine()이 호출되어, 해당 줄이 -2으로 변한다.
         assertEquals(-2, board[row][3]);
         // 라인이 지워지면 점수가 올라간다.
-        assertTrue(score < boardController.getScore());
+        assertTrue(score < inGameScoreController.getScore());
 
     }
 
@@ -86,7 +87,7 @@ class BoardControllerTest {
         int column = 7;
         // row, column 좌표에 줄 삭제 아이텤이 있는 경우
         board[row][column] = 8;
-        int score = boardController.getScore();
+        int score = inGameScoreController.getScore();
 
         // when
         boardController.lineCheck();
@@ -94,7 +95,7 @@ class BoardControllerTest {
         // blinkLine()이 호출되어, 해당 줄이 -2으로 변한다.
         assertEquals(-2, board[row][column]);
         // 라인이 지워지면 점수가 올라간다.
-        assertTrue(score < boardController.getScore());
+        assertTrue(score < inGameScoreController.getScore());
 
     }
 
@@ -102,23 +103,23 @@ class BoardControllerTest {
     @DisplayName("블럭이 10번 생성될 때마다 지워진 줄이 없으면 50점 감소한다.")
     void lineCheckInTenTimes() {
         // Given: Set initial score
-        int initialScore = boardController.getScore();
+        int initialScore = inGameScoreController.getScore();
 
         // When: No lines are deleted across 10 block placements
         for (int i = 0; i < 10; i++) {
             boardController.lineCheck();  // Simulate line check with no line deletion
-            boardController.subScoreOnLineNotEraseIn10Blocks(); // Manually trigger scoring rule
+            inGameScoreController.subScoreOnLineNotEraseIn10Blocks(); // Manually trigger scoring rule
         }
 
         // Then: Verify no score change after the first 10 checks
-        assertEquals(initialScore, boardController.getScore(),"Score should not change after 10 block placements with no line deletions");
+        assertEquals(initialScore, inGameScoreController.getScore(),"Score should not change after 10 block placements with no line deletions");
 
         // Another lineCheck to trigger the score decrement
         boardController.lineCheck();  // No lines will be deleted
-        boardController.subScoreOnLineNotEraseIn10Blocks(); // This should now decrease the score
+        inGameScoreController.subScoreOnLineNotEraseIn10Blocks(); // This should now decrease the score
 
         // Expect: Score should be decreased by 50 after the 11th block
-        assertEquals(initialScore - 50, boardController.getScore(), "Score should decrease by 50 after the 11th block placement with no line deletion");
+        assertEquals(initialScore - 50, inGameScoreController.getScore(), "Score should decrease by 50 after the 11th block placement with no line deletion");
     }
 
     @Test

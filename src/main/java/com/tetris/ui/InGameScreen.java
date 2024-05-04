@@ -3,6 +3,7 @@ package com.tetris.ui;
 
 import com.tetris.logic.Block;
 import com.tetris.logic.BoardController;
+import com.tetris.logic.InGameScoreController;
 import com.tetris.logic.SettingController;
 import com.tetris.model.BlockType;
 
@@ -29,13 +30,15 @@ public class InGameScreen extends JPanel {
     private final int[][] board; // 게임 보드 상태s
     private int[][] nextBlockBoard; // 다음 블록 표시 영역
     private final BoardController boardController; // 게임 보드 컨트롤러
+    private final InGameScoreController inGameScoreController; // 인게임 점수 컨트롤러
     SettingController settingController;
     private int score; // 점수
 
-    public InGameScreen(BoardController boardController) {
+    public InGameScreen(BoardController boardController, InGameScoreController inGameScoreController) {
         // 임시 데이터로 초기화
         board = boardController.getBoard();
         this.boardController = boardController;
+        this.inGameScoreController = inGameScoreController;
         settingController = new SettingController();
 
         initNextBlockBoard();
@@ -79,9 +82,9 @@ public class InGameScreen extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        String scoreMessage = boardController.getScoreMessages();
+        String scoreMessage = inGameScoreController.getScoreMessages();
 
-        score = boardController.getScore();
+        score = inGameScoreController.getScore();
 
         // 전체 게임 보드의 배경을 검정색으로 설정
         g.setColor(Color.BLACK);

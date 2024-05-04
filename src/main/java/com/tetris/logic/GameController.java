@@ -11,7 +11,8 @@ import java.awt.event.KeyEvent;
 public class GameController implements PauseScreenCallback {
     private BoardController boardController;
     private InGameScreen inGameScreen;
-    private final ScoreController scoreController;
+    private final InGameScoreController inGameScoreController;
+    private final RankScoreController rankScoreController;
     private final SettingController settingController = new SettingController();
     private final int[] keyCodes = settingController.getKeyCodes();
     private int ROTATE = keyCodes[0];
@@ -35,9 +36,10 @@ public class GameController implements PauseScreenCallback {
         this.isItem = isItem;
 
         initUI();
-        this.boardController = new BoardController(this, isItem);
-        this.inGameScreen = new InGameScreen(this.boardController);
-        this.scoreController = new ScoreController();
+        this.inGameScoreController = new InGameScoreController();
+        this.boardController = new BoardController(this, this.inGameScoreController, isItem);
+        this.inGameScreen = new InGameScreen(this.boardController, this.inGameScoreController);
+        this.rankScoreController = new RankScoreController();
 
         startGame(isItem);
     }
@@ -129,10 +131,10 @@ public class GameController implements PauseScreenCallback {
 
             if (boardController.checkGameOver()) {
                 frame.dispose();
-                if (scoreController.isScoreInTop10(boardController.getScore(), isItem)) {
-                    new RegisterScoreScreen(boardController.getScore(), isItem);
+                if (rankScoreController.isScoreInTop10(inGameScoreController.getScore(), isItem)) {
+                    new RegisterScoreScreen(inGameScoreController.getScore(), isItem);
                 } else {
-                    new GameOverScreen(boardController.getScore(), isItem);
+                    new GameOverScreen(inGameScoreController.getScore(), isItem);
                 }
                 timer.stop();
             }
@@ -147,7 +149,7 @@ public class GameController implements PauseScreenCallback {
 
             currentSpeed -= speed;
             timer.setDelay(currentSpeed);
-            boardController.addScoreMessage("Speed up! \nCurrent Delay " + currentSpeed);
+            inGameScoreController.addScoreMessage("Speed up! \nCurrent Delay " + currentSpeed);
         }
     }
 }
