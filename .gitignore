@@ -104,9 +104,11 @@ replay_pid*
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
 
-
 # Gradle
 .idea/**/gradle.xml
+<<<<<<< HEAD
+.idea/**/libraries
+=======
 .idea/**/libraries
 
 .idea/misc.xml
@@ -116,3 +118,4 @@ text-based-tetris.iml
 
 ranking.txt
 config.properties
+>>>>>>> develop
