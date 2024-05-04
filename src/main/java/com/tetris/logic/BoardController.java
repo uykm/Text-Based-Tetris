@@ -313,6 +313,9 @@ public class BoardController {
 
     // 블록을 회전시킴. 충돌 시 회전하지 않음
     public void rotateBlock() {
+        if (currentBlock instanceof WeightItemBlock || currentBlock instanceof BombItemBlock || currentBlock instanceof ExtensionItemBlock) {
+            return;
+        }
         currentBlock.rotate();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -525,7 +528,6 @@ public class BoardController {
         boolean[][] toCreate = new boolean[26][16];
         for (int height = 3; height < 23; height++) {
             for (int width = 3; width < 13; width++) {
-
                 if (grid.getBoard()[height][width] == EXTEND_BLOCK) {  // 확장 아이템 블록 발견
                     toCreate[height][width] = true;
                     for(int i = 0; i < 8; ++i) {

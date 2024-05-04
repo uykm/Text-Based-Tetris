@@ -147,8 +147,8 @@ public abstract class Block {
             case 0 -> new ItemBlock().waterBlock();
             case 1 -> new ItemBlock().lineBlock();
             case 2 -> new BombItemBlock();
-            case 3 -> new ExtensionItemBlock();
-            default -> new WeightItemBlock();
+            case 3 -> new WeightItemBlock();
+            default -> new ExtensionItemBlock();
         };
     }
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.tetris.model.BlockTypeTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2024-05-04T14:26:18" hostname="sinmingyuui-MacBookPro.local" time="0.002">
+<testsuite name="com.tetris.model.BlockTypeTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2024-05-04T18:15:20" hostname="sinmingyuui-MacBookPro.local" time="0.001">
   <properties/>
   <testcase name="values_returnsAllBlockTypes()" classname="com.tetris.model.BlockTypeTest" time="0.0"/>
-  <testcase name="getBlockTypeByIndex_invalidIndex_returnsNullBlock()" classname="com.tetris.model.BlockTypeTest" time="0.0"/>
-  <testcase name="getBlockTypeByIndex_validIndex_returnsCorrectBlockType()" classname="com.tetris.model.BlockTypeTest" time="0.001"/>
+  <testcase name="getBlockTypeByIndex_invalidIndex_returnsNullBlock()" classname="com.tetris.model.BlockTypeTest" time="0.001"/>
+  <testcase name="getBlockTypeByIndex_validIndex_returnsCorrectBlockType()" classname="com.tetris.model.BlockTypeTest" time="0.0"/>
   <testcase name="valueOf_invalidBlockTypeName_throwsIllegalArgumentException()" classname="com.tetris.model.BlockTypeTest" time="0.0"/>
   <testcase name="valueOf_validBlockTypeName_returnsCorrectBlockType()" classname="com.tetris.model.BlockTypeTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
