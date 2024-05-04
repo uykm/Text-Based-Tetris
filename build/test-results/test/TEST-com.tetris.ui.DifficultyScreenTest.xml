@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.tetris.ui.DifficultyScreenTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2024-05-04T14:26:18" hostname="sinmingyuui-MacBookPro.local" time="0.469">
+  <properties/>
+  <testcase name="actionPerformed_normal()" classname="com.tetris.ui.DifficultyScreenTest" time="0.094"/>
+  <testcase name="actionPerformed_easy()" classname="com.tetris.ui.DifficultyScreenTest" time="0.085"/>
+  <testcase name="actionPerformed_hard()" classname="com.tetris.ui.DifficultyScreenTest" time="0.066"/>
+  <testcase name="actionPerformed_menu()" classname="com.tetris.ui.DifficultyScreenTest" time="0.114"/>
+  <testcase name="keyListener_enter()" classname="com.tetris.ui.DifficultyScreenTest" time="0.109"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

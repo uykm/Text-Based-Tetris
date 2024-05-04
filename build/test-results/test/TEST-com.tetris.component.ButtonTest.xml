@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.tetris.component.ButtonTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2024-05-04T14:26:17" hostname="sinmingyuui-MacBookPro.local" time="0.007">
+  <properties/>
+  <testcase name="createLogoBtn()" classname="com.tetris.component.ButtonTest" time="0.002"/>
+  <testcase name="createLogoBtnNext()" classname="com.tetris.component.ButtonTest" time="0.001"/>
+  <testcase name="createBtn()" classname="com.tetris.component.ButtonTest" time="0.001"/>
+  <testcase name="createLogoBtnUp()" classname="com.tetris.component.ButtonTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

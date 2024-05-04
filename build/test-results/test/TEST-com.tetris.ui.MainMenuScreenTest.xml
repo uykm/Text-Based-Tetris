@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.tetris.ui.MainMenuScreenTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2024-05-04T14:26:18" hostname="sinmingyuui-MacBookPro.local" time="0.601">
+  <properties/>
+  <testcase name="actionPerformedTest()" classname="com.tetris.ui.MainMenuScreenTest" time="0.42"/>
+  <testcase name="keyListenerTest()" classname="com.tetris.ui.MainMenuScreenTest" time="0.181"/>
+  <system-out><![CDATA[Timer executed
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

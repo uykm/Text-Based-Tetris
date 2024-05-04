@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.tetris.ui.KeySettingScreenTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-05-04T14:26:18" hostname="sinmingyuui-MacBookPro.local" time="0.0">
+  <properties/>
+  <testcase name="enterInputMode()" classname="com.tetris.ui.KeySettingScreenTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
