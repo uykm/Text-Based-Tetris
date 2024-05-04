@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.tetris.logic.ScoreControllerTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2024-05-04T14:26:17" hostname="sinmingyuui-MacBookPro.local" time="0.037">
+  <properties/>
+  <testcase name="isScoreInTop10()" classname="com.tetris.logic.ScoreControllerTest" time="0.012"/>
+  <testcase name="addScore()" classname="com.tetris.logic.ScoreControllerTest" time="0.008"/>
+  <testcase name="isScoreInTop10_withLessThen10Scores()" classname="com.tetris.logic.ScoreControllerTest" time="0.003"/>
+  <testcase name="resetScores()" classname="com.tetris.logic.ScoreControllerTest" time="0.002"/>
+  <testcase name="getScores()" classname="com.tetris.logic.ScoreControllerTest" time="0.003"/>
+  <testcase name="addScore_largerThen10()" classname="com.tetris.logic.ScoreControllerTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
