@@ -1,7 +1,7 @@
 package com.tetris.ui;
 
 import com.tetris.logic.Score;
-import com.tetris.logic.ScoreController;
+import com.tetris.logic.RankScoreController;
 import com.tetris.logic.SettingController;
 
 import javax.swing.*;
@@ -19,7 +19,7 @@ import static com.tetris.component.ScreenSize.setWidthHeight;
 public class ScoreboardScreen extends JFrame implements ActionListener {
 
     SettingController settingController = new SettingController();
-    ScoreController scoreController = new ScoreController();
+    RankScoreController rankScoreController = new RankScoreController();
     JButton menuBtn;
     private final String screenSize;
 
@@ -101,7 +101,7 @@ public class ScoreboardScreen extends JFrame implements ActionListener {
         scorePanel.add(title);
 
         // 예시 데이터 추가
-        List<Score> topScores = scoreController.getScores(isItem);
+        List<Score> topScores = rankScoreController.getScores(isItem);
 
         // 상위 10개 스코어 표시
         for (int i = 0; i < topScores.size(); i++) {
@@ -178,7 +178,7 @@ public class ScoreboardScreen extends JFrame implements ActionListener {
         scorePanel.add(title);
 
         // 예시 데이터 추가
-        List<Score> topScores = scoreController.getScores(isItem);
+        List<Score> topScores = rankScoreController.getScores(isItem);
 
         // 상위 10개 스코어 표시
         for (int i = 0; i < topScores.size(); i++) {

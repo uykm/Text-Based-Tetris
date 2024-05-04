@@ -1,6 +1,6 @@
 package com.tetris.ui;
 
-import com.tetris.logic.ScoreController;
+import com.tetris.logic.RankScoreController;
 import com.tetris.logic.SettingController;
 
 import javax.swing.*;
@@ -24,7 +24,7 @@ SettingScreen extends JFrame implements ActionListener {
     JButton btnColorBlind0, btnColorBlind1, btnColorBlind2, btnColorBlind3;
     JButton btnInitializeSetting;
     JButton btnMenu;
-    ScoreController scoreController = new ScoreController();
+    RankScoreController rankScoreController = new RankScoreController();
     SettingController settingController = new SettingController();
 
     public SettingScreen() {
@@ -145,9 +145,9 @@ SettingScreen extends JFrame implements ActionListener {
         } else if (btnInitializeKeySetting.isFocusOwner()) {
             settingController.initializeKeySettings();
         } else if (btnInitializeNormalScore.isFocusOwner()) {
-            scoreController.resetScores(false);
+            rankScoreController.resetScores(false);
         } else if (btnInitializeItemScore.isFocusOwner()) {
-            scoreController.resetScores(true);
+            rankScoreController.resetScores(true);
         } else if (btnInitializeSetting.isFocusOwner()) {
             settingController.initializeSettings();
             setVisible(false);
@@ -195,9 +195,9 @@ SettingScreen extends JFrame implements ActionListener {
             setVisible(false);
             new MainMenuScreen();
         } else if (command.equals("scoreNormal")) {
-            scoreController.resetScores(false);
+            rankScoreController.resetScores(false);
         } else if (command.equals("scoreItem")) {
-            scoreController.resetScores(true);
+            rankScoreController.resetScores(true);
         } else if (command.equals("initialize")) {
             settingController.initializeSettings();
             setVisible(false);
