@@ -11,10 +11,14 @@ public class BoardController {
     public static final int BOMB_EVENT = 13;
     public static final int EXTEND_BLOCK = 14;
     public static final int EXTEND_BLOCK_EVENT = 15;
-    // 게임 보드
-    boolean waterBlockMoved = false;
+
     final private Board grid;
     final private InGameScoreController inGameScoreController;
+    final private GameController gameController;
+    // final private ItemBlockController itemBlockController;
+    // 게임 보드
+    boolean waterBlockMoved = false;
+
     // 게임 보드의 너비, 높이
     final private int WIDTH;
     final private int HEIGHT;
@@ -45,11 +49,10 @@ public class BoardController {
 
     private boolean needNewBlock = false;
 
-    final private GameController gameController;
-
     public BoardController(GameController gameController, InGameScoreController inGameScoreController, Boolean isItemMode) {
         this.isItemMode = isItemMode;
         this.grid = new Board();
+        // this.itemBlockController = new ItemBlockController(grid, grid.getWidth(), grid.getHeight());
         this.inGameScoreController = inGameScoreController;
         this.WIDTH = grid.getWidth();
         this.HEIGHT = grid.getHeight();

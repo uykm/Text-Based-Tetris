@@ -11,6 +11,7 @@ public class OBlock extends Block {
             {0, 4, 4, 0},
             {0, 4, 4, 0},
             {0, 0, 0, 0}
-        }, new Color[]{Color.YELLOW, Color.GRAY,  Color.GRAY,  Color.GRAY});
+        }, new Color[]{Color.YELLOW, Color.GRAY,  Color.GRAY,  Color.GRAY}
+        , BlockType.OBlock);
     }
 }

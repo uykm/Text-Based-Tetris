@@ -11,6 +11,7 @@ public class TBlock extends Block {
             {0, 6, 6, 6},
             {0, 0, 6, 0},
             {0, 0, 0, 0}
-        }, new Color[]{Color.MAGENTA, Color.ORANGE,  Color.YELLOW,  Color.ORANGE});
+        }, new Color[]{Color.MAGENTA, Color.ORANGE,  Color.YELLOW,  Color.ORANGE}
+        , BlockType.TBlock);
     }
 }

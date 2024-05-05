@@ -11,6 +11,7 @@ public class ExtensionItemBlock extends Block {
                 {0, 14, 0, 0},
                 {0, 0, 0, 0},
                 {0, 0, 0, 0},
-        }, new Color[]{Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE}); // 색상은 예시, 실제 게임에 맞게 조정
+        }, new Color[]{Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE}
+        , BlockType.ExtensionItemBlock); // 색상은 예시, 실제 게임에 맞게 조정
     }
 }

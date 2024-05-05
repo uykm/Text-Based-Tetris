@@ -11,6 +11,7 @@ public class LBlock extends Block {
             {0, 3, 3, 3},
             {0, 3, 0, 0},
             {0, 0, 0, 0}
-        }, new Color[]{Color.ORANGE, Color.WHITE,  Color.WHITE,  Color.RED});
+        }, new Color[]{Color.ORANGE, Color.WHITE,  Color.WHITE,  Color.RED}
+        , BlockType.LBlock);
     }
 }

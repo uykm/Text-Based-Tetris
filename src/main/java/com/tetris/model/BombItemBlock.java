@@ -11,7 +11,8 @@ public class BombItemBlock extends Block {
                 {0, 0, 12, 0},
                 {0, 11, 11, 0},
                 {0, 11, 11, 0},
-        }, new Color[]{Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE}); // 색상은 예시, 실제 게임에 맞게 조정
+        }, new Color[]{Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE}
+        , BlockType.BombItemBlock); // 색상은 예시, 실제 게임에 맞게 조정
     }
 
 }

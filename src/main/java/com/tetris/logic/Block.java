@@ -10,15 +10,17 @@ import static com.tetris.logic.SettingProperties.DEFAULT_COLOR_MODE;
 public abstract class Block {
     protected int[][] shape;
     protected Color[] colors;
+    private final BlockType blockType;
     private final SettingController settingController;
     private final RWSelection rwSelection;
     private static int erasedLineCountForItem = 0;
 
-    public Block(int[][] shape, Color[] colors) {
+    public Block(int[][] shape, Color[] colors, BlockType blockType) {
         settingController = new SettingController();
         rwSelection = new RWSelection(settingController.getDifficulty());
         this.shape = shape;
         this.colors = colors;
+        this.blockType = blockType;
     }
 
     public int getShape(int x, int y) {
@@ -46,6 +48,10 @@ public abstract class Block {
 
     public Color[] getColors() {
         return colors;
+    }
+
+    public BlockType getType() {
+        return blockType; // 블록 타입 반환
     }
 
     public int[][] shapeCopy() {
@@ -106,7 +112,8 @@ public abstract class Block {
             case WeightItemBlock -> new WeightItemBlock();
             case BombItemBlock -> new BombItemBlock();
             case ExtensionItemBlock -> new ExtensionItemBlock();
-            case ItemBlock -> new ItemBlock();
+            case WaterItemBlock -> WaterItemBlock.create();
+            case LineEraseItemBlock -> LineEraseItemBlock.create();
         };
     }
 
@@ -121,7 +128,7 @@ public abstract class Block {
     //select for the block
     public Block selectBlock(boolean isItem, int erasedLineCount) {
         // 10줄이 삭제될 때마다 아이템 블록 생성 로직
-        if (isItem && erasedLineCount % 10 == 0 && getErasedLineCountForItem() < erasedLineCount) {
+        if (isItem && erasedLineCount % 2 == 0 && getErasedLineCountForItem() < erasedLineCount) {
             setErasedLineCountForItem(erasedLineCount);
             return selectItemBlock();
         } else {
@@ -144,8 +151,8 @@ public abstract class Block {
     public Block selectItemBlock() {
         RWSelection rwSelection = new RWSelection(3);
         return switch (rwSelection.select()) {
-            case 0 -> new ItemBlock().waterBlock();
-            case 1 -> new ItemBlock().lineBlock();
+            case 0 -> WaterItemBlock.create();
+            case 1 -> LineEraseItemBlock.create();
             case 2 -> new BombItemBlock();
             case 3 -> new WeightItemBlock();
             default -> new ExtensionItemBlock();
