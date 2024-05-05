@@ -1,32 +1,33 @@
 package com.tetris.logic;
 
 import com.tetris.model.*;
-import com.tetris.ui.InGameScreen;
-
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class BoardController {
     public static final int BOMB_BODY = 11;
     public static final int BOMB_EVENT = 13;
-    public static final int EXTEND_BLOCK = 14;
-    public static final int EXTEND_BLOCK_EVENT = 15;
+    final private int BLOCK_COUNT_TO_SPEED_UP = 15;
+    final private int LINE_COUNT_TO_SPEED_UP = 8;
+    final private int BLOCK_SPEED_UP_THRESHOLD = 20;
+    final private int LINE_SPEED_UP_THRESHOLD = 40;
 
     final private Board grid;
     final private InGameScoreController inGameScoreController;
     final private GameController gameController;
-    // final private ItemBlockController itemBlockController;
-    // 게임 보드
-    boolean waterBlockMoved = false;
+    final private ItemBlockController itemBlockController;
+
+    // 현재 블록, 다음 블록
+    private Block currentBlock;
+    private Block nextBlock = new NullBlock();
+
+    // 블록의 초기 좌표
+    private int x, y;
 
     // 게임 보드의 너비, 높이
     final private int WIDTH;
     final private int HEIGHT;
     private int erasedLineCount = 0;
-    private boolean isItemMode;
-    // 현재 블록, 다음 블록
-    private Block currentBlock;
-    private Block nextBlock = new NullBlock();
+    private final boolean isItemMode;
+
     // stopCount: 조작이 없으면 1씩 증가,
     private int stopCount = 0;
     // limitCount: 블록이 바닥에 닿은 순간 1씩 증가, 2 초과시 블록을 고정.
@@ -42,17 +43,12 @@ public class BoardController {
     private int placedBlockCount;
     private boolean canMoveSide;
 
-    final int BLOCK_COUNT_TO_SPEED_UP = 15;
-    final int LINE_COUNT_TO_SPEED_UP = 8;
-    final int BLOCK_SPEED_UP_THRESHOLD = 20;
-    final int LINE_SPEED_UP_THRESHOLD = 40;
-
     private boolean needNewBlock = false;
 
     public BoardController(GameController gameController, InGameScoreController inGameScoreController, Boolean isItemMode) {
         this.isItemMode = isItemMode;
         this.grid = new Board();
-        // this.itemBlockController = new ItemBlockController(grid, grid.getWidth(), grid.getHeight());
+        this.itemBlockController = new ItemBlockController(grid, grid.getWidth(), grid.getHeight());
         this.inGameScoreController = inGameScoreController;
         this.WIDTH = grid.getWidth();
         this.HEIGHT = grid.getHeight();
@@ -63,22 +59,6 @@ public class BoardController {
         this.canMoveSide = true;
         this.nextBlock = nextBlock.selectBlock(isItemMode, erasedLineCount);
     }
-
-    public boolean getNewBlockState() {
-        return needNewBlock;
-    }
-
-    private void setNewBlockState(boolean state) {
-        needNewBlock=state;
-        if(state){
-            excludeBomb();
-            extendBlocks();
-            flowWaterBlock();
-        }
-    }
-
-    // 블록의 초기 좌표
-    int x, y;
 
     private void checkSpeedUp() {
 
@@ -111,7 +91,7 @@ public class BoardController {
         this.currentBlock = nextBlock;
         canMoveSide = true;
         this.nextBlock = nextBlock.selectBlock(isItemMode, erasedLineCount);
-        if (collisionCheck(6, 2)) {
+        if (grid.collisionCheck(currentBlock, 6, 2)) {
             checkSpeedUp();
             x = 6;
             y = 2;
@@ -134,25 +114,16 @@ public class BoardController {
         }
     }
 
+    public boolean getNewBlockState() {
+        return needNewBlock;
+    }
 
-    // 충돌 검사, 충돌하지 않으면 true 반환
-    public boolean collisionCheck(int newX, int newY) {
-        for (int i = 0; i < currentBlock.height(); i++) {
-            for (int j = 0; j < currentBlock.width(); j++) {
-                if (currentBlock.getShape(j, i) != 0) { // Check if part of the block
-                    int boardX = newX + j;
-                    int boardY = newY + i;
-                    if (boardX < 3 || boardX >= WIDTH + 3 || boardY < 3 || boardY >= HEIGHT + 3) {
-                        return false; // Out of bounds
-                    }
-                    if (grid.getBoard()[boardY][boardX] != 0) {
-                        // F((WeightItemBlock)currentBlock).isActive = false;
-                        return false; // Position already occupied
-                    }
-                }
-            }
+    private void setNewBlockState(boolean state) {
+        needNewBlock=state;
+        if(state){
+            itemBlockController.handleItemBlock(currentBlock, x, y);
+            lineCheck();
         }
-        return true; // No collision detected
     }
 
 
@@ -222,14 +193,6 @@ public class BoardController {
         }
     }
 
-    private void eraseOneBlock(int x, int y) {
-        grid.getBoard()[y][x] = 0;
-    }
-
-    private void placeOneBlock(int x, int y, int blockType) {
-        grid.getBoard()[y][x] = blockType;
-    }
-
     // 블록을 이동시킴
     public void moveBlock(Direction direction) {
         if (needNewBlock) {
@@ -241,36 +204,37 @@ public class BoardController {
         }
         switch (direction) {
             case LEFT -> {
-                if (canMoveSide && collisionCheck(x - 1, y)) {
+                if (canMoveSide && grid.collisionCheck(currentBlock, x - 1, y)) {
                     x--;
                     stopCount = 0;
                 }
                 placeBlock();
             }
             case RIGHT -> {
-                if (canMoveSide && collisionCheck(x + 1, y)) {
+                if (canMoveSide && grid.collisionCheck(currentBlock, x + 1, y)) {
                     x++;
                     stopCount = 0;
                 }
                 placeBlock();
             }
             case DOWN -> {
-                if (collisionCheck(x, y + 1)) {
+                if (grid.collisionCheck(currentBlock, x, y + 1)) {
                     placeDown();
                     inGameScoreController.addScoreOnBlockMoveDown(); // 한 칸 내릴 때마다 1점 추가
                 } else { // 충돌!
                     // 무게추 블럭인 경우
                     if (currentBlock instanceof WeightItemBlock) {
                         canMoveSide = false;
-                        breakBlocks(x, y + currentBlock.height() - 1, currentBlock.width());
+                        itemBlockController.handleItemBlock(currentBlock, x, y);
                     } else {
                         // 무게추 블럭이 아닌 경우
                         stopCount++;
                         limitCount++;
                     }
+
                     placeBlock();
 
-                    // 2틱 동안 움직임 없거나 충돌 후 2틱이 지나면 블록을 고정시킴
+                    // 경계선에 닿은 경우 혹은 2틱 동안 움직임 없거나 충돌 후 2틱이 지나면 블록을 고정시킴
                     if (stopCount > 1 || limitCount > 1) {
                         checkGameOver();
                         setNewBlockState(true);
@@ -286,7 +250,6 @@ public class BoardController {
                 placeBlock();
             }
             case SPACE -> {
-
                 // space바 누르면 바로 터지게
                 if (currentBlock instanceof BombItemBlock) {
                     placeBlock();
@@ -294,7 +257,7 @@ public class BoardController {
                     break;
                 }
 
-                while (collisionCheck(x, y + 1)) {
+                while (grid.collisionCheck(currentBlock, x, y + 1)) {
                     y++;
                     inGameScoreController.addScoreOnBlockMoveDown(); // 한 칸 내릴 때마다 1점 추가
                 }
@@ -314,6 +277,10 @@ public class BoardController {
         }
     }
 
+    private boolean isOutOfBoard() {
+        return x <= 2 || x >= WIDTH + 3 || y <= 2 || y >= HEIGHT + 2;
+    }
+
     // 블록을 회전시킴. 충돌 시 회전하지 않음
     public void rotateBlock() {
         if (currentBlock instanceof WeightItemBlock || currentBlock instanceof BombItemBlock || currentBlock instanceof ExtensionItemBlock) {
@@ -322,13 +289,13 @@ public class BoardController {
         currentBlock.rotate();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (collisionCheck(x + i, y + j)) {
+                if (grid.collisionCheck(currentBlock, x + i, y + j)) {
                     inGameScoreController.addScoreOnBlockMoveDown(j);
                     x += i;
                     y += j;
                     return;
                 }
-                if (collisionCheck(x - i, y + j)) {
+                if (grid.collisionCheck(currentBlock, x - i, y + j)) {
                     inGameScoreController.addScoreOnBlockMoveDown(j);
                     x -= i;
                     y += j;
@@ -378,183 +345,12 @@ public class BoardController {
             // 폭탄 이벤트 제거
             for (int j = 3; j < WIDTH + 3; j++) {
                 if (grid.getBoard()[i][j] == 13) {
-                    eraseOneBlock(j, i);
+                    grid.eraseOneBlock(j, i);
                 }
             }
         }
 
         return blink;
-    }
-
-
-    // ToDo: 무게 추 블럭 로직
-
-    private void breakBlocks(int x, int y, int length) {
-        // 경계선에 닿은 경우
-        if (x <= 2 || x >= WIDTH + 3 || y <= 2 || y >= HEIGHT + 2) {
-            stopCount = 2;
-            limitCount = 2;
-            return;
-        }
-
-        for (int i = x; i < x + length; i++) {
-            grid.getBoard()[y + 1][i] = 0;
-        }
-
-        for (int i = y; i > 3; i--) {
-            System.arraycopy(grid.getBoard()[i - 1], x, grid.getBoard()[i], x, length);
-        }
-
-        this.y += 1;
-    }
-
-
-    // TODO: 물 블럭 로직
-
-    //물 블록 좌우 흐름 가능 여부
-    private boolean canFlowSide(int x, int y, Direction direction) {
-        // 현재 위치에서 방향을 따른 옆 칸이 보드 안에 있는지 확인
-        if (direction == Direction.LEFT && (x - 1 >= 3)) {
-            return grid.getBoard()[y][x - 1] == 0;  // 왼쪽으로 확장 가능한지 확인
-        }
-        else if (direction == Direction.RIGHT && (x + 1 <= 12)) {
-            return grid.getBoard()[y][x + 1] == 0;  // 오른쪽으로 확장 가능한지 확인
-        }
-        return false;
-    }
-
-    //물 블록 좌우 흐름
-    private void flowSide(int x, int y) {
-        int newX = x;
-        while (grid.getBoard()[y][newX + 1] == 10){
-            newX++;
-        }
-        if(canFlowSide(newX, y, Direction.RIGHT)) {
-            for(int j=newX; j>=x; j--) {
-                eraseOneBlock(j, y);
-                placeOneBlock(j + 1, y, 10);
-            }
-            eraseOneBlock(x, y-1);
-            placeOneBlock(x, y, 10);
-            waterBlockMoved = true;
-            return;
-        }
-        newX = x;
-        while (grid.getBoard()[y][newX - 1] == 10){
-            newX--;
-        }
-        if(canFlowSide(newX, y, Direction.LEFT)) {
-            for(int j=newX; j<=x; j++) {
-                eraseOneBlock(j, y);
-                placeOneBlock(j - 1, y, 10);
-            }
-            eraseOneBlock(x, y-1);
-            placeOneBlock(x, y, 10);
-            waterBlockMoved = true;
-        }
-    }
-
-    //물 블록 흐름
-    public void flowWaterBlock() {
-        do {
-            waterBlockMoved = false;
-            for (int height = 3; height < 23; height++) {
-                for (int width = 3; width < 13; width++) {
-                    if (grid.getBoard()[height][width] == 10) {  // 물 블록 발견
-                        // 아래로 흐를 수 있는지 확인
-                        if (grid.getBoard()[height + 1][width] == 0) {
-                            eraseOneBlock(width, height);
-                            placeOneBlock(width, height + 1, 10);
-                            waterBlockMoved = true;
-                        } else {
-                            if (grid.getBoard()[height + 1][width] == 10) {
-                                // 옆으로 흐를 수 있는지 확인
-                                flowSide(width, height + 1);
-                            }
-                        }
-                    }
-                }
-            }
-        } while (waterBlockMoved);  // 블록이 이동하는 동안 계속 반복
-        lineCheck();
-    }
-
-
-    // ToDo: 폭탄 블럭 로직
-    private void excludeBomb() {
-        // 폭탄 블록 주변 8칸을 지우기 위한 방향 배열
-        int[] dx = {0, 1, 1, 1, 0, -1, -1, -1};
-        int[] dy = {-1, -1, 0, 1, 1, 1, 0, -1};
-
-        // 상하 좌우로 한 칸씩 더 지우기 위한 방향 배열
-        int[] dx2 = {0, 1, 2, 1, 0, -1, -2, -1};
-        int[] dy2 = {-2, -1, 0, 1, 2, 1, 0, -1};
-
-        boolean[][] toRemove = new boolean[26][16];
-        for (int height = 3; height < 23; height++) {
-            for (int width = 3; width < 13; width++) {
-
-                if (grid.getBoard()[height][width] == BOMB_BODY) {  // 폭탄 블록 발견
-                    toRemove[height][width] = true;
-                    for(int i = 0; i < 8; ++i) {
-                        int nx = width + dx[i];
-                        int ny = height + dy[i];
-                        if(nx >= 3 && nx < 13 && ny >= 3 && ny < 23) {
-                            toRemove[ny][nx] = true;
-                        }
-
-                        // 상하좌우로 한 칸을 더 탐색하여 블럭 지우기
-                        int nx2 = width + dx2[i];
-                        int ny2 = height + dy2[i];
-                        if(nx2 >= 3 && nx2 < 13 && ny2 >= 3 && ny2 < 23) {
-                            toRemove[ny2][nx2] = true;
-                        }
-                    }
-                }
-            }
-        }
-
-        for (int height = 3; height < 23; height++) {
-            for (int width = 3; width < 13; width++) {
-                if (toRemove[height][width]) {  // 폭탄 블록 발견
-                    grid.getBoard()[height][width] = 13;
-                    // eraseOneBlock(width, height);
-                }
-            }
-        }
-    }
-
-    // ToDo: 확장 블럭 로직
-    private void extendBlocks() {
-        int[] dx = {0, 1, 1, 1, 0, -1, -1, -1};
-        int[] dy = {-1, -1, 0, 1, 1, 1, 0, -1};
-        boolean[][] toCreate = new boolean[26][16];
-        for (int height = 3; height < 23; height++) {
-            for (int width = 3; width < 13; width++) {
-                if (grid.getBoard()[height][width] == EXTEND_BLOCK) {  // 확장 아이템 블록 발견
-                    toCreate[height][width] = true;
-                    for(int i = 0; i < 8; ++i) {
-                        int nx = width + dx[i];
-                        int ny = height + dy[i];
-                        if(nx >= 3 && nx < 13 && ny >= 3 && ny < 23) {
-                            toCreate[ny][nx] = true;
-                        }
-                    }
-                }
-            }
-        }
-
-        for (int height = 3; height < 23; height++) {
-            for (int width = 3; width < 13; width++) {
-                if (toCreate[height][width]
-                        && (grid.getBoard()[height][width] == 0 || grid.getBoard()[height][width] == EXTEND_BLOCK)) {  // 확장 아이템 블록 발견
-                    grid.getBoard()[height][width] = EXTEND_BLOCK_EVENT;
-                    toCreate[height][width] = false;
-                }
-            }
-        }
-
-        lineCheck();
     }
 
     public Block getCurrentBlock() {

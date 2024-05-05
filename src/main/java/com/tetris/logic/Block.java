@@ -99,6 +99,7 @@ public abstract class Block {
         }
     }
 
+
     public static Block getBlock(BlockType blockType) {
         return switch (blockType) {
             case IBlock -> new IBlock();
@@ -151,11 +152,11 @@ public abstract class Block {
     public Block selectItemBlock() {
         RWSelection rwSelection = new RWSelection(3);
         return switch (rwSelection.select()) {
-            case 0 -> WaterItemBlock.create();
-            case 1 -> LineEraseItemBlock.create();
-            case 2 -> new BombItemBlock();
-            case 3 -> new WeightItemBlock();
-            default -> new ExtensionItemBlock();
+//            case 0 -> WaterItemBlock.create();
+//            case 1 -> LineEraseItemBlock.create();
+//            case 2 -> new BombItemBlock();
+//            case 3 -> new WeightItemBlock();
+            default -> new WeightItemBlock();
         };
     }
 }
