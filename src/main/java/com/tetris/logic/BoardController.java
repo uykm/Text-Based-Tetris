@@ -23,7 +23,10 @@ public class BoardController {
     // 게임 보드의 너비, 높이
     final private int WIDTH;
     final private int HEIGHT;
-    private int erasedLineCount = 0;
+
+    // 지워진 라인 개수
+    private int erasedLineCount;
+
     private final boolean isItemMode;
 
     private boolean canPlaceBlock;
@@ -47,6 +50,7 @@ public class BoardController {
         this.canPlaceBlock = true;
         this.blockCountWithNoLineErase = 0;
         this.lastLineEraseTime = 0;
+        this.erasedLineCount = 0;
         this.nextBlock = nextBlock.selectBlock(isItemMode, erasedLineCount);
     }
 
@@ -89,7 +93,6 @@ public class BoardController {
             currentBlock = new NullBlock();
         }
         setNewBlockState(false);
-        // addScoreMessage(Block.getErasedLineCountForItem() + "");
     }
 
 
@@ -140,7 +143,6 @@ public class BoardController {
             if (canErase) {
                 blinkLine(i);
                 lineCount++;
-                erasedLineCount++;
             }
         }
         updateScoreByErasedLineCnt(lineCount);
@@ -164,6 +166,7 @@ public class BoardController {
 
     // 라인을 지우고 위에 있는 블록들을 내림
     public void eraseLine(int line) {
+
         for(int i=3; i<WIDTH+3; i++) {
             grid.getBoard()[line][i] = 0;
         }
@@ -318,6 +321,7 @@ public class BoardController {
 
     // ToDo: 줄 삭제 이벤트 로직
     private void blinkLine(int line) {
+        erasedLineCount++;
         for (int i = 3; i < WIDTH + 3; i++) {
             grid.getBoard()[line][i] = -2;
         }
