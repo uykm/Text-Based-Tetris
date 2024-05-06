@@ -95,7 +95,7 @@ SettingScreen extends JFrame implements ActionListener {
 
         // Back to Main Menu
         // btnMenu = createBtn("Menu", "back", this);
-        btnMenu = createLogoBtn("menu", this, "src/image/backLogo.png");
+        btnMenu = createLogoBtn("menu", this, "src/main/java/com/tetris/image/backLogo.png");
         btnMenu.setPreferredSize((new Dimension(60, 32)));
         btnMenu.addKeyListener(new MyKeyListener());
         JPanel backPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));

@@ -111,6 +111,7 @@ replay_pid*
 =======
 .idea/**/libraries
 
+build/*
 *.xml
 .idea/misc.xml
 .idea/vcs.xml
