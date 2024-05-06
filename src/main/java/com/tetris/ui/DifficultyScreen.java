@@ -1,32 +1,28 @@
 package com.tetris.ui;
 
+import com.tetris.component.Button;
 import com.tetris.logic.GameController;
 import com.tetris.logic.SettingController;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import static com.tetris.component.Button.*;
 import static com.tetris.component.ScreenSize.setWidthHeight;
 
 public class DifficultyScreen extends JFrame implements ActionListener {
 
-    JButton btnEasy, btnNormal, btnHard;
-    JButton btnGeneral, btnItem;
-    JButton btnMenu;
-    boolean isItem;
-    SettingController settingController = new SettingController();
+    private JButton btnEasy, btnNormal, btnHard;
+    private JButton btnMenu;
+    private boolean isItem;
+    private SettingController settingController = new SettingController();
 
-    private int btnSize;
+    private final int btnSize;
 
     public DifficultyScreen(boolean isItem) {
-
-        // 노말 모드 vs 아이템 모드
         this.isItem = isItem;
 
         setTitle("Tetris - Difficulty");
@@ -45,19 +41,17 @@ public class DifficultyScreen extends JFrame implements ActionListener {
                 btnSize = 170;
                 break;
         }
-        setLocationRelativeTo(null); // Centered window
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        // 레이아웃 설정
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-        // 버튼
         JPanel topPanel = new JPanel();
-        btnEasy = createLogoBtnUp("Easy", "easy", this, screenSize, "src/image/easy_logo.png");
+        btnEasy = Button.createLogoBtnUp("Easy", "easy", this, screenSize, "src/main/java/com/tetris/image/easy_logo.png");
         btnEasy.setPreferredSize((new Dimension(btnSize, btnSize)));
-        btnNormal = createLogoBtnUp("Normal", "normal", this, screenSize, "src/image/normal_logo.png");
+        btnNormal = Button.createLogoBtnUp("Normal", "normal", this, screenSize, "src/main/java/com/tetris/image/normal_logo.png");
         btnNormal.setPreferredSize((new Dimension(btnSize, btnSize)));
-        btnHard = createLogoBtnUp("Hard", "hard", this, screenSize, "src/image/hard_logo.png");
+        btnHard = Button.createLogoBtnUp("Hard", "hard", this, screenSize, "src/main/java/com/tetris/image/hard_logo.png");
         btnHard.setPreferredSize((new Dimension(btnSize, btnSize)));
 
         btnEasy.addKeyListener(new MyKeyListener());
@@ -73,8 +67,7 @@ public class DifficultyScreen extends JFrame implements ActionListener {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout());
 
-        // btnMenu = createBtn("Menu", "menu", this);
-        btnMenu = createLogoBtn("menu", this, "src/image/backLogo.png");
+        btnMenu = Button.createLogoBtn("menu", this, "src/main/java/com/tetris/image/backLogo.png");
         btnMenu.setPreferredSize((new Dimension(60, 32)));
         btnMenu.addKeyListener(new MyKeyListener());
 
@@ -82,7 +75,7 @@ public class DifficultyScreen extends JFrame implements ActionListener {
         add(bottomPanel, BorderLayout.SOUTH);
 
         pack();
-        setLocationRelativeTo(null); // 위치를 화면 중앙으로 설정
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
@@ -91,21 +84,15 @@ public class DifficultyScreen extends JFrame implements ActionListener {
         String command = e.getActionCommand();
         setVisible(false);
         switch (command) {
-            case "easy" -> {
-                settingController.saveSettings("difficulty", "0");
+            case "easy":
+            case "normal":
+            case "hard":
+                settingController.saveSettings("difficulty", command.equals("easy") ? "0" : command.equals("normal") ? "1" : "2");
                 new GameController(isItem);
-            }
-            case "normal" -> {
-                settingController.saveSettings("difficulty", "1");
-                new GameController(isItem);
-            }
-            case "hard" -> {
-                settingController.saveSettings("difficulty", "2");
-                new GameController(isItem);
-            }
-            case "menu" -> {
+                break;
+            case "menu":
                 new MainMenuScreen();
-            }
+                break;
         }
     }
 
@@ -113,18 +100,14 @@ public class DifficultyScreen extends JFrame implements ActionListener {
         setVisible(false);
         if (btnEasy.isFocusOwner()) {
             settingController.saveSettings("difficulty", "0");
-            setVisible(false);
             new GameController(isItem);
         } else if (btnNormal.isFocusOwner()) {
             settingController.saveSettings("difficulty", "1");
-            setVisible(false);
             new GameController(isItem);
         } else if (btnHard.isFocusOwner()) {
             settingController.saveSettings("difficulty", "2");
-            setVisible(false);
             new GameController(isItem);
         } else if (btnMenu.isFocusOwner()) {
-            setVisible(false);
             new MainMenuScreen();
         }
     }

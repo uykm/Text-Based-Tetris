@@ -98,13 +98,13 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         // 중앙 패널에 Play 버튼 추가
         JPanel centerPanel = new JPanel();
         add(Box.createVerticalStrut(10));
-        btnPlay = createLogoBtnNext("PLAY", "play", this, screenSize, "src/image/play_logo.png");
+        btnPlay = createLogoBtnNext("PLAY", "play", this, screenSize, "src/main/java/com/tetris/image/play_logo.png");
         btnPlay.setPreferredSize(new Dimension(playWidth, playHeight)); // (150, 80) & (250, 130) & (400, 200)
         btnPlay.setFocusable(true);
         centerPanel.add(btnPlay);
 
         // btnItem 버튼 추가
-        btnItem = createLogoBtnNext("ITEM", "item", this, screenSize, "src/image/mario.png");
+        btnItem = createLogoBtnNext("ITEM", "item", this, screenSize, "src/main/java/com/tetris/image/mario.png");
         btnItem.setPreferredSize(new Dimension(playWidth, playHeight));
         btnItem.setFocusable(true);
         centerPanel.add(btnItem);
@@ -116,17 +116,17 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout()); // 버튼들이 나란하게 배치되도록 FlowLayout 사용
 
-        btnSetting = createLogoBtnUp("Setting", "setting", this, screenSize, "src/image/setting_logo.png");
+        btnSetting = createLogoBtnUp("Setting", "setting", this, screenSize, "src/main/java/com/tetris/image/setting_logo.png");
         btnSetting.setPreferredSize((new Dimension(menuWidth, menuHeight))); // (100, 100) & (170, 140) & (270, 200)
         btnSetting.setFocusable(true);
         bottomPanel.add(btnSetting);
 
-        btnRanking = createLogoBtnUp("Rank", "ranking", this, screenSize, "src/image/ranking.png");
+        btnRanking = createLogoBtnUp("Rank", "ranking", this, screenSize, "src/main/java/com/tetris/image/ranking.png");
         btnRanking.setPreferredSize((new Dimension(menuWidth, menuHeight)));
         btnRanking.setFocusable(true);
         bottomPanel.add(btnRanking);
 
-        btnExit = createLogoBtnUp("Exit", "exit", this, screenSize, "src/image/door.png");
+        btnExit = createLogoBtnUp("Exit", "exit", this, screenSize, "src/main/java/com/tetris/image/door.png");
         btnExit.setPreferredSize((new Dimension(menuWidth, menuHeight)));
         btnExit.setFocusable(true);
         bottomPanel.add(btnExit);
