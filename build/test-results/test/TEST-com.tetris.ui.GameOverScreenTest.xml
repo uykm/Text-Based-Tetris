@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.tetris.ui.GameOverScreenTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-05-04T14:26:18" hostname="sinmingyuui-MacBookPro.local" time="0.193">
+<testsuite name="com.tetris.ui.GameOverScreenTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-05-04T18:15:21" hostname="sinmingyuui-MacBookPro.local" time="0.203">
   <properties/>
-  <testcase name="actionPerformedTest()" classname="com.tetris.ui.GameOverScreenTest" time="0.193"/>
+  <testcase name="actionPerformedTest()" classname="com.tetris.ui.GameOverScreenTest" time="0.203"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

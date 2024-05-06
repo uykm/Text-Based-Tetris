@@ -2,8 +2,8 @@ package com.tetris.logic;
 
 public class Board {
     // 게임 보드 높이, 너비
-    private final int width = 10;
-    private final int height = 20;
+    private final int WIDTH = 10;
+    private final int HEIGHT = 20;
     // 게임 보드 확장된(=> 오버플로우 방지) 높이, 너비
     private final int extendedWidth = 16;
     private final int extendedHeight = 26;
@@ -22,9 +22,9 @@ public class Board {
                 board[i][j] = -1;
             }
         }
-        for(int i=2; i<height+4; i++) {
-            for(int j=2; j<width+4; j++) {
-                if(i == 2 || i == height+3 || j == 2 || j == width+3) {
+        for(int i=2; i<HEIGHT+4; i++) {
+            for(int j=2; j<WIDTH+4; j++) {
+                if(i == 2 || i == HEIGHT+3 || j == 2 || j == WIDTH+3) {
                     board[i][j] = 20;
                 } else {
                     board[i][j] = 0;
@@ -35,24 +35,43 @@ public class Board {
 
     // 게임 보드 초기화
     public void clearBoard() {
-        for(int i=2; i<height+4; i++) {
-            for(int j=2; j<width+4; j++) {
+        for(int i=2; i<HEIGHT+4; i++) {
+            for(int j=2; j<WIDTH+4; j++) {
                 board[i][j] = 0;
             }
         }
     }
 
     // 게임 보드 배열을 반환
-    public int[][] getBoard() {
-        return board;
-    }
-
+    public int[][] getBoard() { return board; }
 
     // 게임 보드의 너비, 높이 반환
-    public int getWidth() {
-        return width;
-    }
+    public int getWidth() { return WIDTH; }
     public int getHeight() {
-        return height;
+        return HEIGHT;
+    }
+
+    public void eraseOneBlock(int x, int y) { board[y][x] = 0; }
+
+    public void placeOneBlock(int x, int y, int blockType) { board[y][x] = blockType; }
+
+    // 충돌 검사, 충돌하지 않으면 true 반환
+    public boolean collisionCheck(Block block, int newX, int newY) {
+        for (int i = 0; i < block.height(); i++) {
+            for (int j = 0; j < block.width(); j++) {
+                if (block.getShape(j, i) != 0) { // Check if part of the block
+                    int boardX = newX + j;
+                    int boardY = newY + i;
+                    if (boardX < 3 || boardX >= WIDTH + 3 || boardY < 3 || boardY >= HEIGHT + 3) {
+                        return false; // Out of bounds
+                    }
+                    if (board[boardY][boardX] != 0) {
+                        // F((WeightItemBlock)currentBlock).isActive = false;
+                        return false; // Position already occupied
+                    }
+                }
+            }
+        }
+        return true; // No collision detected
     }
 }

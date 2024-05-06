@@ -9,10 +9,12 @@ public enum BlockType {
     TBlock,
     ZBlock,
     NullBlock,
+    LineEraseItemBlock,
     WeightItemBlock,
     BombItemBlock,
     ExtensionItemBlock,
-    ItemBlock;
+    WaterItemBlock;
+
     public static BlockType getBlockTypeByIndex(int index) {
         return values()[index];
     }

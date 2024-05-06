@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.tetris.logic.ScoreTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2024-05-04T14:26:18" hostname="sinmingyuui-MacBookPro.local" time="0.007">
+<testsuite name="com.tetris.logic.ScoreTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2024-05-04T18:15:20" hostname="sinmingyuui-MacBookPro.local" time="0.003">
   <properties/>
   <testcase name="compareTo()" classname="com.tetris.logic.ScoreTest" time="0.001"/>
-  <testcase name="testToString()" classname="com.tetris.logic.ScoreTest" time="0.0"/>
+  <testcase name="testToString()" classname="com.tetris.logic.ScoreTest" time="0.001"/>
   <testcase name="testHashCode()" classname="com.tetris.logic.ScoreTest" time="0.001"/>
-  <testcase name="testEquals()" classname="com.tetris.logic.ScoreTest" time="0.001"/>
+  <testcase name="testEquals()" classname="com.tetris.logic.ScoreTest" time="0.0"/>
   <testcase name="getPlayerName()" classname="com.tetris.logic.ScoreTest" time="0.0"/>
-  <testcase name="getScore()" classname="com.tetris.logic.ScoreTest" time="0.001"/>
+  <testcase name="getScore()" classname="com.tetris.logic.ScoreTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

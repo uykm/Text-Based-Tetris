@@ -11,6 +11,7 @@ public class ZBlock extends Block {
             {0, 7, 7, 0},
             {0, 0, 7, 7},
             {0, 0, 0, 0}
-        }, new Color[]{Color.RED, Color.MAGENTA,  Color.GREEN,  Color.PINK});
+        }, new Color[]{Color.RED, Color.MAGENTA,  Color.GREEN,  Color.PINK}
+        , BlockType.ZBlock);
     }
 }

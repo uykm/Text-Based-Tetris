@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.tetris.logic.RWSelectionTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2024-05-04T14:26:17" hostname="sinmingyuui-MacBookPro.local" time="0.113">
+<testsuite name="com.tetris.logic.RWSelectionTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2024-05-04T18:15:20" hostname="sinmingyuui-MacBookPro.local" time="0.052">
   <properties/>
-  <testcase name="select()" classname="com.tetris.logic.RWSelectionTest" time="0.001"/>
-  <testcase name="testBlockDistribution_invalid()" classname="com.tetris.logic.RWSelectionTest" time="0.005"/>
-  <testcase name="testBlockDistribution_normal()" classname="com.tetris.logic.RWSelectionTest" time="0.036"/>
-  <testcase name="testBlockDistribution_easy()" classname="com.tetris.logic.RWSelectionTest" time="0.027"/>
-  <testcase name="testBlockDistribution_hard()" classname="com.tetris.logic.RWSelectionTest" time="0.021"/>
-  <testcase name="testBlockDistribution_item()" classname="com.tetris.logic.RWSelectionTest" time="0.018"/>
+  <testcase name="select()" classname="com.tetris.logic.RWSelectionTest" time="0.0"/>
+  <testcase name="testBlockDistribution_invalid()" classname="com.tetris.logic.RWSelectionTest" time="0.001"/>
+  <testcase name="testBlockDistribution_normal()" classname="com.tetris.logic.RWSelectionTest" time="0.016"/>
+  <testcase name="testBlockDistribution_easy()" classname="com.tetris.logic.RWSelectionTest" time="0.011"/>
+  <testcase name="testBlockDistribution_hard()" classname="com.tetris.logic.RWSelectionTest" time="0.009"/>
+  <testcase name="testBlockDistribution_item()" classname="com.tetris.logic.RWSelectionTest" time="0.01"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

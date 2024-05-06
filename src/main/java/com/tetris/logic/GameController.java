@@ -23,7 +23,6 @@ public class GameController implements PauseScreenCallback {
     JFrame frame;
     Timer timer;
 
-
     final int MAX_SPEED = 200;
 
     int currentSpeed;
