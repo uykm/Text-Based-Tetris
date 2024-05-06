@@ -43,30 +43,17 @@ public class Board {
     }
 
     // 게임 보드 배열을 반환
-    public int[][] getBoard() {
-        return board;
-    }
-
+    public int[][] getBoard() { return board; }
 
     // 게임 보드의 너비, 높이 반환
-    public int getWidth() {
-        return WIDTH;
-    }
+    public int getWidth() { return WIDTH; }
     public int getHeight() {
         return HEIGHT;
     }
 
-    public void eraseOneBlock(int x, int y) {
-        if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
-            board[y][x] = 0;
-        }
-    }
+    public void eraseOneBlock(int x, int y) { board[y][x] = 0; }
 
-    public void placeOneBlock(int x, int y, int blockType) {
-        if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
-            board[y][x] = blockType;
-        }
-    }
+    public void placeOneBlock(int x, int y, int blockType) { board[y][x] = blockType; }
 
     // 충돌 검사, 충돌하지 않으면 true 반환
     public boolean collisionCheck(Block block, int newX, int newY) {

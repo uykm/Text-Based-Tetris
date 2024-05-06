@@ -13,16 +13,40 @@ public abstract class Block {
     private final BlockType blockType;
     private final SettingController settingController;
     private final RWSelection rwSelection;
+    public boolean canMoveSide;
     private static int erasedLineCountForItem = 0;
+
+    // stopCount: 조작이 없으면 1씩 증가,
+    private int stopCount = 0;
+    // limitCount: 블록이 바닥에 닿은 순간 1씩 증가, 2 초과시 블록을 고정.
+    // 블록이 moveDown => 0으로 초기화
+    private int limitCount = 0;
+
+    // 블록의 초기 좌표
+    private int x, y;
 
     public Block(int[][] shape, Color[] colors, BlockType blockType) {
         settingController = new SettingController();
         rwSelection = new RWSelection(settingController.getDifficulty());
+        this.x = 6;
+        this.y = 2;
         this.shape = shape;
         this.colors = colors;
         this.blockType = blockType;
+        this.canMoveSide = true;
     }
 
+    public int getX() { return this.x; }
+    public int getY() { return this.y; }
+    public void initializeXY() { this.x = 6; this.y = 2; }
+    public int moveRight() { return this.x++; }
+    public int moveLeft() { return this.x--; }
+    public int moveDown() { return this.y++; }
+    public int moveUp() { return this.y--; }
+    public int moveDownNSpaces(int n) { return this.y += n; }
+    public int moveRightNSpaces(int n) { return this.x += n; }
+    public int moveLeftNSpaces(int n) { return this.x -= n; }
+    
     public int getShape(int x, int y) {
         return shape[y][x];
     }
@@ -99,6 +123,19 @@ public abstract class Block {
         }
     }
 
+    public void initializeLimitCount() { this.limitCount = 0; }
+
+    public void initializeStopCount() { this.stopCount = 0; }
+
+    public void limitCountToTwo() { this.limitCount = 2; }
+
+    public void stopCountToTwo() { this.stopCount = 2; }
+
+    public void increaseLimitCount() { this.limitCount++; }
+
+    public void increaseStopCount() { this.stopCount++; }
+
+
 
     public static Block getBlock(BlockType blockType) {
         return switch (blockType) {
@@ -152,11 +189,15 @@ public abstract class Block {
     public Block selectItemBlock() {
         RWSelection rwSelection = new RWSelection(3);
         return switch (rwSelection.select()) {
-//            case 0 -> WaterItemBlock.create();
-//            case 1 -> LineEraseItemBlock.create();
-//            case 2 -> new BombItemBlock();
-//            case 3 -> new WeightItemBlock();
-            default -> new WeightItemBlock();
+            case 0 -> WaterItemBlock.create();
+            case 1 -> LineEraseItemBlock.create();
+            case 2 -> new BombItemBlock();
+            case 3 -> new WeightItemBlock();
+            default -> new ExtensionItemBlock();
         };
     }
+
+    public int getStopCount() { return this.stopCount; }
+
+    public int getLimitCount() { return this.limitCount; }
 }

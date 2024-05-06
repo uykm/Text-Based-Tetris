@@ -3,6 +3,8 @@ package com.tetris.logic;
 import com.tetris.model.Direction;
 
 public class ItemBlockController {
+    public static final int BOMB_BODY = 11;
+    public static final int BOMB_EVENT = 13;
     public static final int EXTEND_BLOCK = 14;
     public static final int EXTEND_BLOCK_EVENT = 15;
     private Board grid;
@@ -25,7 +27,7 @@ public class ItemBlockController {
                 applyWaterItem();
                 break;
             case WeightItemBlock:
-                applyWeightItem(x, y, block);
+                applyWeightItem(block, x, y);
                 break;
             case BombItemBlock:
                 applyBombItem(x, y);
@@ -33,8 +35,10 @@ public class ItemBlockController {
             case ExtensionItemBlock:
                 applyExtensionItem(x, y);
                 break;
-            default:
+            case LineEraseItemBlock:
                 // 줄 삭제 아이템인 경우
+                break;
+            default:
                 break;
         }
     }
@@ -54,7 +58,7 @@ public class ItemBlockController {
         for (int height = 3; height < 23; height++) {
             for (int width = 3; width < 13; width++) {
 
-                if (grid.getBoard()[height][width] == BoardController.BOMB_BODY) {  // 폭탄 블록 발견
+                if (grid.getBoard()[height][width] == BOMB_BODY) {  // 폭탄 블록 발견
                     toRemove[height][width] = true;
                     for(int i = 0; i < 8; ++i) {
                         int nx = width + dx[i];
@@ -85,15 +89,15 @@ public class ItemBlockController {
     }
 
     // ToDo: 무게 추 블록 로직
-    private void applyWeightItem(int x, int y, Block block) {
+    private void applyWeightItem(Block block, int x, int y) {
         // 로직 구현
         int length = block.width();
         y += block.height() - 1;
 
         // 경계선에 닿은 경우
         if (x <= 2 || x >= WIDTH + 3 || y <= 2 || y >= HEIGHT + 2) {
-            stopCount = 2;
-            limitCount = 2;
+            block.stopCountToTwo();
+            block.limitCountToTwo();
             return;
         }
 
@@ -104,7 +108,8 @@ public class ItemBlockController {
         for (int i = y; i > 3; i--) {
             System.arraycopy(grid.getBoard()[i - 1], x, grid.getBoard()[i], x, length);
         }
-        this.y += 1;
+        block.moveDown();
+        block.canMoveSide = false;
     }
 
     // ToDo: 물 블록 로직
