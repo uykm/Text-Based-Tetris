@@ -218,7 +218,6 @@ public class BoardController {
                 } else { // 충돌!
                     // 무게추 블럭인 경우
                     if (currentBlock instanceof WeightItemBlock) {
-                        currentBlock.canMoveSide = false;
                         itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                     } else {
                         // 무게추 블럭이 아닌 경우
