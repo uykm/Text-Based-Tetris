@@ -111,10 +111,12 @@ replay_pid*
 =======
 .idea/**/libraries
 
+*.xml
 .idea/misc.xml
 .idea/vcs.xml
 .idea/workspace.xml
 
-ranking.txt
+normalRanking.txt
+itemRanking.txt
 config.properties
 >>>>>>> develop
