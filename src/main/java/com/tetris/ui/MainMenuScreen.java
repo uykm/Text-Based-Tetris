@@ -19,9 +19,12 @@ public class MainMenuScreen extends JFrame implements ActionListener {
 
     JButton btnPlay;
     JButton btnItem;
+    JButton btnPvp;
+
     JButton btnSetting;
     JButton btnRanking;
     JButton btnExit;
+
     SettingController settingController = new SettingController();
 
     private String screenSize;
@@ -52,10 +55,10 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         switch (screenSize) {
             case "small":
                 setWidthHeight(390, 420, this);
-                playWidth = 150;
-                playHeight = 80;
+                playWidth = 120;
+                playHeight = 100;
 
-                menuWidth = 100;
+                menuWidth = 120;
                 menuHeight = 100;
 
                 titleFontSize = 70;
@@ -63,7 +66,7 @@ public class MainMenuScreen extends JFrame implements ActionListener {
                 break;
             case "big":
                 setWidthHeight(910, 940, this);
-                playWidth = 400;
+                playWidth = 270;
                 playHeight = 200;
 
                 menuWidth = 270;
@@ -73,11 +76,11 @@ public class MainMenuScreen extends JFrame implements ActionListener {
                 break;
             default:
                 setWidthHeight(650, 680, this);
-                playWidth = 250;
-                playHeight = 130;
+                playWidth = 200;
+                playHeight = 150;
 
-                menuWidth = 170;
-                menuHeight = 140;
+                menuWidth = 200;
+                menuHeight = 150;
 
                 titleFontSize = 110;
                 break;
@@ -108,6 +111,12 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         btnItem.setPreferredSize(new Dimension(playWidth, playHeight));
         btnItem.setFocusable(true);
         centerPanel.add(btnItem);
+
+        // btnBattle 버튼 추가
+        btnPvp = createLogoBtnNext("PVP", "pvp", this, screenSize, "src/main/java/com/tetris/image/pvp.png");
+        btnPvp.setPreferredSize(new Dimension(playWidth, playHeight));
+        btnPvp.setFocusable(true);
+        centerPanel.add(btnPvp);
 
         add(centerPanel, BorderLayout.CENTER);
 
@@ -141,6 +150,7 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         // Attach a key listener to each button
         btnPlay.addKeyListener(new MyKeyListener());
         btnItem.addKeyListener(new MyKeyListener());
+        btnPvp.addKeyListener(new MyKeyListener());
         btnSetting.addKeyListener(new MyKeyListener());
         btnRanking.addKeyListener(new MyKeyListener());
         btnExit.addKeyListener(new MyKeyListener());
@@ -152,12 +162,13 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         setVisible(false);
         switch (command) {
             case "play" -> {
-                // TODO : 난이도 선택 화면으로 넘어가서 GameController 실행
                 new DifficultyScreen(false);
             }
             case "item" -> {
-                // TODO : 난이도 선택 화면으로 넘어가서 GameController 실행
                 new DifficultyScreen(true);
+            }
+            case "pvp" -> {
+                new GameModeScreen();
             }
             case "setting" -> {
                 new SettingScreen();
@@ -194,6 +205,8 @@ public class MainMenuScreen extends JFrame implements ActionListener {
             new DifficultyScreen(false);
         } else if (btnItem.isFocusOwner()) {
             new DifficultyScreen(true);
+        } else if (btnPvp.isFocusOwner()) {
+            new GameModeScreen();
         } else if (btnSetting.isFocusOwner()) {
             new SettingScreen();
         } else if (btnRanking.isFocusOwner()) {
@@ -217,9 +230,11 @@ public class MainMenuScreen extends JFrame implements ActionListener {
     // 아래 방향키
     private void focusDownButton() {
         if (btnPlay.isFocusOwner()) {
-            btnRanking.requestFocusInWindow();
+            btnSetting.requestFocusInWindow();
         } else if (btnItem.isFocusOwner()) {
             btnRanking.requestFocusInWindow();
+        } else if (btnPvp.isFocusOwner()) {
+            btnExit.requestFocusInWindow();
         }
     }
 
@@ -227,6 +242,8 @@ public class MainMenuScreen extends JFrame implements ActionListener {
     private void focusLeftButton() {
         if (btnItem.isFocusOwner()) {
             btnPlay.requestFocusInWindow();
+        } else if (btnPvp.isFocusOwner()) {
+            btnItem.requestFocusInWindow();
         } else if (btnExit.isFocusOwner()) {
             btnRanking.requestFocusInWindow();
         } else if (btnRanking.isFocusOwner()) {
@@ -238,6 +255,8 @@ public class MainMenuScreen extends JFrame implements ActionListener {
     private void focusRightButton() {
         if (btnPlay.isFocusOwner()) {
             btnItem.requestFocusInWindow();
+        } else if (btnItem.isFocusOwner()) {
+            btnPvp.requestFocusInWindow();
         } else if (btnSetting.isFocusOwner()) {
             btnRanking.requestFocusInWindow();
         } else if (btnRanking.isFocusOwner()) {
