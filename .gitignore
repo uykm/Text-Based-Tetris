@@ -109,6 +109,7 @@ replay_pid*
 .idea/**/libraries
 build.gradle
 
+build/*
 *.xml
 .idea/misc.xml
 .idea/vcs.xml

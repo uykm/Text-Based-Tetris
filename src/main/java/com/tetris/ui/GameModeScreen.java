@@ -13,19 +13,18 @@ import java.awt.event.KeyEvent;
 
 import static com.tetris.component.ScreenSize.setWidthHeight;
 
-public class DifficultyScreen extends JFrame implements ActionListener {
+public class GameModeScreen extends JFrame implements ActionListener {
 
-    private JButton btnEasy, btnNormal, btnHard;
+    private JButton btnNormal, btnItem, btnTime;
     private JButton btnMenu;
-    private boolean isItem;
+
     private SettingController settingController = new SettingController();
 
     private final int btnSize;
 
-    public DifficultyScreen(boolean isItem) {
-        this.isItem = isItem;
+    public GameModeScreen() {
 
-        setTitle("Tetris - Difficulty");
+        setTitle("Tetris - GameMode");
         String screenSize = settingController.getScreenSize("screenSize", "small");
         switch (screenSize) {
             case "small":
@@ -47,20 +46,20 @@ public class DifficultyScreen extends JFrame implements ActionListener {
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         JPanel topPanel = new JPanel();
-        btnEasy = Button.createLogoBtnUp("Easy", "easy", this, screenSize, "src/main/java/com/tetris/image/easy_logo.png");
-        btnEasy.setPreferredSize((new Dimension(btnSize, btnSize)));
-        btnNormal = Button.createLogoBtnUp("Normal", "normal", this, screenSize, "src/main/java/com/tetris/image/normal_logo.png");
+        btnNormal = Button.createLogoBtnUp("Normal", "normal", this, screenSize, "src/main/java/com/tetris/image/play_logo.png");
         btnNormal.setPreferredSize((new Dimension(btnSize, btnSize)));
-        btnHard = Button.createLogoBtnUp("Hard", "hard", this, screenSize, "src/main/java/com/tetris/image/hard_logo.png");
-        btnHard.setPreferredSize((new Dimension(btnSize, btnSize)));
+        btnItem = Button.createLogoBtnUp("Item", "item", this, screenSize, "src/main/java/com/tetris/image/mario.png");
+        btnItem.setPreferredSize((new Dimension(btnSize, btnSize)));
+        btnTime = Button.createLogoBtnUp("Time", "time", this, screenSize, "src/main/java/com/tetris/image/time.png");
+        btnTime.setPreferredSize((new Dimension(btnSize, btnSize)));
 
-        btnEasy.addKeyListener(new MyKeyListener());
         btnNormal.addKeyListener(new MyKeyListener());
-        btnHard.addKeyListener(new MyKeyListener());
+        btnItem.addKeyListener(new MyKeyListener());
+        btnTime.addKeyListener(new MyKeyListener());
 
-        topPanel.add(btnEasy);
         topPanel.add(btnNormal);
-        topPanel.add(btnHard);
+        topPanel.add(btnItem);
+        topPanel.add(btnTime);
 
         add(topPanel, BorderLayout.CENTER);
 
@@ -84,29 +83,28 @@ public class DifficultyScreen extends JFrame implements ActionListener {
         String command = e.getActionCommand();
         setVisible(false);
         switch (command) {
-            case "easy":
-            case "normal":
-            case "hard":
-                settingController.saveSettings("difficulty", command.equals("easy") ? "0" : command.equals("normal") ? "1" : "2");
-                new GameController(isItem);
-                break;
-            case "menu":
-                new MainMenuScreen();
-                break;
+            case "normal" -> {
+                //
+            }
+            case "item" -> {
+                //
+            }
+            case "time" -> {
+                //
+            }
+            case "menu" -> {
+                //
+            }
         }
     }
 
     private void moveScreen() {
         setVisible(false);
-        if (btnEasy.isFocusOwner()) {
-            settingController.saveSettings("difficulty", "0");
-            new GameController(isItem);
-        } else if (btnNormal.isFocusOwner()) {
-            settingController.saveSettings("difficulty", "1");
-            new GameController(isItem);
-        } else if (btnHard.isFocusOwner()) {
-            settingController.saveSettings("difficulty", "2");
-            new GameController(isItem);
+        if (btnNormal.isFocusOwner()) {
+        } else if (btnItem.isFocusOwner()) {
+            //
+        } else if (btnTime.isFocusOwner()) {
+            //
         } else if (btnMenu.isFocusOwner()) {
             new MainMenuScreen();
         }
@@ -130,29 +128,29 @@ public class DifficultyScreen extends JFrame implements ActionListener {
     }
 
     private void focusRightButton() {
-        if (btnEasy.isFocusOwner()) {
-            btnNormal.requestFocusInWindow();
-        } else if (btnNormal.isFocusOwner()) {
-            btnHard.requestFocusInWindow();
+        if (btnNormal.isFocusOwner()) {
+            btnItem.requestFocusInWindow();
+        } else if (btnItem.isFocusOwner()) {
+            btnTime.requestFocusInWindow();
         }
     }
 
     private void focusLeftButton() {
-        if (btnHard.isFocusOwner()) {
+        if (btnTime.isFocusOwner()) {
+            btnItem.requestFocusInWindow();
+        } else if (btnItem.isFocusOwner()) {
             btnNormal.requestFocusInWindow();
-        } else if (btnNormal.isFocusOwner()) {
-            btnEasy.requestFocusInWindow();
         }
     }
 
     private void focusUpButton() {
         if (btnMenu.isFocusOwner()) {
-            btnNormal.requestFocusInWindow();
+            btnItem.requestFocusInWindow();
         }
     }
 
     private void focusDownButton() {
-        if (btnEasy.isFocusOwner() || btnNormal.isFocusOwner() || btnHard.isFocusOwner()) {
+        if (btnNormal.isFocusOwner() || btnItem.isFocusOwner() || btnTime.isFocusOwner()) {
             btnMenu.requestFocusInWindow();
         }
     }
