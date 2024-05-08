@@ -158,42 +158,25 @@ public class MainMenuScreen extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String command = e.getActionCommand();
         setVisible(false);
-        switch (command) {
-            case "play" -> {
-                new DifficultyScreen(false);
-            }
-            case "item" -> {
-                new DifficultyScreen(true);
-            }
-            case "pvp" -> {
-                new GameModeScreen();
-            }
-            case "setting" -> {
-                new SettingScreen();
-            }
-            case "ranking" -> {
-                new ScoreboardScreen();
-            }
+        switch (e.getActionCommand()) {
+            case "play" -> new DifficultyScreen(false);
+            case "item" -> new DifficultyScreen(true);
+            case "pvp" -> new GameModeScreen();
+            case "setting" -> new SettingScreen();
+            case "ranking" -> new ScoreboardScreen();
             case "exit" -> System.exit(0);
         }
     }
 
-    // Key listener class
     private class MyKeyListener extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
-            int keyCode = e.getKeyCode();
-            if (keyCode == KeyEvent.VK_DOWN) {
-                focusDownButton();
-            } else if (keyCode == KeyEvent.VK_UP) {
-                focusUpButton();
-            } else if (keyCode == KeyEvent.VK_LEFT) {
-                focusLeftButton();
-            } else if (keyCode == KeyEvent.VK_RIGHT) {
-                focusRightButton();
-            } else if (keyCode == KeyEvent.VK_ENTER) {
-                moveScreen();
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_DOWN -> focusDownButton();
+                case KeyEvent.VK_UP -> focusUpButton();
+                case KeyEvent.VK_LEFT -> focusLeftButton();
+                case KeyEvent.VK_RIGHT -> focusRightButton();
+                case KeyEvent.VK_ENTER -> moveScreen();
             }
         }
     }
@@ -221,9 +204,9 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         if (btnSetting.isFocusOwner()) {
             btnPlay.requestFocusInWindow();
         } else if (btnRanking.isFocusOwner()) {
-            btnPlay.requestFocusInWindow();
+            btnItem.requestFocusInWindow();
         } else if (btnExit.isFocusOwner()) {
-            btnPlay.requestFocusInWindow();
+            btnPvp.requestFocusInWindow();
         }
     }
 
