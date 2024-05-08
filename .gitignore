@@ -106,17 +106,15 @@ replay_pid*
 
 # Gradle
 .idea/**/gradle.xml
-<<<<<<< HEAD
 .idea/**/libraries
-=======
-.idea/**/libraries
+build.gradle
 
 *.xml
 .idea/misc.xml
 .idea/vcs.xml
 .idea/workspace.xml
 
+
 normalRanking.txt
 itemRanking.txt
 config.properties
->>>>>>> develop
