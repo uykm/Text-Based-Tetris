@@ -143,12 +143,17 @@ public class GameController implements PauseScreenCallback {
 
     public void speedUp(int speed) {
         if (currentSpeed >= MAX_SPEED) {
-            if(settingController.getDifficulty()==0) speed = (int)(speed * 0.8);
-            if(settingController.getDifficulty()==2) speed = (int)(speed * 1.2);
-
+            if(settingController.getDifficulty()==0) {
+                speed = (int) (speed * 0.8);
+            }
+            else if(settingController.getDifficulty()==2) {
+                speed = (int) (speed * 1.2);
+            }
             currentSpeed -= speed;
             timer.setDelay(currentSpeed);
-            inGameScoreController.addScoreMessage("Speed up! \nCurrent Delay " + currentSpeed);
+            inGameScoreController.setScoreOnBlockMoveDown((1100-currentSpeed)/100);
+            inGameScoreController.addScoreMessage("Speed up! Current speed: " + currentSpeed);
+            inGameScoreController.addScoreMessage("Score per Block Move Down: " + inGameScoreController.getScoreOnBlockMoveDown());
         }
     }
 }
