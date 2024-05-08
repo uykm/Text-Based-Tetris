@@ -22,13 +22,13 @@ public class PauseScreen extends JFrame implements ActionListener{
     JButton btnReplay = createBtn("Replay", "replay", this);
     JButton btnMainMenu = createBtn("Menu", "mainMenu", this);
     JButton btnQuit = createBtn("Quit", "quit", this);
-    private final boolean isItem;
+    private boolean isItemMode;
 
 
-    public PauseScreen(boolean isItem) {
+    public PauseScreen(boolean isItemMode) {
 
         // 노말모드 vs 아이템 모드
-        this.isItem = isItem;
+        this.isItemMode = isItemMode;
 
         screenSize = settingController.getScreenSize("screenSize", "small");
 
@@ -116,7 +116,7 @@ public class PauseScreen extends JFrame implements ActionListener{
             setVisible(false);
             callback.onResumeGame();
         } else if (btnReplay.isFocusOwner()) {
-            new GameController(isItem);
+            new GameController(isItemMode);
             callback.onHideFrame();
         } else if (btnMainMenu.isFocusOwner()) {
             new MainMenuScreen();
@@ -133,7 +133,7 @@ public class PauseScreen extends JFrame implements ActionListener{
         if (command.equals("back")) {
             callback.onResumeGame();
         } else if (command.equals("replay")) {
-            new GameController(isItem);
+            new GameController(isItemMode);
             callback.onHideFrame();
         } else if (command.equals("mainMenu")) {
             new MainMenuScreen();

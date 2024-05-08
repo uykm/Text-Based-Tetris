@@ -20,12 +20,15 @@ public class BoardController {
     private Block currentBlock;
     private Block nextBlock = new NullBlock();
 
+
     // 게임 보드의 너비, 높이
     final private int WIDTH;
     final private int HEIGHT;
 
     // 지워진 라인 개수
     private int erasedLineCount;
+    // 가장 최근에 아이템 블럭이 생성되게 한 지워진 라인 개수
+    private int erasedLineCountLately;
 
     private final boolean isItemMode;
 
@@ -47,11 +50,12 @@ public class BoardController {
         this.inGameScoreController = inGameScoreController;
         this.WIDTH = grid.getWidth();
         this.HEIGHT = grid.getHeight();
+        this.erasedLineCountLately = 0;
         this.canPlaceBlock = true;
         this.blockCountWithNoLineErase = 0;
         this.lastLineEraseTime = 0;
         this.erasedLineCount = 0;
-        this.nextBlock = nextBlock.selectBlock(isItemMode, erasedLineCount);
+        this.nextBlock = nextBlock.selectBlock(this, isItemMode, erasedLineCount);
     }
 
     private void checkSpeedUp() {
@@ -84,7 +88,7 @@ public class BoardController {
         blockCountWithNoLineErase++;
         currentBlock = nextBlock;
         currentBlock.canMoveSide = true;
-        this.nextBlock = nextBlock.selectBlock(isItemMode, erasedLineCount);
+        this.nextBlock = nextBlock.selectBlock(this, isItemMode, erasedLineCount);
         if (grid.collisionCheck(currentBlock, 6, 2)) {
             checkSpeedUp();
             currentBlock.initializeXY();
@@ -350,5 +354,9 @@ public class BoardController {
     public Block getCurrentBlock() { return currentBlock; }
 
     public int getPlacedBlockCount() { return placedBlockCount; }
+
+    public int getErasedLineCountLately() { return erasedLineCountLately; }
+
+    public void updateErasedLineCountLately(int erasedLineCountToCreateItemBlock) { erasedLineCountLately += erasedLineCountToCreateItemBlock; }
 
 }

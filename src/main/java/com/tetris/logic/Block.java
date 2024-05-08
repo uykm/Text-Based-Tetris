@@ -15,10 +15,8 @@ public abstract class Block {
     private final RWSelection rwSelection;
     public boolean canMoveSide;
 
-    // 가장 최근에 아이템 블럭이 생성되게 한 지워진 라인 개수
-    private static int erasedLineCountLately = 0;
     // 아이템 블럭이 생성될 수 있는 지워진 줄의 개수
-    final private int erasedLineCountToCreateItemBlock = 10;
+    final private int erasedLineCountToCreateItemBlock = 2;
 
     // stopCount: 조작이 없으면 1씩 증가,
     private int stopCount = 0;
@@ -140,7 +138,6 @@ public abstract class Block {
     public void increaseStopCount() { this.stopCount++; }
 
 
-
     public static Block getBlock(BlockType blockType) {
         return switch (blockType) {
             case IBlock -> new IBlock();
@@ -161,16 +158,22 @@ public abstract class Block {
 
 
     // 지워진 라인을 체크하고 아이템 블럭을 생성해도 되는지 체크
-    private boolean checkErasedLineCount(int erasedLineCount) {
-        return erasedLineCount > erasedLineCountLately && erasedLineCount % erasedLineCountToCreateItemBlock == 0;
+    private boolean checkErasedLineCount(BoardController boardController, int erasedLineCount) {
+        int lastCreated = boardController.getErasedLineCountLately();
+        int newLinesSinceLastItem = erasedLineCount - lastCreated;
+
+        if (newLinesSinceLastItem >= erasedLineCountToCreateItemBlock) {
+            // 라인이 한 번에 11줄이 지워졌다고 하면, 10줄이 저장됌
+            boardController.updateErasedLineCountLately(erasedLineCountToCreateItemBlock);
+            return true;
+        }
+        return false;
     }
 
     //select for the block
-    public Block selectBlock(boolean isItem, int erasedLineCount) {
+    public Block selectBlock(BoardController boardController, boolean isItem, int erasedLineCount) {
         // `erasedLineCountToCreateItemBlock`개의 줄이 삭제될 때마다 아이템 블록 생성
-        if (isItem && checkErasedLineCount(erasedLineCount)) {
-            // 라인이 한 번에 11줄이 지워졌다고 하면, 10줄이 저장됌
-            erasedLineCountLately += erasedLineCountToCreateItemBlock;
+        if (isItem && checkErasedLineCount(boardController, erasedLineCount)) {
             return selectItemBlock();
         } else {
             // 일반 블록 선택 로직 (10줄이 삭제되지 않았을 때)
