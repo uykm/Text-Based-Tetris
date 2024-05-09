@@ -16,7 +16,7 @@ public abstract class Block {
     public boolean canMoveSide;
 
     // 아이템 블럭이 생성될 수 있는 지워진 줄의 개수
-    final private int erasedLineCountToCreateItemBlock = 2;
+    final private int erasedLineCountToCreateItemBlock = 10;
 
     // stopCount: 조작이 없으면 1씩 증가,
     private int stopCount = 0;
