@@ -9,6 +9,8 @@ public class InGameScoreController {
 
     final private Queue<String> Messages;
 
+    private int scoreOnBlockMoveDown = 1;
+
     public InGameScoreController() {
         this.score = 0;
         this.Messages = new LinkedList<>();
@@ -32,7 +34,15 @@ public class InGameScoreController {
 
     // 블록 이동 시 점수 추가
     public void addScoreOnBlockMoveDown() {
-        addScore(1);
+        addScore(scoreOnBlockMoveDown);
+    }
+
+    public int getScoreOnBlockMoveDown() {
+        return scoreOnBlockMoveDown;
+    }
+
+    public void setScoreOnBlockMoveDown(int num) {
+        scoreOnBlockMoveDown = num;
     }
 
     public void addScoreOnBlockMoveDown(int changedY) {
