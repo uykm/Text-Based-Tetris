@@ -1,8 +1,5 @@
 package com.tetris.logic;
 
-import com.tetris.model.Direction;
-import com.tetris.ui.PauseScreen;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
