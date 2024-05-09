@@ -17,9 +17,8 @@ import static java.lang.System.exit;
 public class MainMenuScreen extends JFrame implements ActionListener {
 
 
-    JButton btnPlay;
-    JButton btnItem;
-    JButton btnPvp;
+    JButton btnSingle;
+    JButton btnMulti;
 
     JButton btnSetting;
     JButton btnRanking;
@@ -55,10 +54,10 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         switch (screenSize) {
             case "small":
                 setWidthHeight(390, 420, this);
-                playWidth = 120;
-                playHeight = 100;
+                playWidth = 150;
+                playHeight = 80;
 
-                menuWidth = 120;
+                menuWidth = 100;
                 menuHeight = 100;
 
                 titleFontSize = 70;
@@ -66,7 +65,7 @@ public class MainMenuScreen extends JFrame implements ActionListener {
                 break;
             case "big":
                 setWidthHeight(910, 940, this);
-                playWidth = 270;
+                playWidth = 400;
                 playHeight = 200;
 
                 menuWidth = 270;
@@ -76,11 +75,11 @@ public class MainMenuScreen extends JFrame implements ActionListener {
                 break;
             default:
                 setWidthHeight(650, 680, this);
-                playWidth = 200;
-                playHeight = 150;
+                playWidth = 250;
+                playHeight = 130;
 
-                menuWidth = 200;
-                menuHeight = 150;
+                menuWidth = 170;
+                menuHeight = 140;
 
                 titleFontSize = 110;
                 break;
@@ -98,25 +97,19 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         add(titleLabel, BorderLayout.NORTH);
         add(Box.createVerticalStrut(20));
 
-        // 중앙 패널에 Play 버튼 추가
+        // 중앙 패널에 Single 버튼 추가
         JPanel centerPanel = new JPanel();
         add(Box.createVerticalStrut(10));
-        btnPlay = createLogoBtnNext("PLAY", "play", this, screenSize, "src/main/java/com/tetris/image/play_logo.png");
-        btnPlay.setPreferredSize(new Dimension(playWidth, playHeight)); // (150, 80) & (250, 130) & (400, 200)
-        btnPlay.setFocusable(true);
-        centerPanel.add(btnPlay);
+        btnSingle = createLogoBtnNext("Single", "single", this, screenSize, "src/main/java/com/tetris/image/single.png");
+        btnSingle.setPreferredSize(new Dimension(playWidth, playHeight)); // (150, 80) & (250, 130) & (400, 200)
+        btnSingle.setFocusable(true);
+        centerPanel.add(btnSingle);
 
-        // btnItem 버튼 추가
-        btnItem = createLogoBtnNext("ITEM", "item", this, screenSize, "src/main/java/com/tetris/image/mario.png");
-        btnItem.setPreferredSize(new Dimension(playWidth, playHeight));
-        btnItem.setFocusable(true);
-        centerPanel.add(btnItem);
-
-        // btnBattle 버튼 추가
-        btnPvp = createLogoBtnNext("PVP", "pvp", this, screenSize, "src/main/java/com/tetris/image/pvp.png");
-        btnPvp.setPreferredSize(new Dimension(playWidth, playHeight));
-        btnPvp.setFocusable(true);
-        centerPanel.add(btnPvp);
+        // Multi 버튼 추가
+        btnMulti = createLogoBtnNext("Multi", "multi", this, screenSize, "src/main/java/com/tetris/image/multi.png");
+        btnMulti.setPreferredSize(new Dimension(playWidth, playHeight));
+        btnMulti.setFocusable(true);
+        centerPanel.add(btnMulti);
 
         add(centerPanel, BorderLayout.CENTER);
 
@@ -145,12 +138,11 @@ public class MainMenuScreen extends JFrame implements ActionListener {
         setVisible(true);
 
         // Set initial focus to the "Game Start" button after the GUI is fully initialized
-        btnPlay.requestFocusInWindow();
+        btnSingle.requestFocusInWindow();
 
         // Attach a key listener to each button
-        btnPlay.addKeyListener(new MyKeyListener());
-        btnItem.addKeyListener(new MyKeyListener());
-        btnPvp.addKeyListener(new MyKeyListener());
+        btnSingle.addKeyListener(new MyKeyListener());
+        btnMulti.addKeyListener(new MyKeyListener());
         btnSetting.addKeyListener(new MyKeyListener());
         btnRanking.addKeyListener(new MyKeyListener());
         btnExit.addKeyListener(new MyKeyListener());
@@ -160,9 +152,8 @@ public class MainMenuScreen extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         setVisible(false);
         switch (e.getActionCommand()) {
-            case "play" -> new DifficultyScreen(false);
-            case "item" -> new DifficultyScreen(true);
-            case "pvp" -> new GameModeScreen();
+            case "single" -> new SingleGameModeScreen();
+            case "multi" -> new MultiGameModeScreen();
             case "setting" -> new SettingScreen();
             case "ranking" -> new ScoreboardScreen();
             case "exit" -> System.exit(0);
@@ -184,12 +175,10 @@ public class MainMenuScreen extends JFrame implements ActionListener {
     // 엔터 키
     private void moveScreen() {
         setVisible(false);
-        if (btnPlay.isFocusOwner()) {
-            new DifficultyScreen(false);
-        } else if (btnItem.isFocusOwner()) {
-            new DifficultyScreen(true);
-        } else if (btnPvp.isFocusOwner()) {
-            new GameModeScreen();
+        if (btnSingle.isFocusOwner()) {
+            new SingleGameModeScreen();
+        } else if (btnMulti.isFocusOwner()) {
+            new MultiGameModeScreen();
         } else if (btnSetting.isFocusOwner()) {
             new SettingScreen();
         } else if (btnRanking.isFocusOwner()) {
@@ -202,31 +191,27 @@ public class MainMenuScreen extends JFrame implements ActionListener {
     // 위 방향키
     private void focusUpButton() {
         if (btnSetting.isFocusOwner()) {
-            btnPlay.requestFocusInWindow();
+            btnSingle.requestFocusInWindow();
         } else if (btnRanking.isFocusOwner()) {
-            btnItem.requestFocusInWindow();
+            btnSingle.requestFocusInWindow();
         } else if (btnExit.isFocusOwner()) {
-            btnPvp.requestFocusInWindow();
+            btnSingle.requestFocusInWindow();
         }
     }
 
     // 아래 방향키
     private void focusDownButton() {
-        if (btnPlay.isFocusOwner()) {
-            btnSetting.requestFocusInWindow();
-        } else if (btnItem.isFocusOwner()) {
+        if (btnSingle.isFocusOwner()) {
             btnRanking.requestFocusInWindow();
-        } else if (btnPvp.isFocusOwner()) {
-            btnExit.requestFocusInWindow();
+        } else if (btnMulti.isFocusOwner()) {
+            btnRanking.requestFocusInWindow();
         }
     }
 
     // 왼쪽 방향키
     private void focusLeftButton() {
-        if (btnItem.isFocusOwner()) {
-            btnPlay.requestFocusInWindow();
-        } else if (btnPvp.isFocusOwner()) {
-            btnItem.requestFocusInWindow();
+        if (btnMulti.isFocusOwner()) {
+            btnSingle.requestFocusInWindow();
         } else if (btnExit.isFocusOwner()) {
             btnRanking.requestFocusInWindow();
         } else if (btnRanking.isFocusOwner()) {
@@ -236,10 +221,8 @@ public class MainMenuScreen extends JFrame implements ActionListener {
 
     // 오른쪽 방향키
     private void focusRightButton() {
-        if (btnPlay.isFocusOwner()) {
-            btnItem.requestFocusInWindow();
-        } else if (btnItem.isFocusOwner()) {
-            btnPvp.requestFocusInWindow();
+        if (btnSingle.isFocusOwner()) {
+            btnMulti.requestFocusInWindow();
         } else if (btnSetting.isFocusOwner()) {
             btnRanking.requestFocusInWindow();
         } else if (btnRanking.isFocusOwner()) {

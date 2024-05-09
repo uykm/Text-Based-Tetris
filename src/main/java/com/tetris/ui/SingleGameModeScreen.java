@@ -1,7 +1,6 @@
 package com.tetris.ui;
 
 import com.tetris.component.Button;
-import com.tetris.logic.GameController;
 import com.tetris.logic.SettingController;
 
 import javax.swing.*;
@@ -13,16 +12,16 @@ import java.awt.event.KeyEvent;
 
 import static com.tetris.component.ScreenSize.setWidthHeight;
 
-public class GameModeScreen extends JFrame implements ActionListener {
+public class SingleGameModeScreen extends JFrame implements ActionListener {
 
-    private JButton btnNormal, btnItem, btnTime;
+    private JButton btnNormal, btnItem;
     private JButton btnMenu;
 
     private SettingController settingController = new SettingController();
 
     private final int btnSize;
 
-    public GameModeScreen() {
+    public SingleGameModeScreen() {
 
         setTitle("Tetris - GameMode");
         String screenSize = settingController.getScreenSize("screenSize", "small");
@@ -50,16 +49,12 @@ public class GameModeScreen extends JFrame implements ActionListener {
         btnNormal.setPreferredSize((new Dimension(btnSize, btnSize)));
         btnItem = Button.createLogoBtnUp("Item", "item", this, screenSize, "src/main/java/com/tetris/image/mario.png");
         btnItem.setPreferredSize((new Dimension(btnSize, btnSize)));
-        btnTime = Button.createLogoBtnUp("Time", "time", this, screenSize, "src/main/java/com/tetris/image/time.png");
-        btnTime.setPreferredSize((new Dimension(btnSize, btnSize)));
 
         btnNormal.addKeyListener(new MyKeyListener());
         btnItem.addKeyListener(new MyKeyListener());
-        btnTime.addKeyListener(new MyKeyListener());
 
         topPanel.add(btnNormal);
         topPanel.add(btnItem);
-        topPanel.add(btnTime);
 
         add(topPanel, BorderLayout.CENTER);
 
@@ -84,16 +79,13 @@ public class GameModeScreen extends JFrame implements ActionListener {
         setVisible(false);
         switch (command) {
             case "normal" -> {
-                //
+                new DifficultyScreen(false);
             }
             case "item" -> {
-                //
-            }
-            case "time" -> {
-                //
+                new DifficultyScreen(true);
             }
             case "menu" -> {
-                //
+                new MainMenuScreen();
             }
         }
     }
@@ -101,10 +93,9 @@ public class GameModeScreen extends JFrame implements ActionListener {
     private void moveScreen() {
         setVisible(false);
         if (btnNormal.isFocusOwner()) {
+            new DifficultyScreen(false);
         } else if (btnItem.isFocusOwner()) {
-            //
-        } else if (btnTime.isFocusOwner()) {
-            //
+            new DifficultyScreen(true);
         } else if (btnMenu.isFocusOwner()) {
             new MainMenuScreen();
         }
@@ -130,27 +121,23 @@ public class GameModeScreen extends JFrame implements ActionListener {
     private void focusRightButton() {
         if (btnNormal.isFocusOwner()) {
             btnItem.requestFocusInWindow();
-        } else if (btnItem.isFocusOwner()) {
-            btnTime.requestFocusInWindow();
         }
     }
 
     private void focusLeftButton() {
-        if (btnTime.isFocusOwner()) {
-            btnItem.requestFocusInWindow();
-        } else if (btnItem.isFocusOwner()) {
+        if (btnItem.isFocusOwner()) {
             btnNormal.requestFocusInWindow();
         }
     }
 
     private void focusUpButton() {
         if (btnMenu.isFocusOwner()) {
-            btnItem.requestFocusInWindow();
+            btnNormal.requestFocusInWindow();
         }
     }
 
     private void focusDownButton() {
-        if (btnNormal.isFocusOwner() || btnItem.isFocusOwner() || btnTime.isFocusOwner()) {
+        if (btnNormal.isFocusOwner() || btnItem.isFocusOwner()) {
             btnMenu.requestFocusInWindow();
         }
     }
