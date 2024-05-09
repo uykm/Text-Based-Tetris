@@ -104,6 +104,30 @@ public class GameController implements PauseScreenCallback {
         });
     }
 
+    public void controlGame(String key) {
+        if (key.equals("LEFT")) {
+            boardController.moveBlock(Direction.LEFT);
+        } else if (key.equals("RIGHT")) {
+            boardController.moveBlock(Direction.RIGHT);
+        } else if (key.equals("DOWN")) {
+            boardController.moveBlock(Direction.DOWN);
+            inGameScreen.updateBoard();
+        } else if (key.equals("ROTATE")) {
+            boardController.moveBlock(Direction.UP);
+        } else if (key.equals("DROP")) {
+            boardController.moveBlock(Direction.SPACE);
+            inGameScreen.updateBoard();
+        } else if (key.equals("PAUSE")) {
+            timer.stop();
+        } else if (key.equals("RESUME")) {
+            onResumeGame();
+        } else if (key.equals("REPLAY")){
+            frame.dispose();
+            new GameController(isItem);
+        }
+        inGameScreen.repaint();
+    }
+
     private void startGame(boolean isItem) {
         currentSpeed = 1000;
         boardController.placeNewBlock();
@@ -156,4 +180,24 @@ public class GameController implements PauseScreenCallback {
             inGameScoreController.addScoreMessage("Score per Block Move Down: " + inGameScoreController.getScoreOnBlockMoveDown());
         }
     }
+
+    public InGameScreen getInGameScreen() {
+        return inGameScreen;
+    }
+
+    //Todo: 듀얼 게임 관련 로직
+
+    // 삭제된 라인 받아오기
+
+    // 라인 추가하기
+
+    // 추가될 수 있는 라인 수 가져오기
+
+    // 게임 오버 상태 받아오기
+
+
+
+
+
+
 }
