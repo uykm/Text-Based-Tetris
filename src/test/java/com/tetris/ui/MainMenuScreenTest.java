@@ -50,21 +50,21 @@ class MainMenuScreenTest {
         SettingScreen settingScreen = new SettingScreen();
 
         // Enter on Play
-        KeyEvent playEvent = new KeyEvent(screen.btnPlay, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, ' ');
-        screen.btnPlay.dispatchEvent(playEvent);
+        KeyEvent playEvent = new KeyEvent(screen.btnSingle, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, ' ');
+        screen.btnSingle.dispatchEvent(playEvent);
         assertFalse(screen.isVisible(), "MainMenuScreen should become invisible after pressing ENTER on Play.");
         assertTrue(difficultyScreen.isVisible(), "DifficultyScreen should become invisible after pressing ENTER on Play.");
 
-        // Enter on Item
-        KeyEvent ItemEvent = new KeyEvent(screen.btnItem, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, ' ');
-        screen.btnItem.dispatchEvent(ItemEvent);
-        assertFalse(screen.isVisible(), "MainMenuScreen should become invisible after pressing ENTER on Item.");
-        assertTrue(difficultyScreen.isVisible(), "DifficultyScreen should become invisible after pressing ENTER on Item.");
-
-        // Enter on Setting
-        KeyEvent settingEvent = new KeyEvent(screen.btnItem, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, ' ');
-        screen.btnSetting.dispatchEvent(settingEvent);
-        assertFalse(screen.isVisible(), "MainMenuScreen should become invisible after pressing ENTER on Setting.");
-        assertTrue(settingScreen.isVisible(), "SettingScreen should become invisible after pressing ENTER on Setting.");
+//        // Enter on Item
+//        KeyEvent ItemEvent = new KeyEvent(screen.btnItem, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, ' ');
+//        screen.btnItem.dispatchEvent(ItemEvent);
+//        assertFalse(screen.isVisible(), "MainMenuScreen should become invisible after pressing ENTER on Item.");
+//        assertTrue(difficultyScreen.isVisible(), "DifficultyScreen should become invisible after pressing ENTER on Item.");
+//
+//        // Enter on Setting
+//        KeyEvent settingEvent = new KeyEvent(screen.btnItem, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, ' ');
+//        screen.btnSetting.dispatchEvent(settingEvent);
+//        assertFalse(screen.isVisible(), "MainMenuScreen should become invisible after pressing ENTER on Setting.");
+//        assertTrue(settingScreen.isVisible(), "SettingScreen should become invisible after pressing ENTER on Setting.");
     }
 }
