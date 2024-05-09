@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.tetris.model.DirectionTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2024-05-04T18:15:20" hostname="sinmingyuui-MacBookPro.local" time="0.001">
-  <properties/>
-  <testcase name="testValueOf()" classname="com.tetris.model.DirectionTest" time="0.001"/>
-  <testcase name="testValueOf_invalidDirection_throwsIllegalArgumentException()" classname="com.tetris.model.DirectionTest" time="0.0"/>
-  <testcase name="testValues()" classname="com.tetris.model.DirectionTest" time="0.0"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

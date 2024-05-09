@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.tetris.ui.RegisterScoreScreenTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-05-04T18:15:23" hostname="sinmingyuui-MacBookPro.local" time="0.156">
-  <properties/>
-  <testcase name="actionPerformed_Submit()" classname="com.tetris.ui.RegisterScoreScreenTest" time="0.156"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
