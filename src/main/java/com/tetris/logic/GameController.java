@@ -38,15 +38,15 @@ public class GameController implements PauseScreenCallback {
     }
 
     public GameController(boolean isItem, boolean isDualMode) {
-        initialize(isItem);
+        initialize(isItem, isDualMode);
         startGame(isItem, isDualMode);
     }
 
-    private void initialize(boolean isItem) {
+    private void initialize(boolean isItem, boolean isDualMode) {
         this.isItem = isItem;
         initUI();
         this.inGameScoreController = new InGameScoreController();
-        this.boardController = new BoardController(this, this.inGameScoreController, isItem);
+        this.boardController = new BoardController(this, this.inGameScoreController, isItem, isDualMode);
         this.inGameScreen = new InGameScreen(this.boardController, this.inGameScoreController);
         this.rankScoreController = new RankScoreController();
     }
