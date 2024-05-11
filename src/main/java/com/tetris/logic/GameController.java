@@ -11,9 +11,10 @@ import java.awt.event.KeyEvent;
 public class GameController implements PauseScreenCallback {
     private BoardController boardController;
     private InGameScreen inGameScreen;
-    private final InGameScoreController inGameScoreController;
-    private final RankScoreController rankScoreController;
+    private InGameScoreController inGameScoreController;
+    private RankScoreController rankScoreController;
     private final SettingController settingController = new SettingController();
+    private GameController opponent;
     private final int[] keyCodes = settingController.getKeyCodes();
     private int ROTATE = keyCodes[0];
     private int LEFT = keyCodes[1];
@@ -30,17 +31,21 @@ public class GameController implements PauseScreenCallback {
 
     // 게임 컨트롤러 생성자
     public GameController(boolean isItem) {
+        this(isItem, false);
+    }
 
-        // 노말 모드 vs 아이템 모드
+    public GameController(boolean isItem, boolean isDualMode) {
+        initialize(isItem);
+        startGame(isItem, isDualMode);
+    }
+
+    private void initialize(boolean isItem) {
         this.isItem = isItem;
-
         initUI();
         this.inGameScoreController = new InGameScoreController();
         this.boardController = new BoardController(this, this.inGameScoreController, isItem);
         this.inGameScreen = new InGameScreen(this.boardController, this.inGameScoreController);
         this.rankScoreController = new RankScoreController();
-
-        startGame(isItem);
     }
 
     // 게임 UI 초기화
@@ -54,11 +59,7 @@ public class GameController implements PauseScreenCallback {
             setupKeyListener(frame);
             frame.setVisible(true);
             frame.setResizable(false);
-
-            // 콘솔에서 상태 확인을 위한 임시 코드
-            // 실제 게임에서는 게임 로직에 따라 점수를 업데이트하게 됩니다.
-            // TODO: 3/24/24 : 현재 점수 계산 로직 없음, BoardController 또는 GameController에서 점수 계산 로직 추가 필요
-            inGameScreen.updateScore(0); // 점수를 임시로 0으로 설정
+            inGameScreen.updateScore(0);
         });
     }
 
@@ -73,7 +74,6 @@ public class GameController implements PauseScreenCallback {
     }
 
     // 키보드 이벤트 처리
-    // TODO: 3/24/24 : 효정이가 KeyListener 구현 하면 바꿀 예정
     private void setupKeyListener(JFrame frame) {
         // Create the PauseScreen instance once during initialization
 
@@ -105,69 +105,65 @@ public class GameController implements PauseScreenCallback {
     }
 
     public void controlGame(String key) {
-        if (key.equals("LEFT")) {
-            boardController.moveBlock(Direction.LEFT);
-        } else if (key.equals("RIGHT")) {
-            boardController.moveBlock(Direction.RIGHT);
-        } else if (key.equals("DOWN")) {
-            boardController.moveBlock(Direction.DOWN);
-            inGameScreen.updateBoard();
-        } else if (key.equals("ROTATE")) {
-            boardController.moveBlock(Direction.UP);
-        } else if (key.equals("DROP")) {
-            boardController.moveBlock(Direction.SPACE);
-            inGameScreen.updateBoard();
-        } else if (key.equals("PAUSE")) {
-            timer.stop();
-        } else if (key.equals("RESUME")) {
-            onResumeGame();
-        } else if (key.equals("REPLAY")){
-            frame.dispose();
-            new GameController(isItem);
+        switch (key) {
+            case "LEFT" -> boardController.moveBlock(Direction.LEFT);
+            case "RIGHT" -> boardController.moveBlock(Direction.RIGHT);
+            case "DOWN" -> {
+                boardController.moveBlock(Direction.DOWN);
+                inGameScreen.updateBoard();
+            }
+            case "ROTATE" -> boardController.moveBlock(Direction.UP);
+            case "DROP" -> {
+                boardController.moveBlock(Direction.SPACE);
+                inGameScreen.updateBoard();
+            }
+            case "PAUSE" -> timer.stop(); // Todo : 대전 모드 PAUSE 처리
+            case "RESUME" -> onResumeGame();
+            case "REPLAY" -> {
+                frame.dispose();
+                new GameController(isItem);
+            }
         }
         inGameScreen.repaint();
     }
 
-//    private void startGame(boolean isItem) {
-//        currentSpeed = 1000;
-//        boardController.placeNewBlock();
-//
-//        timer = new Timer(currentSpeed, e -> {
-//            boolean blink = boardController.blinkCheck();
-//            if(blink) {
-//                while (blink) {
-//                    inGameScreen.updateBoard();
-//                    try {
-//                        Thread.sleep(100);
-//                    } catch (InterruptedException ex) {
-//                        throw new RuntimeException(ex);
-//                    }
-//                    blink = boardController.blinkCheck();
-//                }
-//            }
-//
-//            inGameScreen.updateBoard();
-//            if(boardController.getNewBlockState()) boardController.placeNewBlock();
-//            boardController.moveBlock(Direction.DOWN);
-//            inGameScreen.updateBoard();
-//
-//            if (boardController.checkGameOver()) {
-//                frame.dispose();
-//                if (rankScoreController.isScoreInTop10(inGameScoreController.getScore(), isItem)) {
-//                    new RegisterScoreScreen(inGameScoreController.getScore(), isItem);
-//                } else {
-//                    new GameOverScreen(inGameScoreController.getScore(), isItem);
-//                }
-//                timer.stop();
-//            }
-//        });
-//        timer.start();
-//    }
-
-    private void startGame(boolean isItem) {
+    private void startGame(boolean isItem, boolean isDualMode) {
         currentSpeed = 1000;
         boardController.placeNewBlock();
-        timer = new Timer(currentSpeed, e -> gameLoop(isItem));
+
+        timer = new Timer(currentSpeed, e -> {
+            boolean blink = boardController.blinkCheck();
+            if(blink) {
+                while (blink) {
+                    inGameScreen.updateBoard();
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    blink = boardController.blinkCheck();
+                }
+            }
+
+            inGameScreen.updateBoard();
+            if(boardController.getNewBlockState()) boardController.placeNewBlock();
+            boardController.moveBlock(Direction.DOWN);
+            inGameScreen.updateBoard();
+
+            if (boardController.checkGameOver()) {
+                frame.dispose();
+                timer.stop();
+                if(!isDualMode){
+                    if (rankScoreController.isScoreInTop10(inGameScoreController.getScore(), isItem)) {
+                        new RegisterScoreScreen(inGameScoreController.getScore(), isItem);
+                    } else {
+                        new GameOverScreen(inGameScoreController.getScore(), isItem);
+                    }
+                } else {
+                    // Todo : 대전 모드 일 경우 GameOver 처리
+                }
+            }
+        });
         timer.start();
     }
 
@@ -236,15 +232,16 @@ public class GameController implements PauseScreenCallback {
         return inGameScreen;
     }
 
-    //Todo: 듀얼 게임 관련 로직
+    public void setOpponent(GameController opponent) {
+        this.opponent = opponent;
+    }
 
-    // 삭제된 라인 받아오기
+    public void addLines(int[][] lines) {
+        boardController.addLines(lines);
+    }
 
-    // 라인 추가하기
-
-    // 추가될 수 있는 라인 수 가져오기
-
-    // 게임 오버 상태 받아오기
-
+    public void sendLines(int[][] lines) {
+        opponent.addLines(lines);
+    }
 
 }

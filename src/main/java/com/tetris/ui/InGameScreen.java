@@ -245,6 +245,11 @@ public class InGameScreen extends JPanel {
                 charWidth = metrics.stringWidth("✷");
                 g.drawString("✵", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
                 break;
+            case 40:
+                g.setColor(Color.GRAY);
+                charWidth = metrics.stringWidth("ㅁ");
+                g.drawString("ㅁ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                break;
             case -2: // 한 줄이 꽉 차서 지워지기 전
                 g.setColor(Color.YELLOW);
                 g.fillRect(x, y, cellSize, cellSize);
