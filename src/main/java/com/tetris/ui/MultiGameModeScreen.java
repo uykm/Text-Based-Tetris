@@ -85,15 +85,15 @@ public class MultiGameModeScreen extends JFrame implements ActionListener {
         switch (command) {
             case "normal" -> {
                 // TODO : DualTetrisController 수정 후 -> new DualTetrisController(false, false);
-                new DualTetrisController();
+                new DualTetrisController(false, false);
             }
             case "item" -> {
                 // TODO : DualTetrisController 수정 후 -> new DualTetrisController(true, false);
-                new DualTetrisController();
+                new DualTetrisController(true, false);
             }
             case "time" -> {
                 // TODO : DualTetrisController 수정 후 -> new DualTetrisController(false, true);
-                new DualTetrisController();
+                new DualTetrisController(false, true);
             }
             case "menu" -> {
                 new MainMenuScreen();
@@ -105,13 +105,13 @@ public class MultiGameModeScreen extends JFrame implements ActionListener {
         setVisible(false);
         if (btnNormal.isFocusOwner()) {
             // TODO : DualTetrisController 수정 후 -> new DualTetrisController(false, false);
-            new DualTetrisController();
+            new DualTetrisController(false, false);
         } else if (btnItem.isFocusOwner()) {
             // TODO : DualTetrisController 수정 후 -> new DualTetrisController(true, false);
-            new DualTetrisController();
+            new DualTetrisController(true, false);
         } else if (btnTime.isFocusOwner()) {
             // TODO : DualTetrisController 수정 후 -> new DualTetrisController(false, true);
-            new DualTetrisController();
+            new DualTetrisController(false, true);
         } else if (btnMenu.isFocusOwner()) {
             new MainMenuScreen();
         }

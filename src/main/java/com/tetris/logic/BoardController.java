@@ -93,7 +93,9 @@ public class BoardController {
     public void placeNewBlock() {
         if(!erasedLines.isEmpty()){
             if(isDualmode){
-                sendLines(copyErasedLine());
+                if(erasedLines.size() > 1){
+                    sendLines(copyErasedLine());
+                }
                 erasedLines.clear();
             }
         }
@@ -422,7 +424,7 @@ public class BoardController {
         for (int i = HEIGHT + 3; i >= 3; i--) {
             boolean isGrayLine = false;
             for (int j = 3; j < WIDTH+3; j++) {
-                if (grid.getBoard()[i][j] == 14) {
+                if (grid.getBoard()[i][j] == 40) {
                     isGrayLine = true;
                     break;
                 }
@@ -454,7 +456,6 @@ public class BoardController {
             System.arraycopy(lines, 0, temp, shouldAddLines.length, lines.length);
             shouldAddLines = temp;
         }
-
     }
 
     // 내 보드에 추가되어야 할 라인을 추가

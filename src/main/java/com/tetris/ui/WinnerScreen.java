@@ -23,12 +23,14 @@ public class WinnerScreen extends JFrame implements ActionListener {
     private JButton btnMenu;
     private JButton btnExit;
     private boolean isItem;
+    private boolean isTimeAttack;
 
     private int titleSize;
     private int btnSize;
 
-    public WinnerScreen(String winner, int scoreWinner, int scoreLoser, boolean isItem) {
+    public WinnerScreen(String winner, int scoreWinner, int scoreLoser, boolean isItem, boolean isTimeAttack) {
         this.isItem = isItem;
+        this.isTimeAttack = isTimeAttack;
 
         setTitle(winner + "is the Winner!!");
         String screenSize = settingController.getScreenSize("screenSize", "small");
@@ -113,7 +115,7 @@ public class WinnerScreen extends JFrame implements ActionListener {
                 new MainMenuScreen();
                 break;
             case "replay":
-                new DualTetrisController();
+                new DualTetrisController(isItem, isTimeAttack);
                 break;
             case "exit":
                 exit(0);
@@ -139,7 +141,7 @@ public class WinnerScreen extends JFrame implements ActionListener {
         if (btnMenu.isFocusOwner()) {
             new MainMenuScreen();
         } else if (btnReplay.isFocusOwner()) {
-            new DualTetrisController();
+            new DualTetrisController(isItem, isTimeAttack);
         } else if (btnExit.isFocusOwner()) {
             exit(0);
         }
