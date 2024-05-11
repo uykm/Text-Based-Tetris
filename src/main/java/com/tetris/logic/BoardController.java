@@ -3,8 +3,6 @@ package com.tetris.logic;
 import com.tetris.model.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.tetris.logic.ItemBlockController.BOMB_BODY;
 import static com.tetris.logic.ItemBlockController.BOMB_EVENT;
@@ -47,7 +45,7 @@ public class BoardController {
 
     private int placedBlockCount;
 
-    private boolean needNewBlock = false;
+    private boolean isNeedNewBlock = false;
 
 
     public BoardController(GameController gameController, InGameScoreController inGameScoreController, Boolean isItemMode, Boolean isDualMode) {
@@ -116,7 +114,7 @@ public class BoardController {
             canPlaceBlock = false;
             currentBlock = new NullBlock();
         }
-        setNewBlockState(false);
+        setIsNeedNewBlock(false);
     }
 
 
@@ -132,15 +130,9 @@ public class BoardController {
         }
     }
 
-    public boolean getNewBlockState() { return needNewBlock; }
+    public boolean getIsNeedNewBlock() { return isNeedNewBlock; }
 
-    private void setNewBlockState(boolean state) {
-        needNewBlock=state;
-        if(state){
-            itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
-            lineCheck();
-        }
-    }
+    private void setIsNeedNewBlock(boolean state) { isNeedNewBlock = state; }
 
 
     // 라인이 꽉 찼는지 확인하고 꽉 찼으면 지우기
@@ -214,9 +206,9 @@ public class BoardController {
     // 블록을 이동시킴
     public void moveBlock(Direction direction) {
 
-        if (needNewBlock) { return; }
+        if (isNeedNewBlock) { return; }
         eraseCurrentBlock();
-        if (!canPlaceBlock) { return;}
+        if (!canPlaceBlock) { return; }
         switch (direction) {
             case LEFT -> {
                 if (currentBlock.canMoveSide && grid.collisionCheck(currentBlock, currentBlock.getX() - 1, currentBlock.getY())) {
@@ -251,7 +243,8 @@ public class BoardController {
                     // 경계선에 닿은 경우 혹은 2틱 동안 움직임 없거나 충돌 후 2틱이 지나면 블록을 고정시킴
                     if (currentBlock.getStopCount() > 1 || currentBlock.getLimitCount() > 1) {
                         checkGameOver();
-                        setNewBlockState(true);
+                        setIsNeedNewBlock(true);
+                        itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                         lineCheck();
                         currentBlock.initializeStopCount();
                         currentBlock.initializeLimitCount();
@@ -267,7 +260,9 @@ public class BoardController {
                 // space바 누르면 바로 터지게
                 if (currentBlock instanceof BombItemBlock) {
                     placeBlock();
-                    setNewBlockState(true);
+                    setIsNeedNewBlock(true);
+                    itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
+                    lineCheck();
                     break;
                 }
 
@@ -282,7 +277,8 @@ public class BoardController {
                     break;
                 }
 
-                setNewBlockState(true);
+                setIsNeedNewBlock(true);
+                itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                 lineCheck();
 
                 currentBlock.initializeLimitCount();

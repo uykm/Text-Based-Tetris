@@ -143,7 +143,7 @@ public class GameController implements PauseScreenCallback {
         while (blink) {
             inGameScreen.updateBoard();
             try {
-                Thread.sleep(100);
+                Thread.sleep(1);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
                 throw new RuntimeException(ex);
@@ -153,8 +153,7 @@ public class GameController implements PauseScreenCallback {
 
         boardController.moveBlock(Direction.DOWN);
         inGameScreen.updateBoard();
-
-        if(boardController.getNewBlockState()) boardController.placeNewBlock();
+        if(boardController.getIsNeedNewBlock()) boardController.placeNewBlock();
         inGameScreen.updateBoard();
 
         // 게임 오버 조건을 확인합니다
