@@ -37,6 +37,8 @@ public class BoardController {
 
     private final boolean isItemMode;
 
+    private final boolean isDualmode;
+
     private boolean canPlaceBlock;
 
     private long lastLineEraseTime;
@@ -48,7 +50,8 @@ public class BoardController {
     private boolean needNewBlock = false;
 
 
-    public BoardController(GameController gameController, InGameScoreController inGameScoreController, Boolean isItemMode) {
+    public BoardController(GameController gameController, InGameScoreController inGameScoreController, Boolean isItemMode, Boolean isDualMode) {
+        this.isDualmode = isDualMode;
         this.isItemMode = isItemMode;
         this.grid = new Board();
         this.itemBlockController = new ItemBlockController(grid, grid.getWidth(), grid.getHeight());
@@ -92,8 +95,10 @@ public class BoardController {
     // nextBlock을 currentBlock으로 옮기고 새로운 nextBlock을 생성
     public void placeNewBlock() {
         if(!erasedLines.isEmpty()){
-            sendLines(copyErasedLine());
-            erasedLines.clear();
+            if(isDualmode){
+                sendLines(copyErasedLine());
+                erasedLines.clear();
+            }
         }
         if(shouldAddLines != null){
             addLines();
@@ -191,7 +196,7 @@ public class BoardController {
         for (int i = line; i > 3; i--) {
             System.arraycopy(grid.getBoard()[i - 1], 3, grid.getBoard()[i], 3, WIDTH);
         }
-        erasedLines.add(line);
+        if(isDualmode)erasedLines.add(line);
     }
 
 
