@@ -22,6 +22,9 @@ public class DualTetrisController {
         gameController1 = new GameController(isItem, true);
         gameController2 = new GameController(isItem, true);
 
+        gameController1.setStrPlayer("A");
+        gameController2.setStrPlayer("B");
+
         gameController1.setOpponent(gameController2);
         gameController2.setOpponent(gameController1);
 

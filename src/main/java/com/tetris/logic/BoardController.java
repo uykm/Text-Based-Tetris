@@ -323,11 +323,14 @@ public class BoardController {
 
         for (int i = 3; i < WIDTH + 3; i++) {
             if ((grid.getBoard()[2][i] > 20) || !canPlaceBlock) {
-
                 return true;
             }
         }
         return false;
+    }
+
+    public String checkWinner() {
+        return gameController.getStrPlayer();
     }
 
     private void placeDown() {
