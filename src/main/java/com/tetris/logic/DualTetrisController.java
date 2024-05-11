@@ -6,10 +6,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
 
 public class DualTetrisController {
     private GameController gameController1;
     private GameController gameController2;
+
+    private Timer limitTimer;
 
     // gameController1 조작을 위한 키 코드 w, a, s, d, Left Shift
     private int[] keyCodes1 = {KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_SHIFT};
@@ -17,16 +20,19 @@ public class DualTetrisController {
     // gameController1 조작을 위한 키 코드 방향키, Right Shift
     private int[] keyCodes2 = {KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_SHIFT};
 
-    public DualTetrisController() {
-        boolean isItem = false; // Assuming both games do not use items by default
-        gameController1 = new GameController(isItem, true);
-        gameController2 = new GameController(isItem, true);
+    public DualTetrisController(boolean isItem, boolean isTimeAttack) {
+        gameController1 = new GameController(isItem, true, isTimeAttack);
+        gameController2 = new GameController(isItem, true, isTimeAttack);
 
         gameController1.setStrPlayer("A");
         gameController2.setStrPlayer("B");
 
         gameController1.setOpponent(gameController2);
         gameController2.setOpponent(gameController1);
+
+        //아이템 모드, 타임어택 모드 상태 표시
+        System.out.println("Item Mode : " + isItem);
+        System.out.println("Time Attack Mode : " + isTimeAttack);
 
         initUI();
     }
@@ -98,7 +104,23 @@ public class DualTetrisController {
         });
     }
 
+    private void timeController() {
+        limitTimer = new Timer();
+        // 3분 제한 끝나면 게임 종료
+        limitTimer.schedule(new java.util.TimerTask() {
+            @Override
+            public void run() {
+                if(gameController1.getScore() > gameController2.getScore()) {
+                    gameController2.gameOver();
+                } else {
+                    gameController1.gameOver();
+                }
+                System.out.println("Time Over");
+            }
+        }, 180000);
+    }
+
     public static void main(String[] args) {
-        new DualTetrisController(); // Launch the dual Tetris controller
+        new DualTetrisController(false, true); // Launch the dual Tetris controller
     }
 }

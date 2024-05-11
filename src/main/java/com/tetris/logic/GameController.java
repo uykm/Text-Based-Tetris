@@ -33,22 +33,24 @@ public class GameController implements PauseScreenCallback {
 
     public int currentSpeed;
     private boolean isItem;
+    private boolean isTimeAttack;
 
     public void setStrPlayer(String _strPlayer) {
         this.strPlayer = _strPlayer;
     }
     // 게임 컨트롤러 생성자
     public GameController(boolean isItem) {
-        this(isItem, false);
+        this(isItem, false, false);
     }
 
-    public GameController(boolean isItem, boolean isDualMode) {
-        initialize(isItem, isDualMode);
+    public GameController(boolean isItem, boolean isDualMode, boolean isTimeAttack) {
+        initialize(isItem, isDualMode, isTimeAttack);
         startGame(isItem, isDualMode);
     }
 
-    private void initialize(boolean isItem, boolean isDualMode) {
+    private void initialize(boolean isItem, boolean isDualMode, boolean isTimeAttack) {
         this.isItem = isItem;
+        this.isTimeAttack = isTimeAttack;
         initUI();
         this.inGameScoreController = new InGameScoreController();
         this.boardController = new BoardController(this, this.inGameScoreController, isItem, isDualMode);
@@ -163,11 +165,11 @@ public class GameController implements PauseScreenCallback {
 
         // 게임 오버 조건을 확인합니다
         if (boardController.checkGameOver()) {
-            endGame(isItem, isDualMode);
+            endGame(isDualMode);
         }
     }
 
-    private void endGame(boolean isItem, boolean isDualMode) {
+    private void endGame(boolean isDualMode) {
         frame.dispose();
         gameTimer.stop();
         if(!isDualMode){
@@ -178,6 +180,8 @@ public class GameController implements PauseScreenCallback {
             }
         } else {
             // Todo : 대전 모드 일 경우 GameOver 처리
+            opponent.sendGameOver();
+            new WinnerScreen(opponent.getStrPlayer(), opponent.getScore(), getScore(), isItem, isTimeAttack);
         }
     }
 
@@ -215,6 +219,19 @@ public class GameController implements PauseScreenCallback {
 
     public void sendLines(int[][] lines) {
         opponent.addLines(lines);
+    }
+
+    public int getScore() {
+        return inGameScoreController.getScore();
+    }
+
+    public void sendGameOver() {
+        frame.dispose();
+        gameTimer.stop();
+    }
+
+    public void gameOver() {
+        endGame(true);
     }
 
 }
