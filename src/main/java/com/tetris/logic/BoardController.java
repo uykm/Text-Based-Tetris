@@ -410,7 +410,7 @@ public class BoardController {
         for (int i = HEIGHT + 3; i >= 3; i--) {
             boolean isGrayLine = false;
             for (int j = 3; j < WIDTH+3; j++) {
-                if (grid.getBoard()[i][j] == 14) {
+                if (grid.getBoard()[i][j] == 40) {
                     isGrayLine = true;
                     break;
                 }
