@@ -14,7 +14,7 @@ class BoardControllerTest {
     void setUp() {
         isItemMode = true;
         gameController = new GameController(isItemMode);
-        boardController = new BoardController(gameController, inGameScoreController, isItemMode);
+        boardController = new BoardController(gameController, inGameScoreController, isItemMode, false);
     }
 
     @Test
