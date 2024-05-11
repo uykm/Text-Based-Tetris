@@ -28,8 +28,8 @@ public class GameController implements PauseScreenCallback {
 
     private final int MAX_SPEED = 200;
 
-    private final int MAX_DELAY = 1000;
-    private final int MIN_DELAY = 1;
+    private final int NORMAL_TICK = 1000;
+    private final int CREATION_TICK = 100;
 
     public int currentSpeed;
     private boolean isItem;
@@ -136,7 +136,7 @@ public class GameController implements PauseScreenCallback {
     }
 
     private void startGame(boolean isItem, boolean isDualMode) {
-        currentSpeed = MAX_DELAY;
+        currentSpeed = NORMAL_TICK;
         boardController.placeNewBlock();
 
         gameTimer = new Timer(currentSpeed, e -> gameLoop(isItem, isDualMode));
@@ -144,22 +144,23 @@ public class GameController implements PauseScreenCallback {
     }
 
     private void gameLoop(boolean isItem, boolean isDualMode) {
-        boolean blink = boardController.blinkCheck();
-        while (blink) {
-            inGameScreen.updateBoard();
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                throw new RuntimeException(ex);
-            }
-            blink = boardController.blinkCheck();
-        }
 
         boardController.moveBlock(Direction.DOWN);
         inGameScreen.updateBoard();
-        if(boardController.getIsNeedNewBlock()) boardController.placeNewBlock();
-        inGameScreen.updateBoard();
+
+        if(boardController.getIsNeedNewBlock()) {
+            while (boardController.blinkCheck()) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(ex);
+                }
+                boardController.blinkErase();
+            }
+            boardController.placeNewBlock();
+            inGameScreen.updateBoard();
+        }
 
         // 게임 오버 조건을 확인합니다
         if (boardController.checkGameOver()) {

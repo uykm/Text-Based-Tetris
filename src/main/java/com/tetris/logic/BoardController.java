@@ -44,7 +44,6 @@ public class BoardController {
     private int blockCountWithNoLineErase;
 
     private int placedBlockCount;
-
     private boolean isNeedNewBlock = false;
 
 
@@ -119,7 +118,7 @@ public class BoardController {
 
 
     // 블록을 게임 보드에 배치
-    public void placeBlock() {
+    private void placeBlock() {
         // 기본 블록 배치 로직
         for (int j = 0; j < currentBlock.height(); j++) {
             for (int i = 0; i < currentBlock.width(); i++) {
@@ -131,7 +130,6 @@ public class BoardController {
     }
 
     public boolean getIsNeedNewBlock() { return isNeedNewBlock; }
-
     private void setIsNeedNewBlock(boolean state) { isNeedNewBlock = state; }
 
 
@@ -244,6 +242,7 @@ public class BoardController {
                     if (currentBlock.getStopCount() > 1 || currentBlock.getLimitCount() > 1) {
                         checkGameOver();
                         setIsNeedNewBlock(true);
+                        // placeNewBlock();
                         itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                         lineCheck();
                         currentBlock.initializeStopCount();
@@ -260,6 +259,7 @@ public class BoardController {
                 // space바 누르면 바로 터지게
                 if (currentBlock instanceof BombItemBlock) {
                     placeBlock();
+                    // placeNewBlock();
                     setIsNeedNewBlock(true);
                     itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                     lineCheck();
@@ -278,6 +278,7 @@ public class BoardController {
                 }
 
                 setIsNeedNewBlock(true);
+                // placeNewBlock();
                 itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                 lineCheck();
 
@@ -313,7 +314,6 @@ public class BoardController {
         currentBlock.rotateBack();
     }
 
-
     // Game Over Check
     public boolean checkGameOver() {
 
@@ -344,19 +344,33 @@ public class BoardController {
         }
     }
 
-    public boolean blinkCheck() {
-        boolean blink = false;
-
+    public void blinkErase() {
         for (int i = 3; i < HEIGHT + 3; i++) {
             if (grid.getBoard()[i][3] == -2) {
                 eraseLine(i);
-                blink = true;
             }
 
             // 폭탄 이벤트 제거
             for (int j = 3; j < WIDTH + 3; j++) {
                 if (grid.getBoard()[i][j] == 13) {
                     grid.eraseOneBlock(j, i);
+                }
+            }
+        }
+    }
+
+    public boolean blinkCheck() {
+        boolean blink = false;
+
+        for (int i = 3; i < HEIGHT + 3; i++) {
+            if (grid.getBoard()[i][3] == -2) {
+                blink = true;
+            }
+
+            // 폭탄 이벤트 제거
+            for (int j = 3; j < WIDTH + 3; j++) {
+                if (grid.getBoard()[i][j] == 13) {
+                    blink = true;
                 }
             }
         }
