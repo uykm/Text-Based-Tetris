@@ -128,41 +128,92 @@ public class GameController implements PauseScreenCallback {
         inGameScreen.repaint();
     }
 
+//    private void startGame(boolean isItem) {
+//        currentSpeed = 1000;
+//        boardController.placeNewBlock();
+//
+//        timer = new Timer(currentSpeed, e -> {
+//            boolean blink = boardController.blinkCheck();
+//            if(blink) {
+//                while (blink) {
+//                    inGameScreen.updateBoard();
+//                    try {
+//                        Thread.sleep(100);
+//                    } catch (InterruptedException ex) {
+//                        throw new RuntimeException(ex);
+//                    }
+//                    blink = boardController.blinkCheck();
+//                }
+//            }
+//
+//            inGameScreen.updateBoard();
+//            if(boardController.getNewBlockState()) boardController.placeNewBlock();
+//            boardController.moveBlock(Direction.DOWN);
+//            inGameScreen.updateBoard();
+//
+//            if (boardController.checkGameOver()) {
+//                frame.dispose();
+//                if (rankScoreController.isScoreInTop10(inGameScoreController.getScore(), isItem)) {
+//                    new RegisterScoreScreen(inGameScoreController.getScore(), isItem);
+//                } else {
+//                    new GameOverScreen(inGameScoreController.getScore(), isItem);
+//                }
+//                timer.stop();
+//            }
+//        });
+//        timer.start();
+//    }
+
     private void startGame(boolean isItem) {
         currentSpeed = 1000;
         boardController.placeNewBlock();
-
-        timer = new Timer(currentSpeed, e -> {
-            boolean blink = boardController.blinkCheck();
-            if(blink) {
-                while (blink) {
-                    inGameScreen.updateBoard();
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    blink = boardController.blinkCheck();
-                }
-            }
-
-            inGameScreen.updateBoard();
-            if(boardController.getNewBlockState()) boardController.placeNewBlock();
-            boardController.moveBlock(Direction.DOWN);
-            inGameScreen.updateBoard();
-
-
-            if (boardController.checkGameOver()) {
-                frame.dispose();
-                if (rankScoreController.isScoreInTop10(inGameScoreController.getScore(), isItem)) {
-                    new RegisterScoreScreen(inGameScoreController.getScore(), isItem);
-                } else {
-                    new GameOverScreen(inGameScoreController.getScore(), isItem);
-                }
-                timer.stop();
-            }
-        });
+        timer = new Timer(currentSpeed, e -> gameLoop(isItem));
         timer.start();
+    }
+
+    private void gameLoop(boolean isItem) {
+        boolean blink = boardController.blinkCheck();
+        while (blink) {
+            inGameScreen.updateBoard();
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+            blink = boardController.blinkCheck();
+        }
+
+        inGameScreen.updateBoard();
+
+        if (boardController.getNewBlockState()) {
+            placeBlockAndResetTimer();
+        }
+        boardController.moveBlock(Direction.DOWN);
+        inGameScreen.updateBoard();
+
+        if (boardController.checkGameOver()) {
+            endGame(isItem);
+        }
+    }
+
+    private void placeBlockAndResetTimer() {
+        boardController.placeNewBlock();
+        inGameScreen.updateBoard();
+
+        if (timer != null) {
+            timer.setInitialDelay(currentSpeed);
+            timer.restart();
+        }
+    }
+
+    private void endGame(boolean isItem) {
+        frame.dispose();
+        if (rankScoreController.isScoreInTop10(inGameScoreController.getScore(), isItem)) {
+            new RegisterScoreScreen(inGameScoreController.getScore(), isItem);
+        } else {
+            new GameOverScreen(inGameScoreController.getScore(), isItem);
+        }
+        timer.stop();
     }
 
     public void speedUp(int speed) {
@@ -194,10 +245,6 @@ public class GameController implements PauseScreenCallback {
     // 추가될 수 있는 라인 수 가져오기
 
     // 게임 오버 상태 받아오기
-
-
-
-
 
 
 }

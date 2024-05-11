@@ -112,9 +112,7 @@ public class BoardController {
         }
     }
 
-    public boolean getNewBlockState() {
-        return needNewBlock;
-    }
+    public boolean getNewBlockState() { return needNewBlock; }
 
     private void setNewBlockState(boolean state) {
         needNewBlock=state;
@@ -196,13 +194,9 @@ public class BoardController {
     // 블록을 이동시킴
     public void moveBlock(Direction direction) {
 
-        if (needNewBlock) {
-            return;
-        }
+        if (needNewBlock) { return; }
         eraseCurrentBlock();
-        if (!canPlaceBlock) {
-            return;
-        }
+        if (!canPlaceBlock) { return;}
         switch (direction) {
             case LEFT -> {
                 if (currentBlock.canMoveSide && grid.collisionCheck(currentBlock, currentBlock.getX() - 1, currentBlock.getY())) {
