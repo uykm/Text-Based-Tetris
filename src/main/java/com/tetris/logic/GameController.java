@@ -9,6 +9,8 @@ import java.awt.event.KeyEvent;
 
 // 게임의 전반적인 흐름을 제어하는 클래스
 public class GameController implements PauseScreenCallback {
+
+    private String strPlayer;
     private BoardController boardController;
     private InGameScreen inGameScreen;
     private InGameScoreController inGameScoreController;
@@ -32,6 +34,9 @@ public class GameController implements PauseScreenCallback {
     public int currentSpeed;
     private boolean isItem;
 
+    public void setStrPlayer(String _strPlayer) {
+        this.strPlayer = _strPlayer;
+    }
     // 게임 컨트롤러 생성자
     public GameController(boolean isItem) {
         this(isItem, false);
@@ -194,6 +199,10 @@ public class GameController implements PauseScreenCallback {
 
     public InGameScreen getInGameScreen() {
         return inGameScreen;
+    }
+
+    public String  getStrPlayer() {
+        return strPlayer;
     }
 
     public void setOpponent(GameController opponent) {
