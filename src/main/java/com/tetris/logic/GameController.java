@@ -22,11 +22,14 @@ public class GameController implements PauseScreenCallback {
     private int DOWN = keyCodes[3];
     private int DROP = keyCodes[4];
     JFrame frame;
-    Timer timer;
+    Timer gameTimer;
 
-    final int MAX_SPEED = 200;
+    private final int MAX_SPEED = 200;
 
-    int currentSpeed;
+    private final int MAX_DELAY = 1000;
+    private final int MIN_DELAY = 1;
+
+    public int currentSpeed;
     private boolean isItem;
 
     // 게임 컨트롤러 생성자
@@ -65,7 +68,7 @@ public class GameController implements PauseScreenCallback {
 
     @Override
     public void onResumeGame() {
-        timer.start();
+        gameTimer.start();
     }
 
     @Override
@@ -94,7 +97,7 @@ public class GameController implements PauseScreenCallback {
                     boardController.moveBlock(Direction.SPACE); // Consider renaming Direction.SPACE to DROP for clarity
                     inGameScreen.updateBoard();
                 } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    timer.stop();
+                    gameTimer.stop();
                     PauseScreen pauseScreen = new PauseScreen(isItem);
                     pauseScreen.setCallback(GameController.this); // Set the callback
                     pauseScreen.setVisible(true); // Show the PauseScreen
@@ -117,7 +120,7 @@ public class GameController implements PauseScreenCallback {
                 boardController.moveBlock(Direction.SPACE);
                 inGameScreen.updateBoard();
             }
-            case "PAUSE" -> timer.stop(); // Todo : 대전 모드 PAUSE 처리
+            case "PAUSE" -> gameTimer.stop(); // Todo : 대전 모드 PAUSE 처리
             case "RESUME" -> onResumeGame();
             case "REPLAY" -> {
                 frame.dispose();
@@ -128,88 +131,50 @@ public class GameController implements PauseScreenCallback {
     }
 
     private void startGame(boolean isItem, boolean isDualMode) {
-        currentSpeed = 1000;
+        currentSpeed = MAX_DELAY;
         boardController.placeNewBlock();
 
-        timer = new Timer(currentSpeed, e -> {
-            boolean blink = boardController.blinkCheck();
-            if(blink) {
-                while (blink) {
-                    inGameScreen.updateBoard();
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    blink = boardController.blinkCheck();
-                }
-            }
-
-            inGameScreen.updateBoard();
-            if(boardController.getNewBlockState()) boardController.placeNewBlock();
-            boardController.moveBlock(Direction.DOWN);
-            inGameScreen.updateBoard();
-
-            if (boardController.checkGameOver()) {
-                frame.dispose();
-                timer.stop();
-                if(!isDualMode){
-                    if (rankScoreController.isScoreInTop10(inGameScoreController.getScore(), isItem)) {
-                        new RegisterScoreScreen(inGameScoreController.getScore(), isItem);
-                    } else {
-                        new GameOverScreen(inGameScoreController.getScore(), isItem);
-                    }
-                } else {
-                    // Todo : 대전 모드 일 경우 GameOver 처리
-                }
-            }
-        });
-        timer.start();
+        gameTimer = new Timer(currentSpeed, e -> gameLoop(isItem, isDualMode));
+        gameTimer.start();
     }
 
-    private void gameLoop(boolean isItem) {
+    private void gameLoop(boolean isItem, boolean isDualMode) {
         boolean blink = boardController.blinkCheck();
         while (blink) {
             inGameScreen.updateBoard();
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
                 throw new RuntimeException(ex);
             }
             blink = boardController.blinkCheck();
         }
 
-        inGameScreen.updateBoard();
-
-        if (boardController.getNewBlockState()) {
-            placeBlockAndResetTimer();
-        }
         boardController.moveBlock(Direction.DOWN);
         inGameScreen.updateBoard();
 
-        if (boardController.checkGameOver()) {
-            endGame(isItem);
-        }
-    }
-
-    private void placeBlockAndResetTimer() {
-        boardController.placeNewBlock();
+        if(boardController.getNewBlockState()) boardController.placeNewBlock();
         inGameScreen.updateBoard();
 
-        if (timer != null) {
-            timer.setInitialDelay(currentSpeed);
-            timer.restart();
+        // 게임 오버 조건을 확인합니다
+        if (boardController.checkGameOver()) {
+            endGame(isItem, isDualMode);
         }
     }
 
-    private void endGame(boolean isItem) {
+    private void endGame(boolean isItem, boolean isDualMode) {
         frame.dispose();
-        if (rankScoreController.isScoreInTop10(inGameScoreController.getScore(), isItem)) {
-            new RegisterScoreScreen(inGameScoreController.getScore(), isItem);
+        gameTimer.stop();
+        if(!isDualMode){
+            if (rankScoreController.isScoreInTop10(inGameScoreController.getScore(), isItem)) {
+                new RegisterScoreScreen(inGameScoreController.getScore(), isItem);
+            } else {
+                new GameOverScreen(inGameScoreController.getScore(), isItem);
+            }
         } else {
-            new GameOverScreen(inGameScoreController.getScore(), isItem);
+            // Todo : 대전 모드 일 경우 GameOver 처리
         }
-        timer.stop();
     }
 
     public void speedUp(int speed) {
@@ -221,7 +186,7 @@ public class GameController implements PauseScreenCallback {
                 speed = (int) (speed * 1.2);
             }
             currentSpeed -= speed;
-            timer.setDelay(currentSpeed);
+            gameTimer.setDelay(currentSpeed);
             inGameScoreController.setScoreOnBlockMoveDown((1100-currentSpeed)/100);
             inGameScoreController.addScoreMessage("Speed up! Current speed: " + currentSpeed);
             inGameScoreController.addScoreMessage("Score per Block Move Down: " + inGameScoreController.getScoreOnBlockMoveDown());

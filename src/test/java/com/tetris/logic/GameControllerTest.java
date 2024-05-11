@@ -22,13 +22,13 @@ class GameControllerTest {
     @Test
     void onResumeGame() {
         // Arrange
-        gameController.timer = new javax.swing.Timer(1000, e -> System.out.println("Timer executed"));
+        gameController.gameTimer = new javax.swing.Timer(1000, e -> System.out.println("Timer executed"));
 
         // Act
         gameController.onResumeGame(); // 게임 재개
 
         // Assert
-        assertTrue(gameController.timer.isRunning(), "Timer should start when game is resumed"); // 타이머가 실행 중인지 확인
+        assertTrue(gameController.gameTimer.isRunning(), "Timer should start when game is resumed"); // 타이머가 실행 중인지 확인
     }
 
     @Test
@@ -44,7 +44,7 @@ class GameControllerTest {
     void speedUp() {
         // Arrange
         gameController.currentSpeed = 1000; // 초기 속도
-        gameController.timer = new javax.swing.Timer(1000, e -> System.out.println("Timer executed"));
+        gameController.gameTimer = new javax.swing.Timer(1000, e -> System.out.println("Timer executed"));
 
         // Act
         gameController.speedUp(100); // 속도 올리기
@@ -53,15 +53,15 @@ class GameControllerTest {
             case 0:
                 // Assert
                 assertEquals(920, gameController.currentSpeed, "Current speed should decrease by the speed increment"); // 속도가 80만큼 감소했는지 확인
-                assertEquals(920, gameController.timer.getDelay(), "Timer delay should match the new speed"); // 타이머 지연 시간이 업데이트되었는지 확인
+                assertEquals(920, gameController.gameTimer.getDelay(), "Timer delay should match the new speed"); // 타이머 지연 시간이 업데이트되었는지 확인
             case 1:
                 // Assert
                 assertEquals(900, gameController.currentSpeed, "Current speed should decrease by the speed increment"); // 속도가 100만큼 감소했는지 확인
-                assertEquals(900, gameController.timer.getDelay(), "Timer delay should match the new speed"); // 타이머 지연 시간이 업데이트되었는지 확인
+                assertEquals(900, gameController.gameTimer.getDelay(), "Timer delay should match the new speed"); // 타이머 지연 시간이 업데이트되었는지 확인
             case 2:
                 // Assert
                 assertEquals(880, gameController.currentSpeed, "Current speed should decrease by the speed increment"); // 속도가 120만큼 감소했는지 확인
-                assertEquals(880, gameController.timer.getDelay(), "Timer delay should match the new speed"); // 타이머 지연 시간이 업데이트되었는지 확인
+                assertEquals(880, gameController.gameTimer.getDelay(), "Timer delay should match the new speed"); // 타이머 지연 시간이 업데이트되었는지 확인
 
         }
     }
