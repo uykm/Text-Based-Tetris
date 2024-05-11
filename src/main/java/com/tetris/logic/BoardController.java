@@ -94,7 +94,9 @@ public class BoardController {
     public void placeNewBlock() {
         if(!erasedLines.isEmpty()){
             if(isDualmode){
-                sendLines(copyErasedLine());
+                if(erasedLines.size() > 1){
+                    sendLines(copyErasedLine());
+                }
                 erasedLines.clear();
             }
         }
@@ -440,7 +442,6 @@ public class BoardController {
             System.arraycopy(lines, 0, temp, shouldAddLines.length, lines.length);
             shouldAddLines = temp;
         }
-
     }
 
     // 내 보드에 추가되어야 할 라인을 추가
