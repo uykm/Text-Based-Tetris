@@ -6,10 +6,16 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
 
 public class DualTetrisController {
     private GameController gameController1;
     private GameController gameController2;
+
+    private Timer limitTimer;
+    private JLabel timeLabel;
+    private boolean isTimeAttack;
+    private  boolean isItem;
 
     // gameController1 조작을 위한 키 코드 w, a, s, d, Left Shift
     private int[] keyCodes1 = {KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_SHIFT};
@@ -17,16 +23,21 @@ public class DualTetrisController {
     // gameController1 조작을 위한 키 코드 방향키, Right Shift
     private int[] keyCodes2 = {KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_SHIFT};
 
-    public DualTetrisController() {
-        boolean isItem = false; // Assuming both games do not use items by default
-        gameController1 = new GameController(isItem, true);
-        gameController2 = new GameController(isItem, true);
+    public DualTetrisController(boolean isItem, boolean isTimeAttack) {
+        this.isTimeAttack = isTimeAttack;
+        this.isItem = isItem;
+        gameController1 = new GameController(isItem, true, isTimeAttack);
+        gameController2 = new GameController(isItem, true, isTimeAttack);
 
         gameController1.setStrPlayer("A");
         gameController2.setStrPlayer("B");
 
         gameController1.setOpponent(gameController2);
         gameController2.setOpponent(gameController1);
+
+        if(isTimeAttack) {
+            timeController();
+        }
 
         initUI();
     }
@@ -85,10 +96,38 @@ public class DualTetrisController {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Dual Tetris Game");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setLayout(new GridLayout(1, 2)); // Set layout to grid with 1 row and 2 columns
+            frame.setLayout(new BorderLayout()); // Change to BorderLayout for better control placement
 
-            frame.add(gameController1.getInGameScreen());
-            frame.add(gameController2.getInGameScreen());
+            JPanel gamePanel = new JPanel(new GridLayout(1, 2));
+            JPanel headerPanel = new JPanel(new GridLayout(1, 3)); // Panel for player names and timer
+
+            // Player labels
+            JLabel player1Label = new JLabel("Player A", SwingConstants.CENTER);
+            JLabel player2Label = new JLabel("Player B", SwingConstants.CENTER);
+
+            // Time or Mode label
+            timeLabel = new JLabel("", SwingConstants.CENTER);
+            timeLabel.setFont(new Font("Serif", Font.BOLD, 16));
+
+            if (isTimeAttack) {
+                timeLabel.setText("Time: 03:00"); // Initial time setup for time attack
+            } else {
+                // Display the mode when not in time attack
+                String modeText = isItem ? "Item Mode" : "Normal Mode";
+                timeLabel.setText(modeText);
+            }
+
+            // Adding components to header panel
+            headerPanel.add(player1Label);
+            headerPanel.add(timeLabel);
+            headerPanel.add(player2Label);
+
+            // Adding game screens
+            gamePanel.add(gameController1.getInGameScreen());
+            gamePanel.add(gameController2.getInGameScreen());
+
+            frame.add(headerPanel, BorderLayout.NORTH);
+            frame.add(gamePanel, BorderLayout.CENTER);
 
             frame.pack();
             setupKeyListener(frame);
@@ -98,7 +137,41 @@ public class DualTetrisController {
         });
     }
 
+    private void updateTime(int remainingTimeInSeconds) {
+        int minutes = remainingTimeInSeconds / 60;
+        int seconds = remainingTimeInSeconds % 60;
+        SwingUtilities.invokeLater(() -> {
+            timeLabel.setText(String.format("Time: %02d:%02d", minutes, seconds));
+        });
+    }
+
+    private void timeController() {
+        limitTimer = new Timer();
+        final int totalDuration = 180; // in seconds for easier countdown handling
+        java.util.TimerTask countdownTask = new java.util.TimerTask() {
+            int remainingTime = totalDuration;
+
+            @Override
+            public void run() {
+                if (remainingTime <= 0) {
+                    if (gameController1.getScore() > gameController2.getScore()) {
+                        gameController2.gameOver();
+                    } else {
+                        gameController1.gameOver();
+                    }
+                    System.out.println("Time Over");
+                    limitTimer.cancel(); // Stop the timer after game over
+                } else {
+                    updateTime(remainingTime);
+                    remainingTime--;
+                }
+            }
+        };
+
+        limitTimer.scheduleAtFixedRate(countdownTask, 0, 1000); // Schedule task to run every second
+    }
+
     public static void main(String[] args) {
-        new DualTetrisController(); // Launch the dual Tetris controller
+        new DualTetrisController(false, true); // Launch the dual Tetris controller
     }
 }
