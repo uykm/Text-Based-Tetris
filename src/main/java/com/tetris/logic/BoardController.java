@@ -115,7 +115,6 @@ public class BoardController {
             canPlaceBlock = false;
             currentBlock = new NullBlock();
         }
-        setIsNeedNewBlock(false);
     }
 
 
@@ -130,9 +129,6 @@ public class BoardController {
             }
         }
     }
-
-    public boolean getIsNeedNewBlock() { return isNeedNewBlock; }
-    private void setIsNeedNewBlock(boolean state) { isNeedNewBlock = state; }
 
 
     // 라인이 꽉 찼는지 확인하고 꽉 찼으면 지우기
@@ -180,13 +176,31 @@ public class BoardController {
 
     // 라인을 지우고 위에 있는 블록들을 내림
     public void eraseLine(int line) {
-        for(int i=3; i<WIDTH+3; i++) {
+        // 지워진 라인을 먼저 비운다.
+        for (int i = 3; i < WIDTH + 3; i++) {
             grid.getBoard()[line][i] = 0;
         }
+
+        // 현재 블록의 Y 좌표 범위를 확인한다.
+        int currentBlockTop = currentBlock.getY();
+        int currentBlockBottom = currentBlockTop + currentBlock.height();
+
+        // 지워진 라인 위로 블록들을 내린다.
         for (int i = line; i > 3; i--) {
-            System.arraycopy(grid.getBoard()[i - 1], 3, grid.getBoard()[i], 3, WIDTH);
+            for (int j = 3; j < WIDTH + 3; j++) {
+                // 현재 블록에 속한 셀은 내리지 않는다.
+                if (i - 1 >= currentBlockTop && i - 1 < currentBlockBottom && j >= currentBlock.getX() && j < currentBlock.getX() + currentBlock.width()) {
+                    // 현재 블록의 셀이라면 내리지 않고, 0으로 초기화할 필요도 없다.
+                    continue;
+                }
+                grid.getBoard()[i][j] = grid.getBoard()[i - 1][j];
+            }
         }
-        if(isDualmode)erasedLines.add(line);
+
+        // 듀얼 모드에서 지워진 라인을 기록
+        if (isDualmode) {
+            erasedLines.add(line);
+        }
     }
 
 
@@ -243,8 +257,7 @@ public class BoardController {
                     // 경계선에 닿은 경우 혹은 2틱 동안 움직임 없거나 충돌 후 2틱이 지나면 블록을 고정시킴
                     if (currentBlock.getStopCount() > 1 || currentBlock.getLimitCount() > 1) {
                         checkGameOver();
-                        setIsNeedNewBlock(true);
-                        // placeNewBlock();
+                        placeNewBlock();
                         itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                         lineCheck();
                         currentBlock.initializeStopCount();
@@ -261,8 +274,7 @@ public class BoardController {
                 // space바 누르면 바로 터지게
                 if (currentBlock instanceof BombItemBlock) {
                     placeBlock();
-                    // placeNewBlock();
-                    setIsNeedNewBlock(true);
+                    placeNewBlock();
                     itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                     lineCheck();
                     break;
@@ -279,8 +291,7 @@ public class BoardController {
                     break;
                 }
 
-                setIsNeedNewBlock(true);
-                // placeNewBlock();
+                placeNewBlock();
                 itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                 lineCheck();
 
