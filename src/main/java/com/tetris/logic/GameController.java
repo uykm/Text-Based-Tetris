@@ -31,7 +31,7 @@ public class GameController implements PauseScreenCallback {
 
     // 게임 컨트롤러 생성자
     public GameController(boolean isItem) {
-        this(isItem, false); // Delegate to the main constructor
+        this(isItem, false);
     }
 
     public GameController(boolean isItem, boolean isDualMode) {
@@ -59,11 +59,7 @@ public class GameController implements PauseScreenCallback {
             setupKeyListener(frame);
             frame.setVisible(true);
             frame.setResizable(false);
-
-            // 콘솔에서 상태 확인을 위한 임시 코드
-            // 실제 게임에서는 게임 로직에 따라 점수를 업데이트하게 됩니다.
-            // TODO: 3/24/24 : 현재 점수 계산 로직 없음, BoardController 또는 GameController에서 점수 계산 로직 추가 필요
-            inGameScreen.updateScore(0); // 점수를 임시로 0으로 설정
+            inGameScreen.updateScore(0);
         });
     }
 
@@ -78,7 +74,6 @@ public class GameController implements PauseScreenCallback {
     }
 
     // 키보드 이벤트 처리
-    // TODO: 3/24/24 : 효정이가 KeyListener 구현 하면 바꿀 예정
     private void setupKeyListener(JFrame frame) {
         // Create the PauseScreen instance once during initialization
 
@@ -122,7 +117,7 @@ public class GameController implements PauseScreenCallback {
                 boardController.moveBlock(Direction.SPACE);
                 inGameScreen.updateBoard();
             }
-            case "PAUSE" -> timer.stop();
+            case "PAUSE" -> timer.stop(); // Todo : 대전 모드 PAUSE 처리
             case "RESUME" -> onResumeGame();
             case "REPLAY" -> {
                 frame.dispose();
@@ -158,11 +153,15 @@ public class GameController implements PauseScreenCallback {
             if (boardController.checkGameOver()) {
                 frame.dispose();
                 timer.stop();
-                if(!isDualMode){if (rankScoreController.isScoreInTop10(inGameScoreController.getScore(), isItem)) {
-                    new RegisterScoreScreen(inGameScoreController.getScore(), isItem);
+                if(!isDualMode){
+                    if (rankScoreController.isScoreInTop10(inGameScoreController.getScore(), isItem)) {
+                        new RegisterScoreScreen(inGameScoreController.getScore(), isItem);
+                    } else {
+                        new GameOverScreen(inGameScoreController.getScore(), isItem);
+                    }
                 } else {
-                    new GameOverScreen(inGameScoreController.getScore(), isItem);
-                }}
+                    // Todo : 대전 모드 일 경우 GameOver 처리
+                }
             }
         });
         timer.start();
@@ -191,10 +190,6 @@ public class GameController implements PauseScreenCallback {
     public void setOpponent(GameController opponent) {
         this.opponent = opponent;
     }
-
-
-    //Todo: 대전 모드 관련 로직
-
 
     public void addLines(int[][] lines) {
         boardController.addLines(lines);
