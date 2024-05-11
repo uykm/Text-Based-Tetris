@@ -1,6 +1,7 @@
 package com.tetris.ui;
 
 import com.tetris.component.Button;
+import com.tetris.logic.DualTetrisController;
 import com.tetris.logic.SettingController;
 
 import javax.swing.*;
@@ -83,16 +84,19 @@ public class MultiGameModeScreen extends JFrame implements ActionListener {
         setVisible(false);
         switch (command) {
             case "normal" -> {
-                //
+                // TODO : DualTetrisController 수정 후 -> new DualTetrisController(false, false);
+                new DualTetrisController();
             }
             case "item" -> {
-                //
+                // TODO : DualTetrisController 수정 후 -> new DualTetrisController(true, false);
+                new DualTetrisController();
             }
             case "time" -> {
-                //
+                // TODO : DualTetrisController 수정 후 -> new DualTetrisController(false, true);
+                new DualTetrisController();
             }
             case "menu" -> {
-                //
+                new MainMenuScreen();
             }
         }
     }
@@ -100,10 +104,14 @@ public class MultiGameModeScreen extends JFrame implements ActionListener {
     private void moveScreen() {
         setVisible(false);
         if (btnNormal.isFocusOwner()) {
+            // TODO : DualTetrisController 수정 후 -> new DualTetrisController(false, false);
+            new DualTetrisController();
         } else if (btnItem.isFocusOwner()) {
-            //
+            // TODO : DualTetrisController 수정 후 -> new DualTetrisController(true, false);
+            new DualTetrisController();
         } else if (btnTime.isFocusOwner()) {
-            //
+            // TODO : DualTetrisController 수정 후 -> new DualTetrisController(false, true);
+            new DualTetrisController();
         } else if (btnMenu.isFocusOwner()) {
             new MainMenuScreen();
         }
