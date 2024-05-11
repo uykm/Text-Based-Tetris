@@ -30,9 +30,9 @@ public class DualTetrisController {
         gameController1.setOpponent(gameController2);
         gameController2.setOpponent(gameController1);
 
-        //아이템 모드, 타임어택 모드 상태 표시
-        System.out.println("Item Mode : " + isItem);
-        System.out.println("Time Attack Mode : " + isTimeAttack);
+        if(isTimeAttack) {
+            timeController();
+        }
 
         initUI();
     }
