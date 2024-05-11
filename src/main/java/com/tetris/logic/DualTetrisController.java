@@ -19,8 +19,11 @@ public class DualTetrisController {
 
     public DualTetrisController() {
         boolean isItem = false; // Assuming both games do not use items by default
-        gameController1 = new GameController(isItem);
-        gameController2 = new GameController(isItem);
+        gameController1 = new GameController(isItem, true);
+        gameController2 = new GameController(isItem, true);
+
+        gameController1.setOpponent(gameController2);
+        gameController2.setOpponent(gameController1);
 
         initUI();
     }

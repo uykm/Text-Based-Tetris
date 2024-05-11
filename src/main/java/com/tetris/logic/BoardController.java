@@ -2,6 +2,10 @@ package com.tetris.logic;
 
 import com.tetris.model.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static com.tetris.logic.ItemBlockController.BOMB_BODY;
 import static com.tetris.logic.ItemBlockController.BOMB_EVENT;
 
@@ -10,6 +14,7 @@ public class BoardController {
     final private int LINE_COUNT_TO_SPEED_UP = 8;
     final private int BLOCK_SPEED_UP_THRESHOLD = 20;
     final private int LINE_SPEED_UP_THRESHOLD = 40;
+    final private int MAX_ADDED_LINES = 10;
 
     final private Board grid;
     final private InGameScoreController inGameScoreController;
@@ -42,6 +47,7 @@ public class BoardController {
 
     private boolean needNewBlock = false;
 
+
     public BoardController(GameController gameController, InGameScoreController inGameScoreController, Boolean isItemMode) {
         this.isItemMode = isItemMode;
         this.grid = new Board();
@@ -56,6 +62,7 @@ public class BoardController {
         this.lastLineEraseTime = 0;
         this.erasedLineCount = 0;
         this.nextBlock = nextBlock.selectBlock(this, isItemMode, erasedLineCount);
+        initializeBoardState();
     }
 
     private void checkSpeedUp() {
@@ -84,6 +91,14 @@ public class BoardController {
 
     // nextBlock을 currentBlock으로 옮기고 새로운 nextBlock을 생성
     public void placeNewBlock() {
+        if(!erasedLines.isEmpty()){
+            sendLines(copyErasedLine());
+            erasedLines.clear();
+        }
+        if(shouldAddLines != null){
+            addLines();
+        }
+        copyBoardState(grid.getBoard(), previousBoardState);
         placedBlockCount++;
         blockCountWithNoLineErase++;
         currentBlock = nextBlock;
@@ -170,13 +185,13 @@ public class BoardController {
 
     // 라인을 지우고 위에 있는 블록들을 내림
     public void eraseLine(int line) {
-
         for(int i=3; i<WIDTH+3; i++) {
             grid.getBoard()[line][i] = 0;
         }
         for (int i = line; i > 3; i--) {
             System.arraycopy(grid.getBoard()[i - 1], 3, grid.getBoard()[i], 3, WIDTH);
         }
+        erasedLines.add(line);
     }
 
 
@@ -359,4 +374,97 @@ public class BoardController {
 
     public void updateErasedLineCountLately(int erasedLineCountToCreateItemBlock) { erasedLineCountLately += erasedLineCountToCreateItemBlock; }
 
+
+    // 대전 모드 관련
+
+    private int[][] shouldAddLines; // 내 보드에 추가 되어야 할 라인
+    private int[][] previousBoardState; // 이전 게임 보드 상태(새로운 블록이 생성되기 전, 라인이 지워진 후 이전 상태 업데이트)
+    final private ArrayList<Integer> erasedLines = new ArrayList<>(); // 지워진 라인 (상대방에게 보내기 위해 저장)
+
+    // 게임이 시작되면 이전 게임 보드 상태를 초기화
+    public void initializeBoardState() {
+        previousBoardState = new int[26][16]; // Assuming 4 is the buffer boundary as seen in your board setup
+        copyBoardState(grid.getBoard(), previousBoardState);
+    }
+
+    // 게임 보드 상태 복사
+    private void copyBoardState(int[][] source, int[][] destination) {
+        for (int i = 0; i < source.length; i++) {
+            System.arraycopy(source[i], 0, destination[i], 0, source[i].length);
+        }
+    }
+
+    // 지워진 라인 복사 (이전 상태에서 받아와서 마지막에 쌓은 블록은 표시되지 않음)
+    public int[][] copyErasedLine() {
+        int[][] erasedLine = new int[erasedLines.size()][16];
+        for (int i = 0; i < erasedLines.size(); i++)
+            System.arraycopy(previousBoardState[erasedLines.get(i)], 0, erasedLine[i], 0, 16);
+        erasedLines.clear();
+        return erasedLine;
+    }
+
+    // 추가 될 수 있는 라인 판단
+    private int checkCanAddLines(int linesToAdd) {
+        int currentGrayLines = 0;
+        // Count current gray lines in the board
+        for (int i = HEIGHT + 3; i >= 3; i--) {
+            boolean isGrayLine = false;
+            for (int j = 3; j < WIDTH+3; j++) {
+                if (grid.getBoard()[i][j] == 14) {
+                    isGrayLine = true;
+                    break;
+                }
+            }
+            if (isGrayLine) {
+                currentGrayLines++;
+            }
+        }
+
+        if (currentGrayLines + linesToAdd > MAX_ADDED_LINES) {
+            return MAX_ADDED_LINES - currentGrayLines;
+        }
+        return linesToAdd;
+    }
+
+    // 상대방에게 지워진 라인을 보냄
+    public void sendLines(int[][] lines) {
+        gameController.sendLines(lines);
+    }
+
+    // 상대방이 lines에 배열을 담아 sendLines를 호출하면 내 보드의 shouldAddLines에 저장
+    // 기존 라인이 있을 경우 아래 부분에 새로운 lines 추가
+    public void addLines(int[][] lines){
+        if(shouldAddLines == null){
+            shouldAddLines = lines;
+        } else{
+            int[][] temp = new int[shouldAddLines.length + lines.length][16];
+            System.arraycopy(shouldAddLines, 0, temp, 0, shouldAddLines.length);
+            System.arraycopy(lines, 0, temp, shouldAddLines.length, lines.length);
+            shouldAddLines = temp;
+        }
+
+    }
+
+    // 내 보드에 추가되어야 할 라인을 추가
+    public void addLines() {
+        int linesToAdd = checkCanAddLines(shouldAddLines.length);
+        if (linesToAdd > 0) {
+            int startAddingFrom = shouldAddLines.length - linesToAdd;
+
+            for (int i = 3; i < HEIGHT + 3 - linesToAdd; i++) {
+                System.arraycopy(grid.getBoard()[i + linesToAdd], 3, grid.getBoard()[i], 3, WIDTH+1);
+            }
+
+            for (int i = 0; i < linesToAdd; i++) {
+                for (int j = 3; j < WIDTH + 3; j++) {
+                    if(shouldAddLines[i][j] > 0) {
+                        grid.getBoard()[HEIGHT + 3 - linesToAdd + i][j] = 40;
+                    } else {
+                        grid.getBoard()[HEIGHT + 3 - linesToAdd + i][j] = 0;
+                    }
+                }
+            }
+        }
+        shouldAddLines = null;
+    }
 }
