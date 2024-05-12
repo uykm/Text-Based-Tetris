@@ -155,6 +155,10 @@ public class BoardController {
             if (canErase) {
                 blinkLine(i);
                 lineCount++;
+                // 듀얼 모드에서 지워진 라인을 기록
+                if (isDualmode) {
+                    erasedLines.add(i);
+                }
             }
         }
         updateScoreByErasedLineCnt(lineCount);
@@ -197,11 +201,6 @@ public class BoardController {
                 }
                 grid.getBoard()[i][j] = grid.getBoard()[i - 1][j];
             }
-        }
-
-        // 듀얼 모드에서 지워진 라인을 기록
-        if (isDualmode) {
-            erasedLines.add(line);
         }
     }
 
@@ -257,9 +256,9 @@ public class BoardController {
                     // 경계선에 닿은 경우 혹은 2틱 동안 움직임 없거나 충돌 후 2틱이 지나면 블록을 고정시킴
                     if (currentBlock.getStopCount() > 1 || currentBlock.getLimitCount() > 1) {
                         checkGameOver();
-                        placeNewBlock();
                         itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                         lineCheck();
+                        placeNewBlock();
                         currentBlock.initializeStopCount();
                         currentBlock.initializeLimitCount();
                     }
@@ -274,9 +273,9 @@ public class BoardController {
                 // space바 누르면 바로 터지게
                 if (currentBlock instanceof BombItemBlock) {
                     placeBlock();
-                    placeNewBlock();
                     itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                     lineCheck();
+                    placeNewBlock();
                     break;
                 }
 
@@ -291,9 +290,9 @@ public class BoardController {
                     break;
                 }
 
-                placeNewBlock();
                 itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                 lineCheck();
+                placeNewBlock();
 
                 currentBlock.initializeLimitCount();
             }
@@ -422,6 +421,7 @@ public class BoardController {
     // 지워진 라인 복사 (이전 상태에서 받아와서 마지막에 쌓은 블록은 표시되지 않음)
     public int[][] copyErasedLine() {
         int[][] erasedLine = new int[erasedLines.size()][16];
+
         for (int i = 0; i < erasedLines.size(); i++)
             System.arraycopy(previousBoardState[erasedLines.get(i)], 0, erasedLine[i], 0, 16);
         erasedLines.clear();
