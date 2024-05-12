@@ -49,7 +49,9 @@ public class GameController implements PauseScreenCallback {
         this.isItem = isItem;
         this.isTimeAttack = isTimeAttack;
         this.isDualMode = isDualMode;
-        initUI();
+
+        if (!isDualMode) { initUI(); }
+
         this.inGameScoreController = new InGameScoreController();
         this.boardController = new BoardController(this, this.inGameScoreController, isItem, isDualMode);
         this.inGameScreen = new InGameScreen(this.boardController, this.inGameScoreController);
@@ -83,7 +85,7 @@ public class GameController implements PauseScreenCallback {
     }
 
     // 키보드 이벤트 처리
-    private void setupKeyListener(JFrame frame) {
+    private void setupKeyListener(JFrame framem) {
         // Create the PauseScreen instance once during initialization
         frame.addKeyListener(new KeyAdapter() {
             @Override
@@ -101,7 +103,7 @@ public class GameController implements PauseScreenCallback {
                     boardController.moveBlock(Direction.SPACE); // Consider renaming Direction.SPACE to DROP for clarity
                 } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     gameTimer.stop();
-                    PauseScreen pauseScreen = new PauseScreen(isItem);
+                    PauseScreen pauseScreen = new PauseScreen(isItem, isDualMode, isTimeAttack);
                     pauseScreen.setCallback(GameController.this); // Set the callback
                     pauseScreen.setVisible(true); // Show the PauseScreen
                 }
@@ -121,11 +123,18 @@ public class GameController implements PauseScreenCallback {
             case "DROP" -> {
                 boardController.moveBlock(Direction.SPACE);
             }
-            case "PAUSE" -> gameTimer.stop(); // Todo : 대전 모드 PAUSE 처리
+            case "PAUSE" -> {
+                gameTimer.stop(); // Todo : 대전 모드 PAUSE 처리
+                new PauseScreen(isItem, isDualMode, isTimeAttack);
+            }
             case "RESUME" -> onResumeGame();
             case "REPLAY" -> {
                 frame.dispose();
-                new GameController(isItem);
+                if (isDualMode) {
+                    new DualTetrisController(isItem, isTimeAttack);
+                } else {
+                    new GameController(isItem);
+                }
             }
         }
         inGameScreen.updateBoard();

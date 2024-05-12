@@ -1,5 +1,6 @@
 package com.tetris.ui;
 
+import com.tetris.logic.DualTetrisController;
 import com.tetris.logic.GameController;
 import com.tetris.logic.SettingController;
 
@@ -24,11 +25,17 @@ public class PauseScreen extends JFrame implements ActionListener{
     JButton btnQuit = createBtn("Quit", "quit", this);
     private boolean isItemMode;
 
+    private boolean isDualMode;
 
-    public PauseScreen(boolean isItemMode) {
+    private boolean isTimeAttckMode;
+
+
+    public PauseScreen(boolean isItemMode, boolean isDualMode, boolean isTimeAttackMode) {
 
         // 노말모드 vs 아이템 모드
         this.isItemMode = isItemMode;
+        this.isDualMode = isDualMode;
+        this.isTimeAttckMode = isTimeAttackMode;
 
         screenSize = settingController.getScreenSize("screenSize", "small");
 
@@ -116,7 +123,11 @@ public class PauseScreen extends JFrame implements ActionListener{
             setVisible(false);
             callback.onResumeGame();
         } else if (btnReplay.isFocusOwner()) {
-            new GameController(isItemMode);
+            if (isDualMode) {
+                new DualTetrisController(isItemMode, isTimeAttckMode);
+            } else {
+                new GameController(isItemMode);
+            }
             callback.onHideFrame();
         } else if (btnMainMenu.isFocusOwner()) {
             new MainMenuScreen();

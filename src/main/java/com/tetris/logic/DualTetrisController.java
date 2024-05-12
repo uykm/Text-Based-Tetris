@@ -86,7 +86,6 @@ public class DualTetrisController {
                 // Handle global pause
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     gameController1.controlGame("PAUSE");
-                    gameController2.controlGame("PAUSE");
                 }
             }
         });
