@@ -35,6 +35,8 @@ public class GameController implements PauseScreenCallback {
     private boolean isItem;
     private boolean isTimeAttack;
 
+    private boolean isDualMode;
+
     public void setStrPlayer(String _strPlayer) {
         this.strPlayer = _strPlayer;
     }
@@ -51,6 +53,7 @@ public class GameController implements PauseScreenCallback {
     private void initialize(boolean isItem, boolean isDualMode, boolean isTimeAttack) {
         this.isItem = isItem;
         this.isTimeAttack = isTimeAttack;
+        this.isDualMode = isDualMode;
 
         if (!isDualMode) { initUI(); }
 
@@ -86,7 +89,7 @@ public class GameController implements PauseScreenCallback {
     }
 
     // 키보드 이벤트 처리
-    private void setupKeyListener(JFrame frame) {
+    private void setupKeyListener(JFrame framem) {
         // Create the PauseScreen instance once during initialization
 
         frame.addKeyListener(new KeyAdapter() {
@@ -107,7 +110,7 @@ public class GameController implements PauseScreenCallback {
                     inGameScreen.updateBoard();
                 } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     gameTimer.stop();
-                    PauseScreen pauseScreen = new PauseScreen(isItem);
+                    PauseScreen pauseScreen = new PauseScreen(isItem, isDualMode, isTimeAttack);
                     pauseScreen.setCallback(GameController.this); // Set the callback
                     pauseScreen.setVisible(true); // Show the PauseScreen
                 }
@@ -131,12 +134,16 @@ public class GameController implements PauseScreenCallback {
             }
             case "PAUSE" -> {
                 gameTimer.stop(); // Todo : 대전 모드 PAUSE 처리
-                new PauseScreen(isItem);
+                new PauseScreen(isItem, isDualMode, isTimeAttack);
             }
             case "RESUME" -> onResumeGame();
             case "REPLAY" -> {
                 frame.dispose();
-                new GameController(isItem);
+                if (isDualMode) {
+                    new DualTetrisController(isItem, isTimeAttack);
+                } else {
+                    new GameController(isItem);
+                }
             }
         }
         inGameScreen.repaint();
