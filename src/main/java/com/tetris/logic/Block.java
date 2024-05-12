@@ -16,7 +16,7 @@ public abstract class Block {
     public boolean canMoveSide;
 
     // 아이템 블럭이 생성될 수 있는 지워진 줄의 개수
-    final private int erasedLineCountToCreateItemBlock = 10;
+    final private int erasedLineCountToCreateItemBlock = 2;
 
     // stopCount: 조작이 없으면 1씩 증가,
     private int stopCount = 0;
@@ -195,11 +195,11 @@ public abstract class Block {
     public Block selectItemBlock() {
         RWSelection rwSelection = new RWSelection(3);
         return switch (rwSelection.select()) {
-            case 0 -> WaterItemBlock.create();
-            case 1 -> LineEraseItemBlock.create();
-            case 2 -> new BombItemBlock();
-            case 3 -> new WeightItemBlock();
-            default -> new ExtensionItemBlock();
+//            case 0 -> WaterItemBlock.create();
+//            case 1 -> LineEraseItemBlock.create();
+//            case 2 -> new BombItemBlock();
+//            case 3 -> new WeightItemBlock();
+            default -> new BombItemBlock();
         };
     }
 
