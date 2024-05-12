@@ -32,7 +32,7 @@ public class WinnerScreen extends JFrame implements ActionListener {
         this.isItem = isItem;
         this.isTimeAttack = isTimeAttack;
 
-        setTitle(winner + "is the Winner!!");
+        setTitle(winner + " is the Winner!!");
         String screenSize = settingController.getScreenSize("screenSize", "small");
         switch (screenSize) {
             case "small":
