@@ -51,7 +51,9 @@ public class GameController implements PauseScreenCallback {
     private void initialize(boolean isItem, boolean isDualMode, boolean isTimeAttack) {
         this.isItem = isItem;
         this.isTimeAttack = isTimeAttack;
-        initUI();
+
+        if (!isDualMode) { initUI(); }
+
         this.inGameScoreController = new InGameScoreController();
         this.boardController = new BoardController(this, this.inGameScoreController, isItem, isDualMode);
         this.inGameScreen = new InGameScreen(this.boardController, this.inGameScoreController);
@@ -127,7 +129,10 @@ public class GameController implements PauseScreenCallback {
                 boardController.moveBlock(Direction.SPACE);
                 inGameScreen.updateBoard();
             }
-            case "PAUSE" -> gameTimer.stop(); // Todo : 대전 모드 PAUSE 처리
+            case "PAUSE" -> {
+                gameTimer.stop(); // Todo : 대전 모드 PAUSE 처리
+                new PauseScreen(isItem);
+            }
             case "RESUME" -> onResumeGame();
             case "REPLAY" -> {
                 frame.dispose();
