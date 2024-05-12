@@ -4,6 +4,8 @@ import com.tetris.model.Direction;
 import com.tetris.ui.*;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -27,14 +29,12 @@ public class GameController implements PauseScreenCallback {
     Timer gameTimer;
 
     private final int MAX_SPEED = 200;
-
     private final int NORMAL_TICK = 1000;
-    private final int CREATION_TICK = 100;
+    private final int FAST_DELAY = 10;
 
     public int currentSpeed;
     private boolean isItem;
     private boolean isTimeAttack;
-
     private boolean isDualMode;
 
     public void setStrPlayer(String _strPlayer) {
@@ -46,11 +46,6 @@ public class GameController implements PauseScreenCallback {
     }
 
     public GameController(boolean isItem, boolean isDualMode, boolean isTimeAttack) {
-        initialize(isItem, isDualMode, isTimeAttack);
-        startGame(isDualMode);
-    }
-
-    private void initialize(boolean isItem, boolean isDualMode, boolean isTimeAttack) {
         this.isItem = isItem;
         this.isTimeAttack = isTimeAttack;
         this.isDualMode = isDualMode;
@@ -61,6 +56,7 @@ public class GameController implements PauseScreenCallback {
         this.boardController = new BoardController(this, this.inGameScoreController, isItem, isDualMode);
         this.inGameScreen = new InGameScreen(this.boardController, this.inGameScoreController);
         this.rankScoreController = new RankScoreController();
+        startGame(isDualMode);
     }
 
     // 게임 UI 초기화
@@ -91,7 +87,6 @@ public class GameController implements PauseScreenCallback {
     // 키보드 이벤트 처리
     private void setupKeyListener(JFrame framem) {
         // Create the PauseScreen instance once during initialization
-
         frame.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -102,19 +97,17 @@ public class GameController implements PauseScreenCallback {
                     boardController.moveBlock(Direction.RIGHT);
                 } else if (e.getKeyCode() == DOWN) {
                     boardController.moveBlock(Direction.DOWN);
-                    inGameScreen.updateBoard();
                 } else if (e.getKeyCode() == ROTATE) {
                     boardController.moveBlock(Direction.UP); // Consider renaming Direction.UP to ROTATE for clarity
                 } else if (e.getKeyCode() == DROP) {
                     boardController.moveBlock(Direction.SPACE); // Consider renaming Direction.SPACE to DROP for clarity
-                    inGameScreen.updateBoard();
                 } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     gameTimer.stop();
                     PauseScreen pauseScreen = new PauseScreen(isItem, isDualMode, isTimeAttack);
                     pauseScreen.setCallback(GameController.this); // Set the callback
                     pauseScreen.setVisible(true); // Show the PauseScreen
                 }
-                inGameScreen.repaint();
+                inGameScreen.updateBoard();
             }
         });
     }
@@ -125,12 +118,10 @@ public class GameController implements PauseScreenCallback {
             case "RIGHT" -> boardController.moveBlock(Direction.RIGHT);
             case "DOWN" -> {
                 boardController.moveBlock(Direction.DOWN);
-                inGameScreen.updateBoard();
             }
             case "ROTATE" -> boardController.moveBlock(Direction.UP);
             case "DROP" -> {
                 boardController.moveBlock(Direction.SPACE);
-                inGameScreen.updateBoard();
             }
             case "PAUSE" -> {
                 gameTimer.stop(); // Todo : 대전 모드 PAUSE 처리
@@ -146,33 +137,61 @@ public class GameController implements PauseScreenCallback {
                 }
             }
         }
-        inGameScreen.repaint();
+        inGameScreen.updateBoard();
     }
 
     private void startGame(boolean isDualMode) {
         currentSpeed = NORMAL_TICK;
         boardController.placeNewBlock();
         inGameScreen.updateBoard();
-
         // 타이머를 게임 루프와 같이 사용합니다.
-        gameTimer = new Timer(currentSpeed, e -> gameLoop(isDualMode));
+        setupTimer(currentSpeed);
+    }
+
+    private void setupTimer(int delay) {
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+        gameTimer = new Timer(delay, e -> gameLoop(isDualMode, true));
         gameTimer.start();
     }
 
-    private void gameLoop(boolean isDualMode) {
-        boardController.moveBlock(Direction.DOWN);
-        inGameScreen.updateBoard();
-
-        while (boardController.blinkCheck()) {
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                throw new RuntimeException(ex);
-            }
-            boardController.blinkErase();
-            inGameScreen.updateBoard();
+    public void resetTimer() {
+        // 현재 설정된 타이머를 중지하고 빠르게 한 번 실행
+        if (gameTimer != null) {
+            gameTimer.stop();
         }
+        // 빠르게 실행할 타이머 설정
+        Timer fastTimer = new Timer(FAST_DELAY, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // gameLoop를 한 번 실행
+                gameLoop(isDualMode, false);
+                // 빠르게 실행한 후에 원래 속도의 타이머로 다시 설정
+                setupTimer(currentSpeed);
+            }
+        });
+        fastTimer.setRepeats(false);  // 이 타이머는 한 번만 실행됩니다.
+        fastTimer.start();
+    }
+
+    private void gameLoop(boolean isDualMode, boolean isNotFastTimer) {
+        if (isNotFastTimer) {
+            boardController.moveBlock(Direction.DOWN);
+
+            while (boardController.blinkCheck()) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(ex);
+                }
+                boardController.blinkErase();
+                inGameScreen.updateBoard();
+            }
+        } else {
+            boardController.placeBlock();
+        }
+        inGameScreen.updateBoard();
 
         // 게임 오버 체크
         if (boardController.checkGameOver()) {
@@ -198,29 +217,24 @@ public class GameController implements PauseScreenCallback {
 
     public void speedUp(int speed) {
         if (currentSpeed >= MAX_SPEED) {
-            if(settingController.getDifficulty()==0) {
+            if (settingController.getDifficulty() == 0) {
                 speed = (int) (speed * 0.8);
-            }
-            else if(settingController.getDifficulty()==2) {
+            } else if (settingController.getDifficulty() == 2) {
                 speed = (int) (speed * 1.2);
             }
             currentSpeed -= speed;
             gameTimer.setDelay(currentSpeed);
-            inGameScoreController.setScoreOnBlockMoveDown((1100-currentSpeed)/100);
+            inGameScoreController.setScoreOnBlockMoveDown((1100 - currentSpeed) / 100);
             inGameScoreController.addScoreMessage("Speed up! Current speed: " + currentSpeed);
             inGameScoreController.addScoreMessage("Score per Block Move Down: " + inGameScoreController.getScoreOnBlockMoveDown());
         }
-    }
-
-    public void updateScreen() {
-        inGameScreen.updateBoard();
     }
 
     public InGameScreen getInGameScreen() {
         return inGameScreen;
     }
 
-    public String  getStrPlayer() {
+    public String getStrPlayer() {
         return strPlayer;
     }
 
