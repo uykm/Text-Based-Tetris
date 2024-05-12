@@ -1,9 +1,6 @@
 package com.tetris.logic;
 
 import com.tetris.model.*;
-import com.tetris.ui.InGameScreen;
-
-import javax.swing.*;
 import java.util.ArrayList;
 
 import static com.tetris.logic.ItemBlockController.BOMB_BODY;
@@ -108,7 +105,7 @@ public class BoardController {
         currentBlock = nextBlock;
         currentBlock.canMoveSide = true;
         this.nextBlock = nextBlock.selectBlock(this, isItemMode, erasedLineCount);
-        if (grid.collisionCheck(currentBlock, 6, 2)) {
+        if (grid.checkNotCollision(currentBlock, 6, 2)) {
             checkSpeedUp();
             currentBlock.initializeXY();
         } else {
@@ -127,7 +124,11 @@ public class BoardController {
             for (int i = 0; i < currentBlock.width(); i++) {
                 int x = currentBlock.getX();
                 int y = currentBlock.getY();
-                grid.getBoard()[y + j][x + i] += currentBlock.getShape(i, j);
+                if (grid.getBoard()[y + j][x + i] == 13 && currentBlock.getShape(i, j) > 0) { // 폭탄 이벤트인 경우 덮어 씌우기
+                    grid.getBoard()[y + j][x + i] = currentBlock.getShape(i, j);
+                } else {
+                    grid.getBoard()[y + j][x + i] += currentBlock.getShape(i, j);
+                }
             }
         }
     }
@@ -224,21 +225,21 @@ public class BoardController {
         if (!canPlaceBlock) { return; }
         switch (direction) {
             case LEFT -> {
-                if (currentBlock.canMoveSide && grid.collisionCheck(currentBlock, currentBlock.getX() - 1, currentBlock.getY())) {
+                if (currentBlock.canMoveSide && grid.checkNotCollision(currentBlock, currentBlock.getX() - 1, currentBlock.getY())) {
                     currentBlock.moveLeft();
                     currentBlock.initializeStopCount();
                 }
                 placeBlock();
             }
             case RIGHT -> {
-                if (currentBlock.canMoveSide && grid.collisionCheck(currentBlock, currentBlock.getX() + 1, currentBlock.getY())) {
+                if (currentBlock.canMoveSide && grid.checkNotCollision(currentBlock, currentBlock.getX() + 1, currentBlock.getY())) {
                     currentBlock.moveRight();
                     currentBlock.initializeStopCount();
                 }
                 placeBlock();
             }
             case DOWN -> {
-                if (grid.collisionCheck(currentBlock, currentBlock.getX(), currentBlock.getY() + 1)) {
+                if (grid.checkNotCollision(currentBlock, currentBlock.getX(), currentBlock.getY() + 1)) {
                     placeDown();
                     inGameScoreController.addScoreOnBlockMoveDown(); // 한 칸 내릴 때마다 1점 추가
                 } else { // 충돌!
@@ -255,7 +256,6 @@ public class BoardController {
 
                     // 경계선에 닿은 경우 혹은 2틱 동안 움직임 없거나 충돌 후 2틱이 지나면 블록을 고정시킴
                     if (currentBlock.getStopCount() > 1 || currentBlock.getLimitCount() > 1) {
-                        checkGameOver();
                         itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                         lineCheck();
                         placeNewBlock();
@@ -279,7 +279,7 @@ public class BoardController {
                     break;
                 }
 
-                while (grid.collisionCheck(currentBlock, currentBlock.getX(), currentBlock.getY() + 1)) {
+                while (grid.checkNotCollision(currentBlock, currentBlock.getX(), currentBlock.getY() + 1)) {
                     currentBlock.moveDown();
                     inGameScoreController.addScoreOnBlockMoveDown(); // 한 칸 내릴 때마다 1점 추가
                 }
@@ -309,13 +309,13 @@ public class BoardController {
         currentBlock.rotate();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (grid.collisionCheck(currentBlock, currentBlock.getX() + i, currentBlock.getY() + j)) {
+                if (grid.checkNotCollision(currentBlock, currentBlock.getX() + i, currentBlock.getY() + j)) {
                     inGameScoreController.addScoreOnBlockMoveDown(j);
                     currentBlock.moveRightNSpaces(i);
                     currentBlock.moveDownNSpaces(j);
                     return;
                 }
-                if (grid.collisionCheck(currentBlock, currentBlock.getX() - i, currentBlock.getY() + j)) {
+                if (grid.checkNotCollision(currentBlock, currentBlock.getX() - i, currentBlock.getY() + j)) {
                     inGameScoreController.addScoreOnBlockMoveDown(j);
                     currentBlock.moveLeftNSpaces(i);
                     currentBlock.moveDownNSpaces(j);
@@ -326,7 +326,7 @@ public class BoardController {
         currentBlock.rotateBack();
     }
 
-    // Game Over Check
+    // ToDo: Game Over Check
     public boolean checkGameOver() {
 
         for (int i = 3; i < WIDTH + 3; i++) {

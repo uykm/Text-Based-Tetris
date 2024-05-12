@@ -1,5 +1,7 @@
 package com.tetris.logic;
 
+import com.tetris.model.BombItemBlock;
+
 public class Board {
     // 게임 보드 높이, 너비
     private final int WIDTH = 10;
@@ -56,7 +58,7 @@ public class Board {
     public void placeOneBlock(int x, int y, int blockType) { board[y][x] = blockType; }
 
     // 충돌 검사, 충돌하지 않으면 true 반환
-    public boolean collisionCheck(Block block, int newX, int newY) {
+    public boolean checkNotCollision(Block block, int newX, int newY) {
         for (int i = 0; i < block.height(); i++) {
             for (int j = 0; j < block.width(); j++) {
                 if (block.getShape(j, i) != 0) { // Check if part of the block
@@ -65,8 +67,8 @@ public class Board {
                     if (boardX < 3 || boardX >= WIDTH + 3 || boardY < 3 || boardY >= HEIGHT + 3) {
                         return false; // Out of bounds
                     }
-                    if (board[boardY][boardX] != 0) {
-                        // F((WeightItemBlock)currentBlock).isActive = false;
+                    if (board[boardY][boardX] > 0 && board[boardY][boardX] != 13) {
+                        System.out.println(board[boardY][boardX]);
                         return false; // Position already occupied
                     }
                 }
