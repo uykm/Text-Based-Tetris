@@ -1,7 +1,9 @@
 package com.tetris.logic;
 
 import com.tetris.model.*;
+import com.tetris.ui.InGameScreen;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 import static com.tetris.logic.ItemBlockController.BOMB_BODY;
@@ -44,8 +46,6 @@ public class BoardController {
     private int blockCountWithNoLineErase;
 
     private int placedBlockCount;
-    private boolean isNeedNewBlock = false;
-
 
     public BoardController(GameController gameController, InGameScoreController inGameScoreController, Boolean isItemMode, Boolean isDualMode) {
         this.isDualmode = isDualMode;
@@ -115,11 +115,13 @@ public class BoardController {
             canPlaceBlock = false;
             currentBlock = new NullBlock();
         }
+
+        gameController.resetTimer();
     }
 
 
     // 블록을 게임 보드에 배치
-    private void placeBlock() {
+    public void placeBlock() {
         // 기본 블록 배치 로직
         for (int j = 0; j < currentBlock.height(); j++) {
             for (int i = 0; i < currentBlock.width(); i++) {
@@ -219,8 +221,6 @@ public class BoardController {
 
     // 블록을 이동시킴
     public void moveBlock(Direction direction) {
-
-        if (isNeedNewBlock) { return; }
         eraseCurrentBlock();
         if (!canPlaceBlock) { return; }
         switch (direction) {
