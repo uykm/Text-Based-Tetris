@@ -28,8 +28,8 @@ public class GameController implements PauseScreenCallback {
 
     private final int MAX_SPEED = 200;
 
-    private final int MAX_DELAY = 1000;
-    private final int MIN_DELAY = 1;
+    private final int NORMAL_TICK = 1000;
+    private final int CREATION_TICK = 100;
 
     public int currentSpeed;
     private boolean isItem;
@@ -45,7 +45,7 @@ public class GameController implements PauseScreenCallback {
 
     public GameController(boolean isItem, boolean isDualMode, boolean isTimeAttack) {
         initialize(isItem, isDualMode, isTimeAttack);
-        startGame(isItem, isDualMode);
+        startGame(isDualMode);
     }
 
     private void initialize(boolean isItem, boolean isDualMode, boolean isTimeAttack) {
@@ -137,33 +137,32 @@ public class GameController implements PauseScreenCallback {
         inGameScreen.repaint();
     }
 
-    private void startGame(boolean isItem, boolean isDualMode) {
-        currentSpeed = MAX_DELAY;
+    private void startGame(boolean isDualMode) {
+        currentSpeed = NORMAL_TICK;
         boardController.placeNewBlock();
+        inGameScreen.updateBoard();
 
-        gameTimer = new Timer(currentSpeed, e -> gameLoop(isItem, isDualMode));
+        // 타이머를 게임 루프와 같이 사용합니다.
+        gameTimer = new Timer(currentSpeed, e -> gameLoop(isDualMode));
         gameTimer.start();
     }
 
-    private void gameLoop(boolean isItem, boolean isDualMode) {
-        boolean blink = boardController.blinkCheck();
-        while (blink) {
-            inGameScreen.updateBoard();
+    private void gameLoop(boolean isDualMode) {
+        boardController.moveBlock(Direction.DOWN);
+        inGameScreen.updateBoard();
+
+        while (boardController.blinkCheck()) {
             try {
                 Thread.sleep(1);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
                 throw new RuntimeException(ex);
             }
-            blink = boardController.blinkCheck();
+            boardController.blinkErase();
+            inGameScreen.updateBoard();
         }
 
-        boardController.moveBlock(Direction.DOWN);
-        inGameScreen.updateBoard();
-        if(boardController.getIsNeedNewBlock()) boardController.placeNewBlock();
-        inGameScreen.updateBoard();
-
-        // 게임 오버 조건을 확인합니다
+        // 게임 오버 체크
         if (boardController.checkGameOver()) {
             endGame(isDualMode);
         }
@@ -199,6 +198,10 @@ public class GameController implements PauseScreenCallback {
             inGameScoreController.addScoreMessage("Speed up! Current speed: " + currentSpeed);
             inGameScoreController.addScoreMessage("Score per Block Move Down: " + inGameScoreController.getScoreOnBlockMoveDown());
         }
+    }
+
+    public void updateScreen() {
+        inGameScreen.updateBoard();
     }
 
     public InGameScreen getInGameScreen() {
