@@ -17,7 +17,7 @@ class PauseScreenTest {
 
     @BeforeEach
     void setUp() throws AWTException {
-        pauseScreen = new PauseScreen(false);
+        pauseScreen = new PauseScreen(false, false);
         robot = new Robot();
         robot.setAutoDelay(100);
 

@@ -27,7 +27,7 @@ public class InGameScreen extends JPanel {
 
     private final int NEXT_BLOCK_BOARD_WIDTH = 8; // 다음 블록 표시 영역의 가로 길이
     private final int NEXT_BLOCK_BOARD_HEIGHT = 8; // 다음 블록 표시 영역의 세로 길이
-    private final int[][] board; // 게임 보드 상태s
+    private final int[][] board; // 게임 보드 상태
     private int[][] nextBlockBoard; // 다음 블록 표시 영역
     private final BoardController boardController; // 게임 보드 컨트롤러
     private final InGameScoreController inGameScoreController; // 인게임 점수 컨트롤러
