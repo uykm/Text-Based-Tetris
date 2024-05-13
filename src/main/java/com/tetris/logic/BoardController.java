@@ -401,6 +401,10 @@ public class BoardController {
 
     // 대전 모드 관련
 
+    public int[][] getShouldAddLines() {
+        return shouldAddLines;
+    }
+
     private int[][] shouldAddLines; // 내 보드에 추가 되어야 할 라인
     private int[][] previousBoardState; // 이전 게임 보드 상태(새로운 블록이 생성되기 전, 라인이 지워진 후 이전 상태 업데이트)
     final private ArrayList<Integer> erasedLines = new ArrayList<>(); // 지워진 라인 (상대방에게 보내기 위해 저장)
