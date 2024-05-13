@@ -498,6 +498,6 @@ public class BoardController {
                 }
             }
         }
-        shouldAddLines = null;
+        shouldAddLines = new int[][]{};
     }
 }
