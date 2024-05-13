@@ -127,7 +127,12 @@ public class BoardController {
             for (int i = 0; i < currentBlock.width(); i++) {
                 int x = currentBlock.getX();
                 int y = currentBlock.getY();
-                grid.getBoard()[y + j][x + i] += currentBlock.getShape(i, j);
+                if ((grid.getBoard()[y + j][x + i] == -2 || grid.getBoard()[y + j][x + i] == 13) && currentBlock.getShape(i, j) > 0) {
+                    // 폭탄 이벤트 값이거나 줄 삭제 이벤트 값일 땐 블록 값을 그대로 저장
+                    grid.getBoard()[y + j][x + i] = currentBlock.getShape(i, j);
+                } else {
+                    grid.getBoard()[y + j][x + i] += currentBlock.getShape(i, j);
+                }
             }
         }
     }

@@ -65,8 +65,8 @@ public class Board {
                     if (boardX < 3 || boardX >= WIDTH + 3 || boardY < 3 || boardY >= HEIGHT + 3) {
                         return false; // Out of bounds
                     }
-                    if (board[boardY][boardX] != 0) {
-                        // F((WeightItemBlock)currentBlock).isActive = false;
+                    if (board[boardY][boardX] != 0 && board[boardY][boardX] != 13 && board[boardY][boardX] != -2) {
+                        // 폭탄 이벤트와 줄 삭제 이벤트도 충돌로 취급 X
                         return false; // Position already occupied
                     }
                 }
