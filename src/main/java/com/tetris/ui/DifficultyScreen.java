@@ -16,9 +16,9 @@ import static com.tetris.component.ScreenSize.setWidthHeight;
 public class DifficultyScreen extends JFrame implements ActionListener {
 
     JButton btnEasy;
-    private JButton btnNormal;
-    private JButton btnHard;
-    private JButton btnMenu;
+    JButton btnNormal;
+    JButton btnHard;
+    JButton btnMenu;
     private boolean isItem;
     private SettingController settingController = new SettingController();
 
