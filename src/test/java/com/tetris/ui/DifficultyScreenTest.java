@@ -104,28 +104,4 @@ class DifficultyScreenTest {
         assertFalse(screen.isVisible(), "DifficultyScreen should become invisible after pressing ENTER on Easy.");
         assertTrue(inGameScreen.isVisible(), "InGameScreen should become visible after clicking difficulty");
     }
-
-//    @Test
-//    public void testKeyEvents() {
-//        // Create Instance
-//        DifficultyScreen difficultyScreen = new DifficultyScreen(false);
-//        SettingController settingController = new SettingController();
-//
-//        // Test key press "ENTER" on Easy
-//        KeyEvent enterEvent = new KeyEvent(difficultyScreen.btnEasy, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, ' ');
-//        difficultyScreen.btnEasy.dispatchEvent(enterEvent);
-//
-//        assertFalse(difficultyScreen.isVisible(), "DifficultyScreen should become invisible after pressing ENTER on Easy.");
-//        assertEquals("0", settingController.getDifficulty(), "Difficulty should be set to '0' for Easy.");
-//
-//        // Test key press "RIGHT" to shift focus
-//        KeyEvent rightEvent = new KeyEvent(difficultyScreen.btnEasy, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_RIGHT, ' ');
-//        difficultyScreen.btnEasy.dispatchEvent(rightEvent);
-//        assertTrue(difficultyScreen.btnNormal.isFocusOwner(), "Focus should move to Normal after pressing RIGHT.");
-//
-//        // Test key press "LEFT" to shift focus
-//        KeyEvent leftEvent = new KeyEvent(difficultyScreen.btnHard, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_LEFT, ' ');
-//        difficultyScreen.btnHard.dispatchEvent(leftEvent);
-//        assertTrue(difficultyScreen.btnNormal.isFocusOwner(), "Focus should move to Normal after pressing LEFT.");
-//    }
 }

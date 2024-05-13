@@ -29,16 +29,26 @@ public class InGameScreen extends JPanel {
     private final int NEXT_BLOCK_BOARD_HEIGHT = 8; // 다음 블록 표시 영역의 세로 길이
     private final int[][] board; // 게임 보드 상태
     private int[][] nextBlockBoard; // 다음 블록 표시 영역
+
+    private final int NEXT_DISTURB_BOARD_WIDTH = 10; // 다음 방해 블록 표시 영역의 가로 길이
+    private final int NEXT_DISTURB_BOARD_HEIGHT = 20; // 다음 방해 블록 표시 영역의 세로 길이
+    private int[][] nextDisturbBoard = new int[NEXT_DISTURB_BOARD_HEIGHT][NEXT_DISTURB_BOARD_WIDTH]; // 다음 방해 블록 표시 영역
+    // disturbBoardStatus[disturbLine][16] -> nextDisturbBoard[20][10]
+
     private final BoardController boardController; // 게임 보드 컨트롤러
     private final InGameScoreController inGameScoreController; // 인게임 점수 컨트롤러
     SettingController settingController;
     private int score; // 점수
 
-    public InGameScreen(BoardController boardController, InGameScoreController inGameScoreController) {
+    private boolean isDualMode;
+
+    public InGameScreen(BoardController boardController, InGameScoreController inGameScoreController, boolean isDualMode) {
         // 임시 데이터로 초기화
         board = boardController.getBoard();
+
         this.boardController = boardController;
         this.inGameScoreController = inGameScoreController;
+        this.isDualMode = isDualMode;
         settingController = new SettingController();
 
         initNextBlockBoard();
@@ -77,6 +87,47 @@ public class InGameScreen extends JPanel {
         }
     }
 
+    private void initDisturbBlockBoard() {
+        int[][] disturbBoardStatus = boardController.getShouldAddLines();
+
+        // 새로운 방해 블록이 도착할 때만 실행
+        if (disturbBoardStatus != null) {
+            int disturbLine = disturbBoardStatus.length;
+
+            // 다음 방해 블록 영역 초기화
+            nextDisturbBoard = new int[NEXT_DISTURB_BOARD_HEIGHT][NEXT_DISTURB_BOARD_WIDTH];
+
+            // disturbBoardStatus[Height][Width]
+            // 17  :  0  1  2 + 3 4 5 6 7 8 9 10 11 12 + 13 14 15
+            // 18  :  0  1  2 + 3 4 5 6 7 8 9 10 11 12 + 13 14 15
+            // 19  :  0  1  2 + 3 4 5 6 7 8 9 10 11 12 + 13 14 15
+            // 결과 : -1 -1 20 + 0 0 4 4 4 4 3  7  7  1 + 20 -1 -1
+
+            for (int[] nums : disturbBoardStatus) {
+                for (int num : nums) {
+                    System.out.print(num + " ");
+                }
+                System.out.println();
+            }
+
+            for (int i = 0; i < disturbLine; i++) {
+                for (int j = 3; j < 13; j++) {
+                    int newValue = disturbBoardStatus[i][j] != 0 ? 30 : 0;
+                    nextDisturbBoard[NEXT_DISTURB_BOARD_HEIGHT - disturbLine + i][j - 3] = newValue;
+                }
+            }
+
+            // 35 30 30 30 30 30 30 30 30 30
+            // 35 30 30 30 30 30 30 30 30 30
+            for (int[] nums : nextDisturbBoard) {
+                for (int num : nums) {
+                    System.out.print(num + " ");
+                }
+                System.out.println();
+            }
+        }
+    }
+
     @Override
     // 화면을 그리는 메소드
     protected void paintComponent(Graphics g) {
@@ -100,7 +151,7 @@ public class InGameScreen extends JPanel {
         // 게임 보드 그리기
         for (int i = 0; i < EXTEND_BOARD_HEIGHT; i++) {
             for (int j = 0; j < EXTEND_BOARD_WIDTH; j++) {
-                drawCell(g, j * cellSize, i * cellSize, board[i][j]);
+                drawCell(g, j * cellSize, i * cellSize, board[i][j] , false);
             }
         }
         int borderWidth = cellSize / 3 * 2; // 테두리 선의 너비
@@ -117,7 +168,7 @@ public class InGameScreen extends JPanel {
         for (int i = 0; i < NEXT_BLOCK_BOARD_HEIGHT; i++) {
             for (int j = 0; j < NEXT_BLOCK_BOARD_WIDTH; j++) {
                 if (nextBlockBoard[i][j] != ' ') {
-                    drawCell(g, (EXTEND_BOARD_WIDTH + 1 + j) * cellSize, i * cellSize, nextBlockBoard[i][j]);
+                    drawCell(g, (EXTEND_BOARD_WIDTH + 1 + j) * cellSize, i * cellSize, nextBlockBoard[i][j], false);
                 }
             }
         }
@@ -153,7 +204,27 @@ public class InGameScreen extends JPanel {
         String scoreText = "" + score;
         g.drawString(scoreText, scoreboardX + (scoreboardWidth - metrics.stringWidth(scoreText)) / 2, scoreboardY + cellSize * 2 + metrics.getAscent());
 
-        drawScoreMessages(g, scoreMessage);
+        // 상대방으로부터 넘어올 블록 미리 표시하는 구간
+        if (isDualMode) {
+            int halfCellSize = cellSize / 2;
+            int disturbBoardWidth = NEXT_DISTURB_BOARD_WIDTH * halfCellSize;
+            int disturbBoardHeight = NEXT_DISTURB_BOARD_HEIGHT * halfCellSize;
+            int disturbBoardX = scoreboardX + (scoreboardWidth - disturbBoardWidth) / 2;
+            int disturbBoardY = scoreboardY + scoreboardHeight + cellSize;
+
+            // 상대방 방해 블록 표시할 상자
+            g.setColor(Color.BLACK);
+            g.fillRect(disturbBoardX, disturbBoardY, disturbBoardWidth, disturbBoardHeight);
+
+            if (nextDisturbBoard != null) {
+
+                for (int i = 0; i < NEXT_DISTURB_BOARD_HEIGHT; i++) {
+                    for (int j = 0; j < NEXT_DISTURB_BOARD_WIDTH; j++) {
+                        drawCell(g, disturbBoardX + j * halfCellSize, disturbBoardY + i * halfCellSize, nextDisturbBoard[i][j], true);
+                    }
+                }
+            }
+        }
     }
 
     // 스코어 메시지를 여러 줄로 그리는 메소드
@@ -174,17 +245,21 @@ public class InGameScreen extends JPanel {
     }
 
     // 셀을 그리는 메소드
-    private void drawCell(Graphics g, int x, int y, int content) {
-        Font font = new Font("Arial", Font.BOLD, blockSize); // 폰트 설정
-        FontMetrics metrics = g.getFontMetrics(font);
+    private void drawCell(Graphics g, int x, int y, int content, boolean isDisturb) {
+
+        int curCellSize = isDisturb ? cellSize / 2 : cellSize;
+        int fontSize = isDisturb ? blockSize / 2 : blockSize;
+        Font font = new Font("Arial", Font.BOLD, fontSize);
         g.setFont(font);
+        FontMetrics metrics = g.getFontMetrics(font);
+
         int charWidth = metrics.stringWidth("X");
         int charHeight = metrics.getHeight();
 
         switch (content) {
             default:
                 g.setColor(Color.BLACK); // 검정색으로 배경을 채움
-                g.fillRect(x, y, cellSize, cellSize);
+                g.fillRect(x, y, curCellSize, curCellSize);
                 break;
             case -1:
                 g.setColor(Color.GRAY); // 회색으로 테두리를 그림
@@ -245,10 +320,17 @@ public class InGameScreen extends JPanel {
                 charWidth = metrics.stringWidth("✷");
                 g.drawString("✵", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
                 break;
-            case 40:
+            case 40: // 게임 보드 안의 방해 블록
                 g.setColor(Color.GRAY);
                 charWidth = metrics.stringWidth("ㅁ");
                 g.drawString("ㅁ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                break;
+            case 30: // 앞으로 나올 방해 블록 표시 보드
+                g.setColor(Color.WHITE); // 방해 블록의 색상 지정
+                int halfCharX = x + (curCellSize - charWidth) / 2;
+                int halfCharY = y + (curCellSize - charHeight) / 2 + metrics.getAscent();
+
+                g.drawString("o", halfCharX, halfCharY);
                 break;
             case -2: // 한 줄이 꽉 차서 지워지기 전
                 g.setColor(Color.YELLOW);
@@ -271,6 +353,7 @@ public class InGameScreen extends JPanel {
     // 게임 보드 업데이트 메소드 nextBlockBoard를 업데이트 하기 위함
     public void updateBoard() {
         initNextBlockBoard();
+        initDisturbBlockBoard();
         repaint();
     }
 }
