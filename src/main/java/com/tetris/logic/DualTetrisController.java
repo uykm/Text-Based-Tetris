@@ -17,6 +17,12 @@ public class DualTetrisController {
     private boolean isTimeAttack;
     private  boolean isItem;
 
+    private JFrame frame;
+
+    public JFrame getDualFrame() {
+        return this.frame;
+    }
+
     // gameController1 조작을 위한 키 코드 w, a, s, d, Left Shift
     private int[] keyCodes1 = {KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_SHIFT};
 
@@ -34,6 +40,9 @@ public class DualTetrisController {
 
         gameController1.setOpponent(gameController2);
         gameController2.setOpponent(gameController1);
+
+        gameController1.setDualTetrisController(this);
+        gameController2.setDualTetrisController(this);
 
         if(isTimeAttack) {
             timeController();
@@ -93,7 +102,7 @@ public class DualTetrisController {
 
     private void initUI() {
         SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Dual Tetris Game");
+            frame = new JFrame("Dual Tetris Game");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setLayout(new BorderLayout()); // Change to BorderLayout for better control placement
 
