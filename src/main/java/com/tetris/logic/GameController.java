@@ -28,6 +28,8 @@ public class GameController implements PauseScreenCallback {
     JFrame frame;
     Timer gameTimer;
 
+    private DualTetrisController dualTetrisController;
+
     private final int MAX_SPEED = 200;
     private final int NORMAL_TICK = 1000;
     private final int FAST_DELAY = 10;
@@ -43,6 +45,14 @@ public class GameController implements PauseScreenCallback {
     // 게임 컨트롤러 생성자
     public GameController(boolean isItem) {
         this(isItem, false, false);
+    }
+
+    public void setDualTetrisController(DualTetrisController dualTetrisController) {
+        this.dualTetrisController = dualTetrisController;
+    }
+
+    public GameController getOpponent() {
+        return this.opponent;
     }
 
     public GameController(boolean isItem, boolean isDualMode, boolean isTimeAttack) {
@@ -125,15 +135,24 @@ public class GameController implements PauseScreenCallback {
             }
             case "PAUSE" -> {
                 gameTimer.stop(); // Todo : 대전 모드 PAUSE 처리
-                new PauseScreen(isItem, isDualMode, isTimeAttack);
+                opponent.gameTimer.stop();
+                PauseScreen pauseScreen = new PauseScreen(isItem, isDualMode, isTimeAttack);
+                pauseScreen.setGameController(this);
             }
             case "RESUME" -> onResumeGame();
             case "REPLAY" -> {
-                frame.dispose();
                 if (isDualMode) {
+                    dualTetrisController.getDualFrame().dispose();
                     new DualTetrisController(isItem, isTimeAttack);
                 } else {
+                    frame.dispose();
                     new GameController(isItem);
+                }
+            }
+            case "MENU" -> {
+                if (isDualMode) {
+                    dualTetrisController.getDualFrame().dispose();
+                    new MainMenuScreen();
                 }
             }
         }

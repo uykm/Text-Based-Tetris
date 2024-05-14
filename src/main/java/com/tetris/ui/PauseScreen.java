@@ -29,6 +29,12 @@ public class PauseScreen extends JFrame implements ActionListener{
 
     private boolean isTimeAttckMode;
 
+    private GameController gameController;
+
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
+    }
+
 
     public PauseScreen(boolean isItemMode, boolean isDualMode, boolean isTimeAttackMode) {
 
@@ -121,17 +127,26 @@ public class PauseScreen extends JFrame implements ActionListener{
         setVisible(false);
         if (btnBack.isFocusOwner()) {
             setVisible(false);
-            callback.onResumeGame();
+            if (isDualMode) {
+                gameController.controlGame("RESUME");
+                gameController.getOpponent().controlGame("RESUME");
+            } else {
+                callback.onResumeGame();
+            }
         } else if (btnReplay.isFocusOwner()) {
             if (isDualMode) {
-                new DualTetrisController(isItemMode, isTimeAttckMode);
+                gameController.controlGame("REPLAY");
             } else {
                 new GameController(isItemMode);
             }
             callback.onHideFrame();
         } else if (btnMainMenu.isFocusOwner()) {
-            new MainMenuScreen();
-            callback.onHideFrame();
+            if (isDualMode) {
+                gameController.controlGame("MENU");
+            } else {
+                new MainMenuScreen();
+                callback.onHideFrame();
+            }
         } else if (btnQuit.isFocusOwner()) {
             exit(0);
         }
