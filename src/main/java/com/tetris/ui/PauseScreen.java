@@ -138,22 +138,14 @@ public class PauseScreen extends JFrame implements ActionListener{
         String command = e.getActionCommand();
         setVisible(false);
         if (command.equals("back")) {
+            gameController.controlGame("RESUME");
             if (isDualMode) {
-                gameController.controlGame("RESUME");
                 gameController.getOpponent().controlGame("RESUME");
             }
         } else if (command.equals("replay")) {
-            if (isDualMode) {
-                gameController.controlGame("REPLAY");
-            } else {
-                new GameController(isItemMode);
-            }
+            gameController.controlGame("REPLAY");
         } else if (command.equals("mainMenu")) {
-            if (isDualMode) {
-                gameController.controlGame("MENU");
-            } else {
-                new MainMenuScreen();
-            }
+            gameController.controlGame("MENU");
         } else if (command.equals("quit")) {
             exit(0);
         }

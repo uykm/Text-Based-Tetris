@@ -110,7 +110,7 @@ public class GameController  {
                     if (isDualMode) {
                         opponent.gameTimer.stop();
                     }
-                    new PauseScreen(isItem, isDualMode, isTimeAttack);
+                    controlGame("PAUSE");
                 }
                 inGameScreen.updateBoard();
             }
@@ -129,6 +129,7 @@ public class GameController  {
                 boardController.moveBlock(Direction.SPACE);
             }
             case "PAUSE" -> {
+                System.out.println("PAUSE");
                 gameTimer.stop(); // Todo : 대전 모드 PAUSE 처리
                 if (isDualMode) {
                     opponent.gameTimer.stop();
@@ -136,8 +137,12 @@ public class GameController  {
                 PauseScreen pauseScreen = new PauseScreen(isItem, isDualMode, isTimeAttack);
                 pauseScreen.setGameController(this);
             }
-            case "RESUME" -> gameTimer.start();
+            case "RESUME" -> {
+                System.out.println("RESUME");
+                gameTimer.start();
+            }
             case "REPLAY" -> {
+                System.out.println("REPLAY");
                 if (isDualMode) {
                     dualTetrisController.getDualFrame().dispose();
                     new DualTetrisController(isItem, isTimeAttack);
@@ -147,6 +152,7 @@ public class GameController  {
                 }
             }
             case "MENU" -> {
+                System.out.println("MENU");
                 if (isDualMode) {
                     dualTetrisController.getDualFrame().dispose();
                     new MainMenuScreen();
@@ -167,7 +173,6 @@ public class GameController  {
     }
 
     private void setupTimer(int delay) {
-        System.out.println("setupTimer");
         if (gameTimer != null) {
             gameTimer.stop();
         }
@@ -176,7 +181,6 @@ public class GameController  {
     }
 
     public void resetTimer() {
-        System.out.println("resetTimer");
         // 현재 설정된 타이머를 중지하고 빠르게 한 번 실행
         if (gameTimer != null) {
             gameTimer.stop();
@@ -228,9 +232,7 @@ public class GameController  {
 
     private void endGame(boolean isDualMode) {
         gameTimer.stop();
-        System.out.println("End Game");
         if(!isDualMode){
-            System.out.println("SINGLE MODE endgame");
             frame.dispose();
             if (!gameEnded) {
                 this.gameEnded = true;
