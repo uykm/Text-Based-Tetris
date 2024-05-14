@@ -179,6 +179,5 @@ public class PauseScreen extends JFrame implements ActionListener{
         } else if (command.equals("quit")) {
             exit(0);
         }
-
     }
 }

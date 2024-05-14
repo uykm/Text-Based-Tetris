@@ -113,9 +113,12 @@ public class GameController implements PauseScreenCallback {
                     boardController.moveBlock(Direction.SPACE); // Consider renaming Direction.SPACE to DROP for clarity
                 } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     gameTimer.stop();
+                    if (isDualMode) {
+                        opponent.gameTimer.stop();
+                    }
                     PauseScreen pauseScreen = new PauseScreen(isItem, isDualMode, isTimeAttack);
-                    pauseScreen.setCallback(GameController.this); // Set the callback
-                    pauseScreen.setVisible(true); // Show the PauseScreen
+//                    pauseScreen.setCallback(GameController.this); // Set the callback
+//                    pauseScreen.setVisible(true); // Show the PauseScreen
                 }
                 inGameScreen.updateBoard();
             }
@@ -214,14 +217,23 @@ public class GameController implements PauseScreenCallback {
 
         // 게임 오버 체크
         if (boardController.checkGameOver()) {
+            System.out.println("boardController.checkGameOver()");
             endGame(isDualMode);
         }
     }
 
+
+    private boolean winnerScreenAlreadyOccured = false;
+    private void setWinnerScreenAlreadyOccured(boolean occured) {
+        this.winnerScreenAlreadyOccured = occured;
+    }
+
     private void endGame(boolean isDualMode) {
-        frame.dispose();
         gameTimer.stop();
+        opponent.gameTimer.stop();
+        System.out.println("End Game");
         if(!isDualMode){
+            frame.dispose();
             if (rankScoreController.isScoreInTop10(inGameScoreController.getScore(), isItem)) {
                 new RegisterScoreScreen(inGameScoreController.getScore(), isItem);
             } else {
@@ -229,8 +241,15 @@ public class GameController implements PauseScreenCallback {
             }
         } else {
             // Todo : 대전 모드 일 경우 GameOver 처리
-            opponent.sendGameOver();
-            new WinnerScreen(opponent.getStrPlayer(), opponent.getScore(), getScore(), isItem, isTimeAttack);
+            System.out.println("DUAL MODE GAMEOVER");
+
+            if (!winnerScreenAlreadyOccured) {
+                System.out.println("winnerScreenAlreayOccured: " + winnerScreenAlreadyOccured);
+                this.winnerScreenAlreadyOccured = true;
+                opponent.setWinnerScreenAlreadyOccured(true);
+                WinnerScreen winnerScreen = new WinnerScreen(opponent.getStrPlayer(), opponent.getScore(), getScore(), isItem, isTimeAttack);
+                winnerScreen.setDualTetrisController(dualTetrisController);
+            }
         }
     }
 

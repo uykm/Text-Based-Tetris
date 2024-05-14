@@ -7,4 +7,4 @@ Player7:Easy:60
 익명:Easy:54
 Player6:Easy:50
 Player5:Easy:40
-Player4:Easy:30
+익명:Easy:39

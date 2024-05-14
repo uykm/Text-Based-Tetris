@@ -19,6 +19,8 @@ public class WinnerScreen extends JFrame implements ActionListener {
     private final SettingController settingController = new SettingController();
     private final RankScoreController rankScoreController = new RankScoreController();
 
+    private DualTetrisController dualTetrisController;
+
     private JButton btnReplay;
     private JButton btnMenu;
     private JButton btnExit;
@@ -27,6 +29,11 @@ public class WinnerScreen extends JFrame implements ActionListener {
 
     private int titleSize;
     private int btnSize;
+
+
+    public void setDualTetrisController(DualTetrisController dualTetrisController) {
+        this.dualTetrisController = dualTetrisController;
+    }
 
     public WinnerScreen(String winner, int scoreWinner, int scoreLoser, boolean isItem, boolean isTimeAttack) {
         this.isItem = isItem;
@@ -110,6 +117,7 @@ public class WinnerScreen extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         setVisible(false);
+        dualTetrisController.getDualFrame().dispose();
         switch (command) {
             case "menu":
                 new MainMenuScreen();
@@ -138,6 +146,7 @@ public class WinnerScreen extends JFrame implements ActionListener {
 
     private void moveScreen() {
         setVisible(false);
+        dualTetrisController.getDualFrame().dispose();
         if (btnMenu.isFocusOwner()) {
             new MainMenuScreen();
         } else if (btnReplay.isFocusOwner()) {
