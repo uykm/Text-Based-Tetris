@@ -97,12 +97,6 @@ public class InGameScreen extends JPanel {
             // 다음 방해 블록 영역 초기화
             nextDisturbBoard = new int[NEXT_DISTURB_BOARD_HEIGHT][NEXT_DISTURB_BOARD_WIDTH];
 
-            // disturbBoardStatus[Height][Width]
-            // 17  :  0  1  2 + 3 4 5 6 7 8 9 10 11 12 + 13 14 15
-            // 18  :  0  1  2 + 3 4 5 6 7 8 9 10 11 12 + 13 14 15
-            // 19  :  0  1  2 + 3 4 5 6 7 8 9 10 11 12 + 13 14 15
-            // 결과 : -1 -1 20 + 0 0 4 4 4 4 3  7  7  1 + 20 -1 -1
-
             for (int[] nums : disturbBoardStatus) {
                 for (int num : nums) {
                     System.out.print(num + " ");
@@ -117,8 +111,6 @@ public class InGameScreen extends JPanel {
                 }
             }
 
-            // 35 30 30 30 30 30 30 30 30 30
-            // 35 30 30 30 30 30 30 30 30 30
             for (int[] nums : nextDisturbBoard) {
                 for (int num : nums) {
                     System.out.print(num + " ");
@@ -253,7 +245,7 @@ public class InGameScreen extends JPanel {
         g.setFont(font);
         FontMetrics metrics = g.getFontMetrics(font);
 
-        int charWidth = metrics.stringWidth("X");
+        int charWidth = metrics.stringWidth("ㅁ");
         int charHeight = metrics.getHeight();
 
         switch (content) {
@@ -330,7 +322,7 @@ public class InGameScreen extends JPanel {
                 int halfCharX = x + (curCellSize - charWidth) / 2;
                 int halfCharY = y + (curCellSize - charHeight) / 2 + metrics.getAscent();
 
-                g.drawString("o", halfCharX, halfCharY);
+                g.drawString("ㅁ", halfCharX, halfCharY);
                 break;
             case -2: // 한 줄이 꽉 차서 지워지기 전
                 g.setColor(Color.YELLOW);
