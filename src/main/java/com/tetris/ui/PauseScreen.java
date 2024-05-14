@@ -126,7 +126,6 @@ public class PauseScreen extends JFrame implements ActionListener{
     private void applyPause() {
         setVisible(false);
         if (btnBack.isFocusOwner()) {
-            setVisible(false);
             if (isDualMode) {
                 gameController.controlGame("RESUME");
                 gameController.getOpponent().controlGame("RESUME");
@@ -157,13 +156,26 @@ public class PauseScreen extends JFrame implements ActionListener{
         String command = e.getActionCommand();
         setVisible(false);
         if (command.equals("back")) {
-            callback.onResumeGame();
+            if (isDualMode) {
+                gameController.controlGame("RESUME");
+                gameController.getOpponent().controlGame("RESUME");
+            } else {
+                callback.onResumeGame();
+            }
         } else if (command.equals("replay")) {
-            new GameController(isItemMode);
+            if (isDualMode) {
+                gameController.controlGame("REPLAY");
+            } else {
+                new GameController(isItemMode);
+            }
             callback.onHideFrame();
         } else if (command.equals("mainMenu")) {
-            new MainMenuScreen();
-            callback.onHideFrame();
+            if (isDualMode) {
+                gameController.controlGame("MENU");
+            } else {
+                new MainMenuScreen();
+                callback.onHideFrame();
+            }
         } else if (command.equals("quit")) {
             exit(0);
         }
