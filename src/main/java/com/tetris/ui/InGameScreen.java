@@ -31,7 +31,7 @@ public class InGameScreen extends JPanel {
     private int[][] nextBlockBoard; // 다음 블록 표시 영역
 
     private final int NEXT_DISTURB_BOARD_WIDTH = 10; // 다음 방해 블록 표시 영역의 가로 길이
-    private final int NEXT_DISTURB_BOARD_HEIGHT = 20; // 다음 방해 블록 표시 영역의 세로 길이
+    private final int NEXT_DISTURB_BOARD_HEIGHT = 15; // 다음 방해 블록 표시 영역의 세로 길이
     private int[][] nextDisturbBoard = new int[NEXT_DISTURB_BOARD_HEIGHT][NEXT_DISTURB_BOARD_WIDTH]; // 다음 방해 블록 표시 영역
     // disturbBoardStatus[disturbLine][16] -> nextDisturbBoard[20][10]
 
@@ -97,25 +97,11 @@ public class InGameScreen extends JPanel {
             // 다음 방해 블록 영역 초기화
             nextDisturbBoard = new int[NEXT_DISTURB_BOARD_HEIGHT][NEXT_DISTURB_BOARD_WIDTH];
 
-            for (int[] nums : disturbBoardStatus) {
-                for (int num : nums) {
-                    System.out.print(num + " ");
-                }
-                System.out.println();
-            }
-
             for (int i = 0; i < disturbLine; i++) {
                 for (int j = 3; j < 13; j++) {
                     int newValue = disturbBoardStatus[i][j] != 0 ? 30 : 0;
                     nextDisturbBoard[NEXT_DISTURB_BOARD_HEIGHT - disturbLine + i][j - 3] = newValue;
                 }
-            }
-
-            for (int[] nums : nextDisturbBoard) {
-                for (int num : nums) {
-                    System.out.print(num + " ");
-                }
-                System.out.println();
             }
         }
     }
