@@ -283,11 +283,12 @@ public class BoardController {
                     placeNewBlock();
                     break;
                 }
-
+                gameController.gameTimer.stop();
                 while (grid.collisionCheck(currentBlock, currentBlock.getX(), currentBlock.getY() + 1)) {
                     currentBlock.moveDown();
                     inGameScoreController.addScoreOnBlockMoveDown(); // 한 칸 내릴 때마다 1점 추가
                 }
+                gameController.gameTimer.start();
                 placeBlock();
 
                 // 무게 추 블럭인 경우 새로운 다음 블럭을 불러오면 안됌
@@ -425,6 +426,22 @@ public class BoardController {
         for (int i = 0; i < source.length; i++) {
             System.arraycopy(source[i], 0, destination[i], 0, source[i].length);
         }
+    }
+
+    public void copyBoardStateExcludingCurrentBlock() {
+        // Temporarily remove the current block
+        eraseCurrentBlock();
+
+        int[][] source = grid.getBoard();
+        int[][] destination = previousBoardState;
+
+        // Copy the board state
+        for (int i = 0; i < source.length; i++) {
+            System.arraycopy(source[i], 0, destination[i], 0, source[i].length);
+        }
+
+        // Restore the current block
+        placeBlock();
     }
 
     // 지워진 라인 복사 (이전 상태에서 받아와서 마지막에 쌓은 블록은 표시되지 않음)
