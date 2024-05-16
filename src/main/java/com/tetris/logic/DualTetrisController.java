@@ -11,11 +11,12 @@ import java.util.Timer;
 public class DualTetrisController {
     private GameController gameController1;
     private GameController gameController2;
+    private SettingController settingController;
 
     private Timer limitTimer;
     private JLabel timeLabel;
     private boolean isTimeAttack;
-    private  boolean isItem;
+    private boolean isItem;
 
     private JFrame frame;
 
@@ -24,14 +25,22 @@ public class DualTetrisController {
     }
 
     // gameController1 조작을 위한 키 코드 w, a, s, d, Left Shift
-    private int[] keyCodes1 = {KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_SHIFT};
+    // private int[] keyCodes1 = {KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_SHIFT};
+    private int[] keyCodes1;
 
     // gameController1 조작을 위한 키 코드 방향키, Right Shift
-    private int[] keyCodes2 = {KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_SHIFT};
+    // private int[] keyCodes2 = {KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_SHIFT};
+    private int[] keyCodes2;
 
     public DualTetrisController(boolean isItem, boolean isTimeAttack) {
+
         this.isTimeAttack = isTimeAttack;
         this.isItem = isItem;
+
+        settingController = new SettingController();
+        keyCodes1 = settingController.getKeyCodes("playerA");
+        keyCodes2 = settingController.getKeyCodes("playerB");
+
         gameController1 = new GameController(isItem, true, isTimeAttack);
         gameController2 = new GameController(isItem, true, isTimeAttack);
 
@@ -44,7 +53,7 @@ public class DualTetrisController {
         gameController1.setDualTetrisController(this);
         gameController2.setDualTetrisController(this);
 
-        if(isTimeAttack) {
+        if (isTimeAttack) {
             timeController();
         }
 

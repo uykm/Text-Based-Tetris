@@ -21,7 +21,7 @@ public class GameController  {
     private RankScoreController rankScoreController;
     private final SettingController settingController = new SettingController();
     private GameController opponent;
-    private final int[] keyCodes = settingController.getKeyCodes();
+    private final int[] keyCodes = settingController.getKeyCodes("single");
     private int ROTATE = keyCodes[0];
     private int LEFT = keyCodes[1];
     private int RIGHT = keyCodes[2];
