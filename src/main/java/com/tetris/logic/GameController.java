@@ -210,6 +210,7 @@ public class GameController  {
                     throw new RuntimeException(ex);
                 }
                 boardController.blinkErase();
+                boardController.copyBoardStateExcludingCurrentBlock();
                 inGameScreen.updateBoard();
             }
         } else {
