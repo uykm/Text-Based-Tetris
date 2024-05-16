@@ -67,15 +67,15 @@ public class DualTetrisController {
         // Setting up controls for gameController1
         game1Controls.put(keyCodes1[0], "ROTATE");
         game1Controls.put(keyCodes1[1], "LEFT");
-        game1Controls.put(keyCodes1[2], "DOWN");
-        game1Controls.put(keyCodes1[3], "RIGHT");
+        game1Controls.put(keyCodes1[2], "RIGHT");
+        game1Controls.put(keyCodes1[3], "DOWN");
         game1Controls.put(keyCodes1[4], "DROP");
 
         // Setting up controls for gameController2
         game2Controls.put(keyCodes2[0], "ROTATE");
         game2Controls.put(keyCodes2[1], "LEFT");
-        game2Controls.put(keyCodes2[2], "DOWN");
-        game2Controls.put(keyCodes2[3], "RIGHT");
+        game2Controls.put(keyCodes2[2], "RIGHT");
+        game2Controls.put(keyCodes2[3], "DOWN");
         game2Controls.put(keyCodes2[4], "DROP");
 
         frame.addKeyListener(new KeyAdapter() {
