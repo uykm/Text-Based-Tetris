@@ -430,7 +430,10 @@ public class BoardController {
     }
 
     public void copyBoardStateExcludingCurrentBlock() {
-        int[][] source = grid.getBoard();
+        int[][] source = new int[grid.getBoard().length][];
+        for (int i = 0; i < grid.getBoard().length; i++) {
+            source[i] = grid.getBoard()[i].clone();
+        }
         int[][] destination = previousBoardState;
 
         // source 보드에서 현재 블록을 제거
