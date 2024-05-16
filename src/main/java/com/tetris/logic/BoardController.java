@@ -376,7 +376,6 @@ public class BoardController {
                 }
             }
         }
-        placeBlock();
     }
 
     public boolean blinkCheck() {
