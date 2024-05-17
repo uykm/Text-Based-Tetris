@@ -95,7 +95,7 @@ class DifficultyScreenTest {
         GameController gameController = new GameController(false);
         InGameScoreController inGameScoreController = new InGameScoreController();
         BoardController boardController = new BoardController(gameController, inGameScoreController, false, false);
-        InGameScreen inGameScreen = new InGameScreen(boardController, inGameScoreController);
+        InGameScreen inGameScreen = new InGameScreen(boardController, inGameScoreController, false);
 
         // Test key press "ENTER" on Easy
         KeyEvent enterEvent = new KeyEvent(screen.btnEasy, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, ' ');

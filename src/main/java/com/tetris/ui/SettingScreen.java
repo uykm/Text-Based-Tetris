@@ -60,7 +60,7 @@ SettingScreen extends JFrame implements ActionListener {
         settingsPanel.add(createPanel("Screen Size", new JButton[]{btnSize1, btnSize2, btnSize3}, screenSize));
 
         // Key Setting
-        btnKeySetting = createBtn("Key Setting", "keySetting", this);
+        btnKeySetting = createBtn("Setting", "keySetting", this);
         btnKeySetting.addKeyListener(new MyKeyListener());
 
         btnInitializeKeySetting = createBtn("Initialize", "initializeKey", this);
@@ -140,10 +140,11 @@ SettingScreen extends JFrame implements ActionListener {
             new SettingScreen();
         } else if (btnKeySetting.isFocusOwner()) {
             setVisible(false);
-            // keySetting 창을 위한 컨트롤러를 하나 만들어야 할 듯
-            new KeySettingScreen();
+            new KeySettingModeScreen();
         } else if (btnInitializeKeySetting.isFocusOwner()) {
-            settingController.initializeKeySettings();
+            // settingController.initializeKeySettings();
+            setVisible(false);
+            new InitKeySettingModeScreen();
         } else if (btnInitializeNormalScore.isFocusOwner()) {
             rankScoreController.resetScores(false);
         } else if (btnInitializeItemScore.isFocusOwner()) {
@@ -187,10 +188,11 @@ SettingScreen extends JFrame implements ActionListener {
             new SettingScreen();
         } else if (command.equals("keySetting")) {
             setVisible(false);
-            // keySetting 창을 위한 컨트롤러를 하나 만들어야 할 듯
-            new KeySettingScreen();
+            new KeySettingModeScreen();
         } else if (command.equals("initializeKey")) {
-            settingController.initializeKeySettings();
+            // settingController.initializeKeySettings();
+            setVisible(false);
+            new InitKeySettingModeScreen();
         } else if (command.equals("menu")) {
             setVisible(false);
             new MainMenuScreen();

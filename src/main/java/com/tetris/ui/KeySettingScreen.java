@@ -15,15 +15,22 @@ public class KeySettingScreen extends JFrame {
     private JTextField[] textFields = new JTextField[6];
     private SettingController settingController = new SettingController();
     private final int[] keyCodes = new int[5];
-    private final String[] keyShape = settingController.getKeyShape();
+    private final String[] keyShape;
 
     private int focusedIndex = 0;
     private int fontSize;
     private int fieldWidth;
     private int textFieldLength;
     private int textFieldHeight;
+    private String player;
+    private boolean isDualMode;
 
-    public KeySettingScreen() {
+    public KeySettingScreen(String player, boolean isDualMode) {
+
+        // 누구의 키세팅 화면인지 선언.
+        this.isDualMode = isDualMode;
+        this.player = player;
+        keyShape = settingController.getKeyShape(player);
 
         setTitle("Key Setting");
         String screenSize = settingController.getScreenSize("screenSize", "medium");
@@ -114,7 +121,7 @@ public class KeySettingScreen extends JFrame {
         getRootPane().getActionMap().put("enterAction", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                enterInputMode();
+                enterInputMode(player);
             }
         });
 
@@ -133,11 +140,11 @@ public class KeySettingScreen extends JFrame {
         }
     }
 
-    private void enterInputMode() {
+    private void enterInputMode(String player) {
 
         if (focusedIndex == textFields.length - 1) { // If "Back" text field is focused
             setVisible(false);
-            new MainMenuScreen();
+            new SettingScreen();
             return; // Exit the method early
         }
 
@@ -162,6 +169,16 @@ public class KeySettingScreen extends JFrame {
                     return;
                 }
 
+                if (isDualMode) {
+
+                    // 다른 플레이어가 해당 키를 사용하는지 확인
+                    if (settingController.isKeyAssigned(keyCode, player)) {
+                        JOptionPane.showMessageDialog(KeySettingScreen.this, "This key is already assigned to another player.", "Invalid Key", JOptionPane.WARNING_MESSAGE);
+                        inputDialog.dispose();
+                        return;
+                    }
+                }
+
                 boolean keyAssigned = false;
                 for (JTextField textField : textFields) {
                     if (textField.getText().equals(keyString)) {
@@ -173,8 +190,8 @@ public class KeySettingScreen extends JFrame {
                     textFields[focusedIndex].setText(keyString);
                     keyCodes[focusedIndex] = keyCode;
                     keyShape[focusedIndex] = keyString;
-                    settingController.setKeyCodes(keyCodes);
-                    settingController.setKeyShape(keyShape);
+                    settingController.setKeyCodes(keyCodes, player);
+                    settingController.setKeyShape(keyShape, player);
                 } else {
                     JOptionPane.showMessageDialog(KeySettingScreen.this, "This key is already assigned to another section.", "Key Already Assigned", JOptionPane.WARNING_MESSAGE);
                 }
