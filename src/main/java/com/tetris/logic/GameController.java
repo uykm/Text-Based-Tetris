@@ -2,7 +2,9 @@ package com.tetris.logic;
 
 import com.tetris.model.Direction;
 import com.tetris.ui.*;
+import org.w3c.dom.ls.LSOutput;
 
+import javax.crypto.spec.PSource;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,7 +12,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 // 게임의 전반적인 흐름을 제어하는 클래스
-public class GameController implements PauseScreenCallback {
+public class GameController  {
 
     private String strPlayer;
     private BoardController boardController;
@@ -19,7 +21,7 @@ public class GameController implements PauseScreenCallback {
     private RankScoreController rankScoreController;
     private final SettingController settingController = new SettingController();
     private GameController opponent;
-    private final int[] keyCodes = settingController.getKeyCodes();
+    private final int[] keyCodes = settingController.getKeyCodes("single");
     private int ROTATE = keyCodes[0];
     private int LEFT = keyCodes[1];
     private int RIGHT = keyCodes[2];
@@ -45,6 +47,7 @@ public class GameController implements PauseScreenCallback {
     // 게임 컨트롤러 생성자
     public GameController(boolean isItem) {
         this(isItem, false, false);
+        System.out.println("SINGLE MODE GAMECONTROLLER CREATED");
     }
 
     public void setDualTetrisController(DualTetrisController dualTetrisController) {
@@ -56,6 +59,7 @@ public class GameController implements PauseScreenCallback {
     }
 
     public GameController(boolean isItem, boolean isDualMode, boolean isTimeAttack) {
+        System.out.println("GAMECONTROLLER CREATED");
         this.isItem = isItem;
         this.isTimeAttack = isTimeAttack;
         this.isDualMode = isDualMode;
@@ -84,16 +88,6 @@ public class GameController implements PauseScreenCallback {
         });
     }
 
-    @Override
-    public void onResumeGame() {
-        gameTimer.start();
-    }
-
-    @Override
-    public void onHideFrame() {
-        frame.setVisible(false);
-    }
-
     // 키보드 이벤트 처리
     private void setupKeyListener(JFrame framem) {
         // Create the PauseScreen instance once during initialization
@@ -113,9 +107,10 @@ public class GameController implements PauseScreenCallback {
                     boardController.moveBlock(Direction.SPACE); // Consider renaming Direction.SPACE to DROP for clarity
                 } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     gameTimer.stop();
-                    PauseScreen pauseScreen = new PauseScreen(isItem, isDualMode, isTimeAttack);
-                    pauseScreen.setCallback(GameController.this); // Set the callback
-                    pauseScreen.setVisible(true); // Show the PauseScreen
+                    if (isDualMode) {
+                        opponent.gameTimer.stop();
+                    }
+                    controlGame("PAUSE");
                 }
                 inGameScreen.updateBoard();
             }
@@ -134,13 +129,20 @@ public class GameController implements PauseScreenCallback {
                 boardController.moveBlock(Direction.SPACE);
             }
             case "PAUSE" -> {
+                System.out.println("PAUSE");
                 gameTimer.stop(); // Todo : 대전 모드 PAUSE 처리
-                opponent.gameTimer.stop();
+                if (isDualMode) {
+                    opponent.gameTimer.stop();
+                }
                 PauseScreen pauseScreen = new PauseScreen(isItem, isDualMode, isTimeAttack);
                 pauseScreen.setGameController(this);
             }
-            case "RESUME" -> onResumeGame();
+            case "RESUME" -> {
+                System.out.println("RESUME");
+                gameTimer.start();
+            }
             case "REPLAY" -> {
+                System.out.println("REPLAY");
                 if (isDualMode) {
                     dualTetrisController.getDualFrame().dispose();
                     new DualTetrisController(isItem, isTimeAttack);
@@ -150,10 +152,13 @@ public class GameController implements PauseScreenCallback {
                 }
             }
             case "MENU" -> {
+                System.out.println("MENU");
                 if (isDualMode) {
                     dualTetrisController.getDualFrame().dispose();
                     new MainMenuScreen();
                 }
+                frame.dispose();
+                new MainMenuScreen();
             }
         }
         inGameScreen.updateBoard();
@@ -205,6 +210,7 @@ public class GameController implements PauseScreenCallback {
                     throw new RuntimeException(ex);
                 }
                 boardController.blinkErase();
+                boardController.copyBoardStateExcludingCurrentBlock();
                 inGameScreen.updateBoard();
             }
         } else {
@@ -214,23 +220,37 @@ public class GameController implements PauseScreenCallback {
 
         // 게임 오버 체크
         if (boardController.checkGameOver()) {
+            System.out.println("boardController.checkGameOver()");
             endGame(isDualMode);
         }
     }
+    private boolean winnerScreenAlreadyOccured = false;
+    private void setWinnerScreenAlreadyOccured(boolean occured) {
+        this.winnerScreenAlreadyOccured = occured;
+    }
+
+    private boolean gameEnded = false;
 
     private void endGame(boolean isDualMode) {
-        frame.dispose();
         gameTimer.stop();
         if(!isDualMode){
-            if (rankScoreController.isScoreInTop10(inGameScoreController.getScore(), isItem)) {
-                new RegisterScoreScreen(inGameScoreController.getScore(), isItem);
-            } else {
-                new GameOverScreen(inGameScoreController.getScore(), isItem);
+            frame.dispose();
+            if (!gameEnded) {
+                this.gameEnded = true;
+                if (rankScoreController.isScoreInTop10(inGameScoreController.getScore(), isItem)) {
+                    new RegisterScoreScreen(inGameScoreController.getScore(), isItem);
+                } else {
+                    new GameOverScreen(inGameScoreController.getScore(), isItem);
+                }
             }
         } else {
-            // Todo : 대전 모드 일 경우 GameOver 처리
-            opponent.sendGameOver();
-            new WinnerScreen(opponent.getStrPlayer(), opponent.getScore(), getScore(), isItem, isTimeAttack);
+            opponent.gameTimer.stop();
+            if (!winnerScreenAlreadyOccured) {
+                this.winnerScreenAlreadyOccured = true;
+                opponent.setWinnerScreenAlreadyOccured(true);
+                WinnerScreen winnerScreen = new WinnerScreen(opponent.getStrPlayer(), opponent.getScore(), getScore(), isItem, isTimeAttack);
+                winnerScreen.setDualTetrisController(dualTetrisController);
+            }
         }
     }
 
@@ -271,11 +291,6 @@ public class GameController implements PauseScreenCallback {
 
     public int getScore() {
         return inGameScoreController.getScore();
-    }
-
-    public void sendGameOver() {
-        frame.dispose();
-        gameTimer.stop();
     }
 
     public void gameOver() {

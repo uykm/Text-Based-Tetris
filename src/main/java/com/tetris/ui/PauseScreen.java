@@ -117,35 +117,17 @@ public class PauseScreen extends JFrame implements ActionListener{
         }
     }
 
-    PauseScreenCallback callback;
-
-    public void setCallback(PauseScreenCallback callback) {
-        this.callback = callback;
-    }
-
     private void applyPause() {
         setVisible(false);
         if (btnBack.isFocusOwner()) {
+            gameController.controlGame("RESUME");
             if (isDualMode) {
-                gameController.controlGame("RESUME");
                 gameController.getOpponent().controlGame("RESUME");
-            } else {
-                callback.onResumeGame();
             }
         } else if (btnReplay.isFocusOwner()) {
-            if (isDualMode) {
-                gameController.controlGame("REPLAY");
-            } else {
-                new GameController(isItemMode);
-            }
-            callback.onHideFrame();
+            gameController.controlGame("REPLAY");
         } else if (btnMainMenu.isFocusOwner()) {
-            if (isDualMode) {
-                gameController.controlGame("MENU");
-            } else {
-                new MainMenuScreen();
-                callback.onHideFrame();
-            }
+            gameController.controlGame("MENU");
         } else if (btnQuit.isFocusOwner()) {
             exit(0);
         }
@@ -156,29 +138,16 @@ public class PauseScreen extends JFrame implements ActionListener{
         String command = e.getActionCommand();
         setVisible(false);
         if (command.equals("back")) {
+            gameController.controlGame("RESUME");
             if (isDualMode) {
-                gameController.controlGame("RESUME");
                 gameController.getOpponent().controlGame("RESUME");
-            } else {
-                callback.onResumeGame();
             }
         } else if (command.equals("replay")) {
-            if (isDualMode) {
-                gameController.controlGame("REPLAY");
-            } else {
-                new GameController(isItemMode);
-            }
-            callback.onHideFrame();
+            gameController.controlGame("REPLAY");
         } else if (command.equals("mainMenu")) {
-            if (isDualMode) {
-                gameController.controlGame("MENU");
-            } else {
-                new MainMenuScreen();
-                callback.onHideFrame();
-            }
+            gameController.controlGame("MENU");
         } else if (command.equals("quit")) {
             exit(0);
         }
-
     }
 }
