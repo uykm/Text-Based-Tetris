@@ -1,6 +1,7 @@
 package com.tetris.ui;
 
 import com.tetris.component.Button;
+import com.tetris.logic.DualTetrisController;
 import com.tetris.logic.GameController;
 import com.tetris.logic.SettingController;
 
@@ -10,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Map;
 
 import static com.tetris.component.ScreenSize.setWidthHeight;
 
@@ -20,12 +22,24 @@ public class DifficultyScreen extends JFrame implements ActionListener {
     JButton btnHard;
     JButton btnMenu;
     private boolean isItem;
+    private boolean isDualMode;
+    private boolean isTimeAttack;
     private SettingController settingController = new SettingController();
 
     private final int btnSize;
 
+    // 싱글 모드
     public DifficultyScreen(boolean isItem) {
+        this(isItem, false, false);
+    }
+
+    // 멀티 모드
+    public DifficultyScreen(boolean isItem, boolean isDualMode, boolean isTimeAttack) {
+
+        // 모드 설정 불러오기
         this.isItem = isItem;
+        this.isDualMode = isDualMode;
+        this.isTimeAttack = isTimeAttack;
 
         setTitle("Tetris - Difficulty");
         String screenSize = settingController.getScreenSize("screenSize", "small");
@@ -85,12 +99,17 @@ public class DifficultyScreen extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         setVisible(false);
+
         switch (command) {
             case "easy":
             case "normal":
             case "hard":
                 settingController.saveSettings("difficulty", command.equals("easy") ? "0" : command.equals("normal") ? "1" : "2");
-                new GameController(isItem);
+                if (isDualMode) {
+                    new DualTetrisController(isItem, isTimeAttack);
+                } else {
+                    new GameController(isItem);
+                }
                 break;
             case "menu":
                 new MainMenuScreen();
@@ -100,19 +119,29 @@ public class DifficultyScreen extends JFrame implements ActionListener {
 
     private void moveScreen() {
         setVisible(false);
-        if (btnEasy.isFocusOwner()) {
-            settingController.saveSettings("difficulty", "0");
-            new GameController(isItem);
-        } else if (btnNormal.isFocusOwner()) {
-            settingController.saveSettings("difficulty", "1");
-            new GameController(isItem);
-        } else if (btnHard.isFocusOwner()) {
-            settingController.saveSettings("difficulty", "2");
-            new GameController(isItem);
-        } else if (btnMenu.isFocusOwner()) {
+        Map<JButton, String> buttonDifficultyMap = Map.of(
+                btnEasy, "0",
+                btnNormal, "1",
+                btnHard, "2"
+        );
+
+        for (Map.Entry<JButton, String> entry : buttonDifficultyMap.entrySet()) {
+            if (entry.getKey().isFocusOwner()) {
+                settingController.saveSettings("difficulty", entry.getValue());
+                if (isDualMode) {
+                    new DualTetrisController(isItem, isTimeAttack);
+                } else {
+                    new GameController(isItem);
+                }
+                return;
+            }
+        }
+
+        if (btnMenu.isFocusOwner()) {
             new MainMenuScreen();
         }
     }
+
 
     class MyKeyListener extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
