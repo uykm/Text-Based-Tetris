@@ -185,33 +185,6 @@ public class BoardController {
         }
     }
 
-    // 라인을 지우고 위에 있는 블록들을 내림
-    public void eraseLine(int line) {
-        // 지워진 라인을 먼저 비운다.
-        for (int i = 3; i < WIDTH + 3; i++) {
-            grid.getBoard()[line][i] = 0;
-        }
-
-        // 현재 블록의 Y 좌표 범위를 확인한다.
-        int currentBlockTop = currentBlock.getY();
-        int currentBlockBottom = currentBlockTop + currentBlock.height();
-        int currentBlockLeft = currentBlock.getX();
-        int currentBlockRight = currentBlockLeft + currentBlock.width();
-
-        // 지워진 라인 위로 블록들을 내린다.
-        for (int i = line; i > 3; i--) {
-            for (int j = 3; j < WIDTH + 3; j++) {
-                // 현재 블록에 속한 셀은 내리지 않는다.
-                if (i - 1 >= currentBlockTop && i - 1 < currentBlockBottom && j >= currentBlockLeft && j < currentBlockRight) {
-                    // 현재 블록의 셀이라면 내리지 않고, 0으로 초기화할 필요도 없다.
-                    continue;
-                }
-                grid.getBoard()[i][j] = grid.getBoard()[i - 1][j];
-            }
-        }
-    }
-
-
     // 현재 배열에서 블록을 지움, 블록을 회전하거나 이동하기 전에 사용
     private void eraseCurrentBlock() {
         for (int i = 0; i < currentBlock.width(); i++) {
@@ -277,6 +250,7 @@ public class BoardController {
                 placeBlock();
             }
             case SPACE -> {
+                blinkErase(); // 스페이스바 누르면 줄 삭제 이벤트 바로 삭제
                 // space바 누르면 바로 터지게
                 if (currentBlock instanceof BombItemBlock) {
                     placeBlock();
@@ -292,6 +266,7 @@ public class BoardController {
                 }
                 gameController.gameTimer.start();
                 placeBlock();
+
 
                 // 무게 추 블럭인 경우 새로운 다음 블럭을 불러오면 안됌
                 if (currentBlock instanceof WeightItemBlock) {
@@ -370,6 +345,9 @@ public class BoardController {
             for (int j = 3; j < WIDTH + 3; j++) {
                 if (grid.getBoard()[i][j] == -2) {
                     grid.eraseOneBlock(j, i);
+                    if (j == WIDTH + 2) {
+                        dropLines(i);
+                    }
                 }
             }
 
@@ -378,6 +356,27 @@ public class BoardController {
                 if (grid.getBoard()[i][j] == 13) {
                     grid.eraseOneBlock(j, i);
                 }
+            }
+        }
+    }
+
+    // 위에 있는 블록들을 내림
+    private void dropLines(int line) {
+        // 현재 블록의 Y 좌표 범위를 확인한다.
+        int currentBlockTop = currentBlock.getY();
+        int currentBlockBottom = currentBlockTop + currentBlock.height();
+        int currentBlockLeft = currentBlock.getX();
+        int currentBlockRight = currentBlockLeft + currentBlock.width();
+
+        // 지워진 라인 위의 블록들을 내린다.
+        for (int i = line; i > 3; i--) {
+            for (int j = 3; j < WIDTH + 3; j++) {
+                // 현재 블록에 속한 셀은 내리지 않는다.
+                if (i - 1 >= currentBlockTop && i - 1 < currentBlockBottom && j >= currentBlockLeft && j < currentBlockRight) {
+                    // 현재 블록의 셀이라면 내리지 않고, 0으로 초기화할 필요도 없다.
+                    continue;
+                }
+                grid.getBoard()[i][j] = grid.getBoard()[i - 1][j];
             }
         }
     }
