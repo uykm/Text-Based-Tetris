@@ -64,7 +64,7 @@ public class MainMenuScreen extends JFrame implements ActionListener {
 
                 break;
             case "big":
-                setWidthHeight(910, 940, this);
+                setWidthHeight(910, 900, this);
                 playWidth = 400;
                 playHeight = 200;
 

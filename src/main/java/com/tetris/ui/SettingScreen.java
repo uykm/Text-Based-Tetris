@@ -36,7 +36,7 @@ SettingScreen extends JFrame implements ActionListener {
                 setWidthHeight(390, 420, this);
                 break;
             case "big":
-                setWidthHeight(910, 940, this);
+                setWidthHeight(910, 900, this);
                 break;
             default:
                 setWidthHeight(650, 680, this);
