@@ -12,15 +12,6 @@ public class ItemBlockController {
     final private int HEIGHT;
     private boolean waterBlockMoved;
 
-    private static int erasedLineCountForItem = 0;
-    public static void setErasedLineCountForItem(int count) {
-        erasedLineCountForItem = count;
-    }
-
-    public static int getErasedLineCountForItem() {
-        return erasedLineCountForItem;
-    }
-
     public ItemBlockController(Board grid, int width, int height) {
         this.grid = grid;
         this.WIDTH = width;

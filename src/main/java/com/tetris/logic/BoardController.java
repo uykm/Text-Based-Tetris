@@ -1,9 +1,7 @@
 package com.tetris.logic;
 
 import com.tetris.model.*;
-import com.tetris.ui.InGameScreen;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 import static com.tetris.logic.ItemBlockController.BOMB_BODY;
@@ -120,6 +118,7 @@ public class BoardController {
     }
 
 
+
     // 블록을 게임 보드에 배치
     public void placeBlock() {
         // 기본 블록 배치 로직
@@ -195,12 +194,14 @@ public class BoardController {
         // 현재 블록의 Y 좌표 범위를 확인한다.
         int currentBlockTop = currentBlock.getY();
         int currentBlockBottom = currentBlockTop + currentBlock.height();
+        int currentBlockLeft = currentBlock.getX();
+        int currentBlockRight = currentBlockLeft + currentBlock.width();
 
         // 지워진 라인 위로 블록들을 내린다.
         for (int i = line; i > 3; i--) {
             for (int j = 3; j < WIDTH + 3; j++) {
                 // 현재 블록에 속한 셀은 내리지 않는다.
-                if (i - 1 >= currentBlockTop && i - 1 < currentBlockBottom && j >= currentBlock.getX() && j < currentBlock.getX() + currentBlock.width()) {
+                if (i - 1 >= currentBlockTop && i - 1 < currentBlockBottom && j >= currentBlockLeft && j < currentBlockRight) {
                     // 현재 블록의 셀이라면 내리지 않고, 0으로 초기화할 필요도 없다.
                     continue;
                 }

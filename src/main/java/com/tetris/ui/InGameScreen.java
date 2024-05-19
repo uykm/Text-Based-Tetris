@@ -20,10 +20,10 @@ public class InGameScreen extends JPanel {
     private final int BOARD_WIDTH = 10;
     private final int BOARD_HEIGHT = 20;
 
-    private final int cellSize; // 셀의 크기
-    private final int blockSize; // 블록 크기
-    private final int scoreSize; // 점수판 크기
-    private final int messageSize; // 메시지 크기
+    private final int CELL_SIZE; // 셀의 크기
+    private final int BLOCK_SIZE; // 블록 크기
+    private final int SCORE_SIZE; // 점수판 크기
+    private final int MESSAGE_SIZE; // 메시지 크기
 
     private final int NEXT_BLOCK_BOARD_WIDTH = 8; // 다음 블록 표시 영역의 가로 길이
     private final int NEXT_BLOCK_BOARD_HEIGHT = 8; // 다음 블록 표시 영역의 세로 길이
@@ -54,13 +54,13 @@ public class InGameScreen extends JPanel {
         initNextBlockBoard();
 
         String screenSize = settingController.getScreenSize("screenSize", "medium");
-        cellSize = settingController.getCellSize(screenSize);
-        blockSize = settingController.getBlockSize(screenSize);
-        scoreSize = settingController.getScoreSize(screenSize);
-        messageSize = settingController.getMessageSize(screenSize);
+        CELL_SIZE = settingController.getCellSize(screenSize);
+        BLOCK_SIZE = settingController.getBlockSize(screenSize);
+        SCORE_SIZE = settingController.getScoreSize(screenSize);
+        MESSAGE_SIZE = settingController.getMessageSize(screenSize);
 
         // 화면 크기 설정
-        setPreferredSize(new Dimension((EXTEND_BOARD_WIDTH + NEXT_BLOCK_BOARD_WIDTH + 2) * cellSize, EXTEND_BOARD_HEIGHT * cellSize));
+        setPreferredSize(new Dimension((EXTEND_BOARD_WIDTH + NEXT_BLOCK_BOARD_WIDTH + 2) * CELL_SIZE, EXTEND_BOARD_HEIGHT * CELL_SIZE));
         setBackground(Color.LIGHT_GRAY);
     }
 
@@ -117,60 +117,60 @@ public class InGameScreen extends JPanel {
 
         // 전체 게임 보드의 배경을 검정색으로 설정
         g.setColor(Color.BLACK);
-        g.fillRect(0, 0, EXTEND_BOARD_WIDTH * cellSize, EXTEND_BOARD_HEIGHT * cellSize);
+        g.fillRect(0, 0, EXTEND_BOARD_WIDTH * CELL_SIZE, EXTEND_BOARD_HEIGHT * CELL_SIZE);
 
         // 다음 블록 영역의 배경도 검정색으로 설정
-        int nextBlockBoardX = (EXTEND_BOARD_WIDTH + 2) * cellSize; // 다음 블록 영역의 시작 x 좌표
-        int nextBlockBoardY = cellSize; // 다음 블록 영역의 시작 y 좌표
-        int nextBlockInBoardWidth = (NEXT_BLOCK_BOARD_WIDTH - 2) * cellSize; // 다음 블록 영역의 너비
-        int nextBlockInBoardHeight = (NEXT_BLOCK_BOARD_HEIGHT - 2) * cellSize; // 다음 블록 영역의 높이
+        int nextBlockBoardX = (EXTEND_BOARD_WIDTH + 2) * CELL_SIZE; // 다음 블록 영역의 시작 x 좌표
+        int nextBlockBoardY = CELL_SIZE; // 다음 블록 영역의 시작 y 좌표
+        int nextBlockInBoardWidth = (NEXT_BLOCK_BOARD_WIDTH - 2) * CELL_SIZE; // 다음 블록 영역의 너비
+        int nextBlockInBoardHeight = (NEXT_BLOCK_BOARD_HEIGHT - 2) * CELL_SIZE; // 다음 블록 영역의 높이
         g.fillRect(nextBlockBoardX, nextBlockBoardY, nextBlockInBoardWidth, nextBlockInBoardHeight);
 
         // 게임 보드 그리기
         for (int i = 0; i < EXTEND_BOARD_HEIGHT; i++) {
             for (int j = 0; j < EXTEND_BOARD_WIDTH; j++) {
-                drawCell(g, j * cellSize, i * cellSize, board[i][j] , false);
+                drawCell(g, j * CELL_SIZE, i * CELL_SIZE, board[i][j] , false);
             }
         }
-        int borderWidth = cellSize / 3 * 2; // 테두리 선의 너비
+        int borderWidth = CELL_SIZE / 3 * 2; // 테두리 선의 너비
         // 어두운 회색 상단 선 그리기
-        drawBorderLine(g, cellSize * 2 - borderWidth, cellSize * 2 - borderWidth, (EXTEND_BOARD_WIDTH - 4) * cellSize + borderWidth * 2, borderWidth);
+        drawBorderLine(g, CELL_SIZE * 2 - borderWidth, CELL_SIZE * 2 - borderWidth, (EXTEND_BOARD_WIDTH - 4) * CELL_SIZE + borderWidth * 2, borderWidth);
         // 하단 선 그리기
-        drawBorderLine(g, cellSize * 2 - borderWidth, EXTEND_BOARD_HEIGHT * cellSize - cellSize * 2, (EXTEND_BOARD_WIDTH - 4) * cellSize + borderWidth * 2, borderWidth);
+        drawBorderLine(g, CELL_SIZE * 2 - borderWidth, EXTEND_BOARD_HEIGHT * CELL_SIZE - CELL_SIZE * 2, (EXTEND_BOARD_WIDTH - 4) * CELL_SIZE + borderWidth * 2, borderWidth);
         // 좌측 선 그리기
-        drawBorderLine(g, cellSize * 2 - borderWidth, cellSize * 2, borderWidth, (EXTEND_BOARD_HEIGHT - 4) * cellSize);
+        drawBorderLine(g, CELL_SIZE * 2 - borderWidth, CELL_SIZE * 2, borderWidth, (EXTEND_BOARD_HEIGHT - 4) * CELL_SIZE);
         // 우측 선 그리기
-        drawBorderLine(g, EXTEND_BOARD_WIDTH * cellSize - cellSize * 2, cellSize * 2, borderWidth, (EXTEND_BOARD_HEIGHT - 4) * cellSize);
+        drawBorderLine(g, EXTEND_BOARD_WIDTH * CELL_SIZE - CELL_SIZE * 2, CELL_SIZE * 2, borderWidth, (EXTEND_BOARD_HEIGHT - 4) * CELL_SIZE);
 
         // 다음 블록 영역 그리기
         for (int i = 0; i < NEXT_BLOCK_BOARD_HEIGHT; i++) {
             for (int j = 0; j < NEXT_BLOCK_BOARD_WIDTH; j++) {
                 if (nextBlockBoard[i][j] != ' ') {
-                    drawCell(g, (EXTEND_BOARD_WIDTH + 1 + j) * cellSize, i * cellSize, nextBlockBoard[i][j], false);
+                    drawCell(g, (EXTEND_BOARD_WIDTH + 1 + j) * CELL_SIZE, i * CELL_SIZE, nextBlockBoard[i][j], false);
                 }
             }
         }
-        borderWidth = cellSize / 3;
+        borderWidth = CELL_SIZE / 3;
         // 어두운 회색 상단 선 그리기
-        drawBorderLine(g, nextBlockBoardX - borderWidth, cellSize - borderWidth, nextBlockInBoardWidth + borderWidth * 2, borderWidth);
+        drawBorderLine(g, nextBlockBoardX - borderWidth, CELL_SIZE - borderWidth, nextBlockInBoardWidth + borderWidth * 2, borderWidth);
         // 하단 선 그리기
         drawBorderLine(g, nextBlockBoardX - borderWidth, nextBlockBoardY + nextBlockInBoardHeight, nextBlockInBoardWidth + borderWidth * 2, borderWidth);
         // 좌측 선 그리기
-        drawBorderLine(g, nextBlockBoardX - borderWidth, cellSize, borderWidth, nextBlockInBoardHeight);
+        drawBorderLine(g, nextBlockBoardX - borderWidth, CELL_SIZE, borderWidth, nextBlockInBoardHeight);
         // 우측 선 그리기
-        drawBorderLine(g, nextBlockBoardX + nextBlockInBoardWidth, cellSize, borderWidth, nextBlockInBoardHeight);
+        drawBorderLine(g, nextBlockBoardX + nextBlockInBoardWidth, CELL_SIZE, borderWidth, nextBlockInBoardHeight);
 
 
         // 점수판 상자 그리기
-        int scoreboardX = EXTEND_BOARD_WIDTH * cellSize + cellSize; // 점수판 x 위치
-        int scoreboardY = NEXT_BLOCK_BOARD_HEIGHT * cellSize + cellSize; // 점수판 y 위치
-        int scoreboardWidth = NEXT_BLOCK_BOARD_WIDTH * cellSize; // 점수판 너비
-        int scoreboardHeight = cellSize * 4; // 점수판 높이, 필요에 따라 조정
+        int scoreboardX = EXTEND_BOARD_WIDTH * CELL_SIZE + CELL_SIZE; // 점수판 x 위치
+        int scoreboardY = NEXT_BLOCK_BOARD_HEIGHT * CELL_SIZE + CELL_SIZE; // 점수판 y 위치
+        int scoreboardWidth = NEXT_BLOCK_BOARD_WIDTH * CELL_SIZE; // 점수판 너비
+        int scoreboardHeight = CELL_SIZE * 4; // 점수판 높이, 필요에 따라 조정
         g.setColor(Color.GRAY);
         g.fillRect(scoreboardX, scoreboardY, scoreboardWidth, scoreboardHeight); // 사각형 상자 그리기
 
         // "Scores" 문자열 그리기
-        Font scoresFont = new Font("Arial", Font.PLAIN, scoreSize);
+        Font scoresFont = new Font("Arial", Font.PLAIN, SCORE_SIZE);
         g.setFont(scoresFont);
         g.setColor(Color.GREEN); // "Scores" 문자열 색상
         FontMetrics metrics = g.getFontMetrics(scoresFont);
@@ -180,15 +180,15 @@ public class InGameScreen extends JPanel {
         // 점수 문자열 그리기
         g.setColor(Color.RED); // 점수 문자열 색상
         String scoreText = "" + score;
-        g.drawString(scoreText, scoreboardX + (scoreboardWidth - metrics.stringWidth(scoreText)) / 2, scoreboardY + cellSize * 2 + metrics.getAscent());
+        g.drawString(scoreText, scoreboardX + (scoreboardWidth - metrics.stringWidth(scoreText)) / 2, scoreboardY + CELL_SIZE * 2 + metrics.getAscent());
 
         // 상대방으로부터 넘어올 블록 미리 표시하는 구간
         if (isDualMode) {
-            int halfCellSize = cellSize / 2;
+            int halfCellSize = CELL_SIZE / 2;
             int disturbBoardWidth = NEXT_DISTURB_BOARD_WIDTH * halfCellSize;
             int disturbBoardHeight = NEXT_DISTURB_BOARD_HEIGHT * halfCellSize;
             int disturbBoardX = scoreboardX + (scoreboardWidth - disturbBoardWidth) / 2;
-            int disturbBoardY = scoreboardY + scoreboardHeight + cellSize;
+            int disturbBoardY = scoreboardY + scoreboardHeight + CELL_SIZE;
 
             // 상대방 방해 블록 표시할 상자
             g.setColor(Color.BLACK);
@@ -207,10 +207,10 @@ public class InGameScreen extends JPanel {
 
     // 스코어 메시지를 여러 줄로 그리는 메소드
     private void drawScoreMessages(Graphics g, String scoreMessages) {
-        int messageX = EXTEND_BOARD_WIDTH * cellSize + cellSize; // 점수 메시지 x 위치
-        int messageY = NEXT_BLOCK_BOARD_HEIGHT * cellSize + cellSize * 6; // 점수 메시지 y 위치, 위치 조정 필요
+        int messageX = EXTEND_BOARD_WIDTH * CELL_SIZE + CELL_SIZE; // 점수 메시지 x 위치
+        int messageY = NEXT_BLOCK_BOARD_HEIGHT * CELL_SIZE + CELL_SIZE * 6; // 점수 메시지 y 위치, 위치 조정 필요
         g.setColor(Color.WHITE); // 점수 메시지 색상
-        Font messageFont = new Font("Arial", Font.PLAIN, messageSize);
+        Font messageFont = new Font("Arial", Font.PLAIN, MESSAGE_SIZE);
         g.setFont(messageFont);
         drawStringMultiLine(g, scoreMessages, messageX, messageY);
     }
@@ -225,8 +225,8 @@ public class InGameScreen extends JPanel {
     // 셀을 그리는 메소드
     private void drawCell(Graphics g, int x, int y, int content, boolean isDisturb) {
 
-        int curCellSize = isDisturb ? cellSize / 2 : cellSize;
-        int fontSize = isDisturb ? blockSize / 2 : blockSize;
+        int curCellSize = isDisturb ? CELL_SIZE / 2 : CELL_SIZE;
+        int fontSize = isDisturb ? BLOCK_SIZE / 2 : BLOCK_SIZE;
         Font font = new Font("Arial", Font.BOLD, fontSize);
         g.setFont(font);
         FontMetrics metrics = g.getFontMetrics(font);
@@ -241,67 +241,67 @@ public class InGameScreen extends JPanel {
                 break;
             case -1:
                 g.setColor(Color.GRAY); // 회색으로 테두리를 그림
-                g.fillRect(x, y, cellSize, cellSize);
+                g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
                 break;
             case 20:
                 g.setColor(Color.WHITE); // 'X' 문자를 흰색으로 그림
-                g.drawString("X", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                g.drawString("X", x + (CELL_SIZE - charWidth) / 2 + (CELL_SIZE - charWidth) % 2, y + (CELL_SIZE - charHeight) / 3 + (CELL_SIZE - charHeight) % 2 + metrics.getAscent());
                 break;
             case 1, 2, 4, 6, 7:
                 // 다른 블록 타입에 대한 처리
                 g.setColor(Block.getBlock(BlockType.getBlockTypeByIndex(content - 1)).getColor());
                 charWidth = metrics.stringWidth("ㅁ");
-                g.drawString("ㅁ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                g.drawString("ㅁ", x + (CELL_SIZE - charWidth) / 2 + (CELL_SIZE - charWidth) % 2, y + (CELL_SIZE - charHeight) / 3 + (CELL_SIZE - charHeight) % 2 + metrics.getAscent());
                 break;
             case 3, 5:
                 g.setColor(Block.getBlock(BlockType.getBlockTypeByIndex(content - 1)).getColor());
                 charWidth = metrics.stringWidth("ㅇ");
-                g.drawString("ㅇ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                g.drawString("ㅇ", x + (CELL_SIZE - charWidth) / 2 + (CELL_SIZE - charWidth) % 2, y + (CELL_SIZE - charHeight) / 3 + (CELL_SIZE - charHeight) % 2 + metrics.getAscent());
                 break;
             case 8: // 줄삭제 아이템
                 g.setColor(Color.WHITE); // "L" 문자를 위한 색상 지정
                 charWidth = metrics.stringWidth("L");
-                g.drawString("L", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                g.drawString("L", x + (CELL_SIZE - charWidth) / 2 + (CELL_SIZE - charWidth) % 2, y + (CELL_SIZE - charHeight) / 3 + (CELL_SIZE - charHeight) % 2 + metrics.getAscent());
                 break;
             case 9: // 무게추 아이템
                 g.setColor(Color.DARK_GRAY);
                 charWidth = metrics.stringWidth("ㅇ");
-                g.drawString("ㅇ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                g.drawString("ㅇ", x + (CELL_SIZE - charWidth) / 2 + (CELL_SIZE - charWidth) % 2, y + (CELL_SIZE - charHeight) / 3 + (CELL_SIZE - charHeight) % 2 + metrics.getAscent());
                 break;
             case 10: // 물 아이템
                 g.setColor(Color.BLUE);
                 charWidth = metrics.stringWidth("᯾");
-                g.drawString("᯾", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                g.drawString("᯾", x + (CELL_SIZE - charWidth) / 2 + (CELL_SIZE - charWidth) % 2, y + (CELL_SIZE - charHeight) / 3 + (CELL_SIZE - charHeight) % 2 + metrics.getAscent());
                 break;
             case 11: // 폭탄 아이템
                 g.setColor(Color.RED);
                 charWidth = metrics.stringWidth("◎");
-                g.drawString("◎", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                g.drawString("◎", x + (CELL_SIZE - charWidth) / 2 + (CELL_SIZE - charWidth) % 2, y + (CELL_SIZE - charHeight) / 3 + (CELL_SIZE - charHeight) % 2 + metrics.getAscent());
                 break;
             case 12: // 폭탄 아이템 외형(꽁다리)
                 g.setColor(Color.YELLOW);
                 charWidth = metrics.stringWidth("☄");
-                g.drawString("☄", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                g.drawString("☄", x + (CELL_SIZE - charWidth) / 2 + (CELL_SIZE - charWidth) % 2, y + (CELL_SIZE - charHeight) / 3 + (CELL_SIZE - charHeight) % 2 + metrics.getAscent());
                 break;
             case 13: // 폭탄 터지는 이벤트
                 g.setColor(Color.YELLOW);
                 charWidth = metrics.stringWidth("✸");
-                g.drawString("✸", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                g.drawString("✸", x + (CELL_SIZE - charWidth) / 2 + (CELL_SIZE - charWidth) % 2, y + (CELL_SIZE - charHeight) / 3 + (CELL_SIZE - charHeight) % 2 + metrics.getAscent());
                 break;
             case 14: // 확장 아이템(확장 전)
                 g.setColor(Color.WHITE);
                 charWidth = metrics.stringWidth("✷");
-                g.drawString("✵", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                g.drawString("✵", x + (CELL_SIZE - charWidth) / 2 + (CELL_SIZE - charWidth) % 2, y + (CELL_SIZE - charHeight) / 3 + (CELL_SIZE - charHeight) % 2 + metrics.getAscent());
                 break;
             case 15: // 확장 아이템(확장 후)
                 g.setColor(Color.CYAN);
                 charWidth = metrics.stringWidth("✷");
-                g.drawString("✵", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                g.drawString("✵", x + (CELL_SIZE - charWidth) / 2 + (CELL_SIZE - charWidth) % 2, y + (CELL_SIZE - charHeight) / 3 + (CELL_SIZE - charHeight) % 2 + metrics.getAscent());
                 break;
             case 40: // 게임 보드 안의 방해 블록
                 g.setColor(Color.GRAY);
                 charWidth = metrics.stringWidth("ㅁ");
-                g.drawString("ㅁ", x + (cellSize - charWidth) / 2 + (cellSize - charWidth) % 2, y + (cellSize - charHeight) / 3 + (cellSize - charHeight) % 2 + metrics.getAscent());
+                g.drawString("ㅁ", x + (CELL_SIZE - charWidth) / 2 + (CELL_SIZE - charWidth) % 2, y + (CELL_SIZE - charHeight) / 3 + (CELL_SIZE - charHeight) % 2 + metrics.getAscent());
                 break;
             case 30: // 앞으로 나올 방해 블록 표시 보드
                 g.setColor(Color.WHITE); // 방해 블록의 색상 지정
@@ -312,7 +312,7 @@ public class InGameScreen extends JPanel {
                 break;
             case -2: // 한 줄이 꽉 차서 지워지기 전
                 g.setColor(Color.YELLOW);
-                g.fillRect(x, y, cellSize, cellSize);
+                g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
                 break;
         }
     }
