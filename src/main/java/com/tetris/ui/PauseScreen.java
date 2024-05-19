@@ -49,13 +49,13 @@ public class PauseScreen extends JFrame implements ActionListener{
         String screenSize = settingController.getScreenSize("screenSize", "small");
         switch (screenSize) {
             case "small":
-                setWidthHeight(390, 420, this);
+                setWidthHeight(400, 100, this);
                 break;
             case "big":
-                setWidthHeight(910, 940, this);
+                setWidthHeight(600, 200, this);
                 break;
             default:
-                setWidthHeight(650, 680, this);
+                setWidthHeight(500, 150, this);
                 break;
         }
         setLocationRelativeTo(null);

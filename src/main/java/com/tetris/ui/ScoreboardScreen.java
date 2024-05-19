@@ -33,7 +33,7 @@ public class ScoreboardScreen extends JFrame implements ActionListener {
                 setWidthHeight(390, 420, this);
                 break;
             case "big":
-                setWidthHeight(910, 940, this);
+                setWidthHeight(910, 900, this);
                 break;
             default:
                 setWidthHeight(650, 680, this);
@@ -61,7 +61,7 @@ public class ScoreboardScreen extends JFrame implements ActionListener {
         // 메뉴 버튼
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         // menuBtn = createBtn("Menu", "menu", this);
-        menuBtn = createLogoBtn("menu", this, "src/main/java/com/tetris/image/backLogo.png");
+        menuBtn = createLogoBtn("menu", this, "/image/backLogo.png");
         menuBtn.setPreferredSize((new Dimension(60, 32)));
         menuBtn.addKeyListener(new MyKeyListener());
         btnPanel.add(menuBtn);
