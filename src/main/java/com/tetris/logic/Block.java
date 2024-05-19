@@ -180,13 +180,13 @@ public abstract class Block {
             int blockType = rwSelection.select();
             // 기본 블록 선택 로직
             return switch (blockType) {
-                case 0 -> new OBlock();
-                case 1 -> new OBlock();
-                case 2 -> new OBlock();
+                case 0 -> new IBlock();
+                case 1 -> new JBlock();
+                case 2 -> new LBlock();
                 case 3 -> new OBlock();
-                case 4 -> new OBlock();
-                case 5 -> new OBlock();
-                case 6 -> new OBlock();
+                case 4 -> new SBlock();
+                case 5 -> new TBlock();
+                case 6 -> new ZBlock();
                 default -> throw new IllegalArgumentException("Invalid block type.");
             };
         }
