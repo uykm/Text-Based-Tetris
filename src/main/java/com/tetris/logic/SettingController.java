@@ -40,16 +40,16 @@ public class SettingController {
     public int getCellSize(String screenSize) {
         return switch (screenSize) {
             case "small" -> 15;
-            case "big" -> 35;
-            default -> 25;
+            case "big" -> 27;
+            default -> 20;
         };
     }
 
     public int getScoreSize(String screenSize) {
         return switch (screenSize) {
             case "small" -> 20;
-            case "big" -> 60;
-            default -> 40;
+            case "big" -> 45;
+            default -> 35;
         };
     }
 
@@ -57,15 +57,15 @@ public class SettingController {
         return switch (screenSize) {
             case "small" -> 12;
             case "big" -> 22;
-            default -> 17;
+            default -> 12;
         };
     }
 
     public int getBlockSize(String screenSize) {
         return switch (screenSize) {
-            case "small" -> 22;
-            case "big" -> 48;
-            default -> 36;
+            case "small" -> 20;
+            case "big" -> 34;
+            default -> 26;
         };
     }
 
