@@ -366,8 +366,11 @@ public class BoardController {
 
     public void blinkErase() {
         for (int i = 3; i < HEIGHT + 3; i++) {
-            if (grid.getBoard()[i][3] == -2) {
-                eraseLine(i);
+            // 줄삭제 이벤트 제거
+            for (int j = 3; j < WIDTH + 3; j++) {
+                if (grid.getBoard()[i][j] == -2) {
+                    grid.eraseOneBlock(j, i);
+                }
             }
 
             // 폭탄 이벤트 제거
@@ -397,10 +400,6 @@ public class BoardController {
 
         return blink;
     }
-
-    public Block getCurrentBlock() { return currentBlock; }
-
-    public int getPlacedBlockCount() { return placedBlockCount; }
 
     public int getErasedLineCountLately() { return erasedLineCountLately; }
 
