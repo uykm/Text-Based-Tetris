@@ -46,11 +46,11 @@ public class KeySettingModeScreen extends JFrame implements ActionListener {
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         JPanel topPanel = new JPanel();
-        btnSingle = Button.createLogoBtnUp("Single", "single", this, screenSize, "src/main/java/com/tetris/image/single.png");
+        btnSingle = Button.createLogoBtnUp("Single", "single", this, screenSize, "/image/single.png");
         btnSingle.setPreferredSize((new Dimension(btnSize, btnSize)));
-        btnMultiA = Button.createLogoBtnUp("PlayerA", "playerA", this, screenSize, "src/main/java/com/tetris/image/multi.png");
+        btnMultiA = Button.createLogoBtnUp("PlayerA", "playerA", this, screenSize, "/image/multi.png");
         btnMultiA.setPreferredSize((new Dimension(btnSize, btnSize)));
-        btnMultiB = Button.createLogoBtnUp("PlayerB", "playerB", this, screenSize, "src/main/java/com/tetris/image/multi.png");
+        btnMultiB = Button.createLogoBtnUp("PlayerB", "playerB", this, screenSize, "/image/multi.png");
         btnMultiB.setPreferredSize((new Dimension(btnSize, btnSize)));
 
         btnSingle.addKeyListener(new MyKeyListener());
@@ -66,7 +66,7 @@ public class KeySettingModeScreen extends JFrame implements ActionListener {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout());
 
-        btnMenu = Button.createLogoBtn("menu", this, "src/main/java/com/tetris/image/backLogo.png");
+        btnMenu = Button.createLogoBtn("menu", this, "/image/backLogo.png");
         btnMenu.setPreferredSize((new Dimension(60, 32)));
         btnMenu.addKeyListener(new MyKeyListener());
 
