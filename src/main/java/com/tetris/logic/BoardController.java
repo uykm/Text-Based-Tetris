@@ -118,8 +118,6 @@ public class BoardController {
         gameController.resetTimer();
     }
 
-
-
     // 블록을 게임 보드에 배치
     public void placeBlock() {
         // 기본 블록 배치 로직
@@ -130,13 +128,12 @@ public class BoardController {
                 if ((grid.getBoard()[y + j][x + i] == -2 || grid.getBoard()[y + j][x + i] == 13) && currentBlock.getShape(i, j) > 0) {
                     // 폭탄 이벤트 값이거나 줄 삭제 이벤트 값일 땐 블록 값을 그대로 저장
                     grid.getBoard()[y + j][x + i] = currentBlock.getShape(i, j);
-                } else {
-                    grid.getBoard()[y + j][x + i] += currentBlock.getShape(i, j);
+                } else if (grid.getBoard()[y + j][x + i] == 0){ // 비어있는 공간만 현재 블럭으로 채운다.
+                    grid.getBoard()[y + j][x + i] = currentBlock.getShape(i, j);
                 }
             }
         }
     }
-
 
     // 라인이 꽉 찼는지 확인하고 꽉 찼으면 지우기
     public void lineCheck() {
@@ -362,21 +359,33 @@ public class BoardController {
 
     // 위에 있는 블록들을 내림
     private void dropLines(int line) {
-        // 현재 블록의 Y 좌표 범위를 확인한다.
+        // 현재 블록의 shape 배열을 얻는다.
+        int[][] shape = currentBlock.getShape();
         int currentBlockTop = currentBlock.getY();
-        int currentBlockBottom = currentBlockTop + currentBlock.height();
-        int currentBlockLeft = currentBlock.getX();
-        int currentBlockRight = currentBlockLeft + currentBlock.width();
+        int currentBlockLeftTop = currentBlock.getX();
+        // 현재 블록에 속한 셀들을 확인하기 위한 boolean 배열
+        boolean[][] isCurrentBlockCell = new boolean[HEIGHT + 6][WIDTH + 6];
 
-        // 지워진 라인 위의 블록들을 내린다.
+        // shape 배열을 기반으로 현재 블록의 셀 위치를 계산한다.
+        for (int i = 0; i < shape.length; i++) {
+            for (int j = 0; j < shape[i].length; j++) {
+                if (shape[i][j] != 0) {
+                    int x = currentBlockLeftTop + j;
+                    int y = currentBlockTop + i;
+                    if (x >= 3 && x < WIDTH - 3 && y >= 3 && y < HEIGHT - 3) {
+                        isCurrentBlockCell[y][x] = true;
+                    }
+                }
+            }
+        }
+
+        // 지워진 라인 위의 블록들을 내린다.(현재 블럭 제외)
         for (int i = line; i > 3; i--) {
             for (int j = 3; j < WIDTH + 3; j++) {
                 // 현재 블록에 속한 셀은 내리지 않는다.
-                if (i - 1 >= currentBlockTop && i - 1 < currentBlockBottom && j >= currentBlockLeft && j < currentBlockRight) {
-                    // 현재 블록의 셀이라면 내리지 않고, 0으로 초기화할 필요도 없다.
-                    continue;
+                if (!isCurrentBlockCell[i][j]) {
+                    grid.getBoard()[i][j] = grid.getBoard()[i - 1][j];
                 }
-                grid.getBoard()[i][j] = grid.getBoard()[i - 1][j];
             }
         }
 
