@@ -137,10 +137,10 @@ public class SettingController {
                 keyCodes = new int[]{38, 37, 39, 40, 32};
             }
             case "playerA" -> {
-                keyCodes = new int[]{KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_SHIFT};
+                keyCodes = new int[]{KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_S, KeyEvent.VK_SHIFT};
             }
             case "playerB" -> {
-                keyCodes = new int[]{KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_SHIFT};
+                keyCodes = new int[]{KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_DOWN, KeyEvent.VK_SHIFT};
             }
             default -> throw new IllegalStateException("Unexpected value: " + player);
         }

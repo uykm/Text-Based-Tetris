@@ -14,7 +14,7 @@ public class KeySettingScreen extends JFrame {
     private JLabel[] labels = new JLabel[6];
     private JTextField[] textFields = new JTextField[6];
     private SettingController settingController = new SettingController();
-    private final int[] keyCodes = new int[5];
+    private int[] keyCodes;
     private final String[] keyShape;
 
     private int focusedIndex = 0;
@@ -30,7 +30,10 @@ public class KeySettingScreen extends JFrame {
         // 누구의 키세팅 화면인지 선언.
         this.isDualMode = isDualMode;
         this.player = player;
+
+        // 저장된 키세팅 불러오기
         keyShape = settingController.getKeyShape(player);
+        keyCodes = settingController.getKeyCodes(player);
 
         setTitle("Key Setting");
         String screenSize = settingController.getScreenSize("screenSize", "medium");
