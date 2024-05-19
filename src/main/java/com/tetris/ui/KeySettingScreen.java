@@ -4,9 +4,8 @@ import com.tetris.logic.SettingController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
+import java.util.Arrays;
 
 import static com.tetris.component.ScreenSize.setWidthHeight;
 
@@ -84,10 +83,25 @@ public class KeySettingScreen extends JFrame {
             } else {
                 textFields[i] = new JTextField("Back");
             }
+
             // textFields[i].setSize(20, 20);
             textFields[i].setEditable(false);
             textFields[i].setBackground(Color.WHITE);
             textFields[i].setHorizontalAlignment(JTextField.CENTER);
+
+            // 마우스 클릭 이벤트 추가
+            textFields[i].addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getClickCount() == 1 && !e.isConsumed()) {
+                        e.consume();
+                        // 포커스 인덱스 업데이트 및 입력 모드 진입
+                        focusedIndex = Arrays.asList(textFields).indexOf(e.getSource());
+                        updateFocus();
+                        enterInputMode(player);
+                    }
+                }
+            });
 
             panel.add(labels[i]);
             panel.add(textFields[i]);
