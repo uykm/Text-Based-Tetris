@@ -191,6 +191,10 @@ public class GameController  {
         fastTimer.start();
     }
 
+    public void setBlinkCheckAgain(boolean blinkCheckAgain) {
+        isBlinkCheckAgain = blinkCheckAgain;
+    }
+
     private void gameLoop(boolean isDualMode, boolean isNotFastTimer) {
         if (isNotFastTimer) {
             boardController.moveBlock(Direction.DOWN);

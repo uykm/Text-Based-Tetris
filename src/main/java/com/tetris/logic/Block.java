@@ -194,7 +194,7 @@ public abstract class Block {
 
     public Block selectItemBlock() {
         RWSelection rwSelection = new RWSelection(3);
-        return switch (rwSelection.select()) {
+        return switch (2) {
             case 0 -> WaterItemBlock.create();
             case 1 -> LineEraseItemBlock.create();
             case 2 -> new BombItemBlock();

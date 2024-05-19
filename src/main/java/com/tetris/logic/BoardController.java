@@ -142,7 +142,8 @@ public class BoardController {
             boolean canErase = true;
             for (int j = 3; j < WIDTH + 3; j++) {
                 // 블럭이 배치되어 있지 않거나 애니메이션 중인 블럭인 경우
-                if (grid.getBoard()[i][j] == 0 || grid.getBoard()[i][j] == -2) {
+                if (grid.getBoard()[i][j] == 0 || grid.getBoard()[i][j] == -2 ||
+                        grid.getBoard()[i][j] == BOMB_BODY || grid.getBoard()[i][j] == BOMB_EVENT) {
                     canErase = false;
                 }
                 if (grid.getBoard()[i][j] == 8) {
@@ -250,6 +251,7 @@ public class BoardController {
                 if (currentBlock instanceof BombItemBlock) {
                     placeBlock();
                     itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
+                    gameController.setBlinkCheckAgain(true);
                     placeNewBlock();
                     break;
                 }
@@ -268,6 +270,7 @@ public class BoardController {
 
                 itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                 lineCheck();
+                gameController.setBlinkCheckAgain(true);
                 placeNewBlock();
 
                 currentBlock.initializeLimitCount();
