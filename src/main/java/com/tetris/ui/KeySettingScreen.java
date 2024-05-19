@@ -99,6 +99,7 @@ public class KeySettingScreen extends JFrame {
                         focusedIndex = Arrays.asList(textFields).indexOf(e.getSource());
                         updateFocus();
                         enterInputMode(player);
+                        KeySettingScreen.this.requestFocusInWindow();
                     }
                 }
             });
