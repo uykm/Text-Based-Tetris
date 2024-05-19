@@ -379,6 +379,11 @@ public class BoardController {
                 grid.getBoard()[i][j] = grid.getBoard()[i - 1][j];
             }
         }
+
+        // 맨 윗줄은 따로 0으로 초기화해줘야 한다.
+        for (int j = 3; j < WIDTH + 3; j++) {
+            grid.getBoard()[3][j] = 0;
+        }
     }
 
     public boolean blinkCheck() {
