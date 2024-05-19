@@ -63,11 +63,11 @@ public class DifficultyScreen extends JFrame implements ActionListener {
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         JPanel topPanel = new JPanel();
-        btnEasy = Button.createLogoBtnUp("Easy", "easy", this, screenSize, "src/main/java/com/tetris/image/easy_logo.png");
+        btnEasy = Button.createLogoBtnUp("Easy", "easy", this, screenSize, "/image/easy_logo.png");
         btnEasy.setPreferredSize((new Dimension(btnSize, btnSize)));
-        btnNormal = Button.createLogoBtnUp("Normal", "normal", this, screenSize, "src/main/java/com/tetris/image/normal_logo.png");
+        btnNormal = Button.createLogoBtnUp("Normal", "normal", this, screenSize, "/image/normal_logo.png");
         btnNormal.setPreferredSize((new Dimension(btnSize, btnSize)));
-        btnHard = Button.createLogoBtnUp("Hard", "hard", this, screenSize, "src/main/java/com/tetris/image/hard_logo.png");
+        btnHard = Button.createLogoBtnUp("Hard", "hard", this, screenSize, "/image/hard_logo.png");
         btnHard.setPreferredSize((new Dimension(btnSize, btnSize)));
 
         btnEasy.addKeyListener(new MyKeyListener());
@@ -83,7 +83,7 @@ public class DifficultyScreen extends JFrame implements ActionListener {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout());
 
-        btnMenu = Button.createLogoBtn("menu", this, "src/main/java/com/tetris/image/backLogo.png");
+        btnMenu = Button.createLogoBtn("menu", this, "/image/backLogo.png");
         btnMenu.setPreferredSize((new Dimension(60, 32)));
         btnMenu.addKeyListener(new MyKeyListener());
 

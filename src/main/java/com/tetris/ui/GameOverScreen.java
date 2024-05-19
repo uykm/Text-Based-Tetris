@@ -69,17 +69,17 @@ public class GameOverScreen extends JFrame implements ActionListener {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout());
 
-        btnMenu = createLogoBtnUp("Menu", "menu", this, screenSize, "src/main/java/com/tetris/image/menu.png");
+        btnMenu = createLogoBtnUp("Menu", "menu", this, screenSize, "/image/menu.png");
         btnMenu.setPreferredSize((new Dimension(btnSize, btnSize)));
         btnMenu.setFocusable(true);
         bottomPanel.add(btnMenu);
 
-        btnReplay = createLogoBtnUp("Replay", "replay", this, screenSize, "src/main/java/com/tetris/image/replay.png");
+        btnReplay = createLogoBtnUp("Replay", "replay", this, screenSize, "/image/replay.png");
         btnReplay.setPreferredSize((new Dimension(btnSize, btnSize)));
         btnReplay.setFocusable(true);
         bottomPanel.add(btnReplay);
 
-        btnExit = createLogoBtnUp("Exit", "exit", this, screenSize, "src/main/java/com/tetris/image/exit_logo.png");
+        btnExit = createLogoBtnUp("Exit", "exit", this, screenSize, "/image/exit_logo.png");
         btnExit.setPreferredSize((new Dimension(btnSize, btnSize)));
         btnExit.setFocusable(true);
         bottomPanel.add(btnExit);
