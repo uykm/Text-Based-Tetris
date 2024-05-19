@@ -1,5 +1,8 @@
 package com.tetris.logic;
 
+import com.tetris.ui.KeySettingScreen;
+
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -70,40 +73,42 @@ public class SettingController {
         return Integer.parseInt(properties.getProperty("difficulty", "1"));
     }
 
-    public int[] getKeyCodes() {
+
+    // single - playerA - playerB
+    public int[] getKeyCodes(String player) {
         int[] keyCodes = new int[5];
-        keyCodes[0] = Integer.parseInt(properties.getProperty("key_rotate", "38")); // 기본값은 KeyEvent.VK_UP
-        keyCodes[1] = Integer.parseInt(properties.getProperty("key_left", "37")); // 기본값은 KeyEvent.VK_LEFT
-        keyCodes[2] = Integer.parseInt(properties.getProperty("key_right", "39")); // 기본값은 KeyEvent.VK_RIGHT
-        keyCodes[3] = Integer.parseInt(properties.getProperty("key_down", "40")); // 기본값은 KeyEvent.VK_DOWN
-        keyCodes[4] = Integer.parseInt(properties.getProperty("key_drop", "32")); // 기본값은 KeyEvent.VK_P
+        keyCodes[0] = Integer.parseInt(properties.getProperty(player + "_key_rotate", "38")); // 기본값은 KeyEvent.VK_UP
+        keyCodes[1] = Integer.parseInt(properties.getProperty(player + "_key_left", "37")); // 기본값은 KeyEvent.VK_LEFT
+        keyCodes[2] = Integer.parseInt(properties.getProperty(player + "_key_right", "39")); // 기본값은 KeyEvent.VK_RIGHT
+        keyCodes[3] = Integer.parseInt(properties.getProperty(player + "_key_down", "40")); // 기본값은 KeyEvent.VK_DOWN
+        keyCodes[4] = Integer.parseInt(properties.getProperty(player + "_key_drop", "32")); // 기본값은 KeyEvent.VK_P
         return keyCodes;
     }
 
-    public void setKeyCodes(int[] keyCodes) {
-        saveSettings("key_rotate", Integer.toString(keyCodes[0]));
-        saveSettings("key_left", Integer.toString(keyCodes[1]));
-        saveSettings("key_right", Integer.toString(keyCodes[2]));
-        saveSettings("key_down", Integer.toString(keyCodes[3]));
-        saveSettings("key_drop", Integer.toString(keyCodes[4]));
+    public void setKeyCodes(int[] keyCodes, String player) {
+        saveSettings(player + "_key_rotate", Integer.toString(keyCodes[0]));
+        saveSettings(player + "_key_left", Integer.toString(keyCodes[1]));
+        saveSettings(player + "_key_right", Integer.toString(keyCodes[2]));
+        saveSettings(player + "_key_down", Integer.toString(keyCodes[3]));
+        saveSettings(player + "_key_drop", Integer.toString(keyCodes[4]));
     }
 
-    public String[] getKeyShape() {
+    public String[] getKeyShape(String player) {
         String[] keyShape = new String[5];
-        keyShape[0] = properties.getProperty("key_rotate_shape", "Up");
-        keyShape[1] = properties.getProperty("key_left_shape", "Left");
-        keyShape[2] = properties.getProperty("key_right_shape", "Right");
-        keyShape[3] = properties.getProperty("key_down_shape", "Down");
-        keyShape[4] = properties.getProperty("key_drop_shape", "Space");
+        keyShape[0] = properties.getProperty(player + "_key_rotate_shape", "Up");
+        keyShape[1] = properties.getProperty(player + "_key_left_shape", "Left");
+        keyShape[2] = properties.getProperty(player + "_key_right_shape", "Right");
+        keyShape[3] = properties.getProperty(player + "_key_down_shape", "Down");
+        keyShape[4] = properties.getProperty(player + "_key_drop_shape", "Space");
         return keyShape;
     }
 
-    public void setKeyShape(String[] keyShape) {
-        saveSettings("key_rotate_shape", keyShape[0]);
-        saveSettings("key_left_shape", keyShape[1]);
-        saveSettings("key_right_shape", keyShape[2]);
-        saveSettings("key_down_shape", keyShape[3]);
-        saveSettings("key_drop_shape", keyShape[4]);
+    public void setKeyShape(String[] keyShape, String player) {
+        saveSettings(player + "_key_rotate_shape", keyShape[0]);
+        saveSettings(player + "_key_left_shape", keyShape[1]);
+        saveSettings(player + "_key_right_shape", keyShape[2]);
+        saveSettings(player + "_key_down_shape", keyShape[3]);
+        saveSettings(player + "_key_drop_shape", keyShape[4]);
     }
 
     public void saveSettings(String key, String value) {
@@ -120,21 +125,59 @@ public class SettingController {
             properties.load(fis);
         } catch (IOException e) {
             initializeSettings();
-            initializeKeySettings();
         }
     }
 
-    public void initializeKeySettings() {
-        int[] keyCodes = new int[]{38, 37, 39, 40, 32};
+    // 각각의 키세팅 초기화
+    public void initializeKeySettings(String player) {
+        
+        int[] keyCodes;
+        switch (player) {
+            case "single" -> {
+                keyCodes = new int[]{38, 37, 39, 40, 32};
+            }
+            case "playerA" -> {
+                keyCodes = new int[]{KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_S, KeyEvent.VK_SHIFT};
+            }
+            case "playerB" -> {
+                keyCodes = new int[]{KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_DOWN, KeyEvent.VK_SHIFT};
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + player);
+        }
+        
         String[] keyShapes = new String[5];
-
         for (int i = 0; i < 5; i++) {
             String keyShape = KeyEvent.getKeyText(keyCodes[i]);
             keyShapes[i] = keyShape;
         }
 
-        setKeyCodes(keyCodes);
-        setKeyShape(keyShapes);
+        setKeyCodes(keyCodes, player);
+        setKeyShape(keyShapes, player);
+    }
+
+    // 모든 키세팅 초기화
+    public void initializeAllKeySettings() {
+        initializeKeySettings("single");
+        initializeKeySettings("playerA");
+        initializeKeySettings("playerB");
+    }
+
+    // 다흔 플레이어와 키가 겹치는지 확인
+    public boolean isKeyAssigned(int keyCode, String player) {
+
+        int[] assignedKeyCodes;
+        if (player.equals("playerA")) {
+            assignedKeyCodes = getKeyCodes("playerB");
+        } else {
+            assignedKeyCodes = getKeyCodes("playerA");
+        }
+
+        for (int assignedKeycode : assignedKeyCodes) {
+            if (keyCode == assignedKeycode) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void initializeSettings() {
@@ -142,7 +185,7 @@ public class SettingController {
         saveSettings("screenSize", "medium");
         saveSettings("colorBlindMode", "default");
         saveSettings("difficulty", "1");
-        initializeKeySettings();
+        initializeAllKeySettings();
     }
 
     public void setColorBlindMode(String mode) {

@@ -106,6 +106,7 @@ public class BoardController {
         currentBlock = nextBlock;
         currentBlock.canMoveSide = true;
         this.nextBlock = nextBlock.selectBlock(this, isItemMode, erasedLineCount);
+
         if (grid.collisionCheck(currentBlock, 6, 2)) {
             checkSpeedUp();
             currentBlock.initializeXY();
@@ -284,11 +285,12 @@ public class BoardController {
                     placeNewBlock();
                     break;
                 }
-
+                gameController.gameTimer.stop();
                 while (grid.collisionCheck(currentBlock, currentBlock.getX(), currentBlock.getY() + 1)) {
                     currentBlock.moveDown();
                     inGameScoreController.addScoreOnBlockMoveDown(); // 한 칸 내릴 때마다 1점 추가
                 }
+                gameController.gameTimer.start();
                 placeBlock();
 
                 // 무게 추 블럭인 경우 새로운 다음 블럭을 불러오면 안됌
@@ -427,6 +429,31 @@ public class BoardController {
             System.arraycopy(source[i], 0, destination[i], 0, source[i].length);
         }
     }
+
+    public void copyBoardStateExcludingCurrentBlock() {
+        int[][] source = new int[grid.getBoard().length][];
+        for (int i = 0; i < grid.getBoard().length; i++) {
+            source[i] = grid.getBoard()[i].clone();
+        }
+        int[][] destination = previousBoardState;
+
+        // source 보드에서 현재 블록을 제거
+        for (int i = 0; i < currentBlock.width(); i++) {
+            for (int j = 0; j < currentBlock.height(); j++) {
+                int x = currentBlock.getX();
+                int y = currentBlock.getY();
+                if (currentBlock.getShape(i, j) > 0) {
+                    source[y + j][x + i] -= currentBlock.getShape(i, j);
+                }
+            }
+        }
+
+        // board 상태를 previousBoardState에 복사
+        for (int i = 0; i < source.length; i++) {
+            System.arraycopy(source[i], 0, destination[i], 0, source[i].length);
+        }
+    }
+
 
     // 지워진 라인 복사 (이전 상태에서 받아와서 마지막에 쌓은 블록은 표시되지 않음)
     public int[][] copyErasedLine() {
