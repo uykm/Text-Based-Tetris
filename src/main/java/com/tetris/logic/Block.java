@@ -179,7 +179,7 @@ public abstract class Block {
             // 일반 블록 선택 로직 (10줄이 삭제되지 않았을 때)
             int blockType = rwSelection.select();
             // 기본 블록 선택 로직
-            return switch (3) {
+            return switch (blockType) {
                 case 0 -> new IBlock();
                 case 1 -> new JBlock();
                 case 2 -> new LBlock();

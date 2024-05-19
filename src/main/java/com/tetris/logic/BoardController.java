@@ -142,9 +142,7 @@ public class BoardController {
             boolean canErase = true;
             for (int j = 3; j < WIDTH + 3; j++) {
                 // 블럭이 배치되어 있지 않거나 애니메이션 중인 블럭인 경우
-                if (grid.getBoard()[i][j] == 0 || grid.getBoard()[i][j] == -2
-                        // 폭탄 블럭은 라인체크에 반영 X
-                        || grid.getBoard()[i][j] == BOMB_BODY || grid.getBoard()[i][j] == BOMB_EVENT) {
+                if (grid.getBoard()[i][j] == 0 || grid.getBoard()[i][j] == -2) {
                     canErase = false;
                 }
                 if (grid.getBoard()[i][j] == 8) {
@@ -233,8 +231,8 @@ public class BoardController {
                     // 경계선에 닿은 경우 혹은 2틱 동안 움직임 없거나 충돌 후 2틱이 지나면 블록을 고정시킴
                     if (currentBlock.getStopCount() > 1 || currentBlock.getLimitCount() > 1) {
                         checkGameOver();
-                        itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                         lineCheck();
+                        itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                         placeNewBlock();
                         currentBlock.initializeStopCount();
                         currentBlock.initializeLimitCount();
@@ -252,7 +250,6 @@ public class BoardController {
                 if (currentBlock instanceof BombItemBlock) {
                     placeBlock();
                     itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
-                    lineCheck();
                     placeNewBlock();
                     break;
                 }
@@ -263,7 +260,6 @@ public class BoardController {
                 }
                 gameController.gameTimer.start();
                 placeBlock();
-
 
                 // 무게 추 블럭인 경우 새로운 다음 블럭을 불러오면 안됌
                 if (currentBlock instanceof WeightItemBlock) {
@@ -361,8 +357,9 @@ public class BoardController {
     private void dropLines(int line) {
         // 현재 블록의 shape 배열을 얻는다.
         int[][] shape = currentBlock.getShape();
-        int currentBlockTop = currentBlock.getY();
-        int currentBlockLeftTop = currentBlock.getX();
+        int currentBlockY = currentBlock.getY();
+        int currentBlockX = currentBlock.getX();
+
         // 현재 블록에 속한 셀들을 확인하기 위한 boolean 배열
         boolean[][] isCurrentBlockCell = new boolean[HEIGHT + 6][WIDTH + 6];
 
@@ -370,9 +367,9 @@ public class BoardController {
         for (int i = 0; i < shape.length; i++) {
             for (int j = 0; j < shape[i].length; j++) {
                 if (shape[i][j] != 0) {
-                    int x = currentBlockLeftTop + j;
-                    int y = currentBlockTop + i;
-                    if (x >= 3 && x < WIDTH - 3 && y >= 3 && y < HEIGHT - 3) {
+                    int x = currentBlockX + j;
+                    int y = currentBlockY + i;
+                    if (x >= 3 && x < WIDTH + 3 && y >= 3 && y < HEIGHT + 3) {
                         isCurrentBlockCell[y][x] = true;
                     }
                 }
@@ -380,11 +377,11 @@ public class BoardController {
         }
 
         // 지워진 라인 위의 블록들을 내린다.(현재 블럭 제외)
-        for (int i = line; i > 3; i--) {
+        for (int i = line - 1; i >= 3; i--) {
             for (int j = 3; j < WIDTH + 3; j++) {
                 // 현재 블록에 속한 셀은 내리지 않는다.
-                if (!isCurrentBlockCell[i][j]) {
-                    grid.getBoard()[i][j] = grid.getBoard()[i - 1][j];
+                if (!isCurrentBlockCell[i][j] && !isCurrentBlockCell[i+1][j] ) {
+                    grid.getBoard()[i+1][j] = grid.getBoard()[i][j];
                 }
             }
         }
@@ -403,7 +400,6 @@ public class BoardController {
                 blink = true;
             }
 
-            // 폭탄 이벤트 제거
             for (int j = 3; j < WIDTH + 3; j++) {
                 if (grid.getBoard()[i][j] == 13) {
                     blink = true;
