@@ -477,27 +477,27 @@ public class BoardController {
     }
 
     // 추가 될 수 있는 라인 판단
-    private int checkCanAddLines(int linesToAdd) {
-        int currentGrayLines = 0;
-        // Count current gray lines in the board
-        for (int i = HEIGHT + 3; i >= 3; i--) {
-            boolean isGrayLine = false;
-            for (int j = 3; j < WIDTH+3; j++) {
-                if (grid.getBoard()[i][j] == 40) {
-                    isGrayLine = true;
-                    break;
-                }
-            }
-            if (isGrayLine) {
-                currentGrayLines++;
-            }
-        }
-
-        if (currentGrayLines + linesToAdd > MAX_ADDED_LINES) {
-            return MAX_ADDED_LINES - currentGrayLines;
-        }
-        return linesToAdd;
-    }
+//    private int checkCanAddLines(int linesToAdd) {
+//        int currentGrayLines = 0;
+//        // Count current gray lines in the board
+//        for (int i = HEIGHT + 3; i >= 3; i--) {
+//            boolean isGrayLine = false;
+//            for (int j = 3; j < WIDTH+3; j++) {
+//                if (grid.getBoard()[i][j] == 40) {
+//                    isGrayLine = true;
+//                    break;
+//                }
+//            }
+//            if (isGrayLine) {
+//                currentGrayLines++;
+//            }
+//        }
+//
+//        if (currentGrayLines + linesToAdd > MAX_ADDED_LINES) {
+//            return MAX_ADDED_LINES - currentGrayLines;
+//        }
+//        return linesToAdd;
+//    }
 
     // 상대방에게 지워진 라인을 보냄
     public void sendLines(int[][] lines) {
@@ -509,7 +509,15 @@ public class BoardController {
     public void addLines(int[][] lines){
         if(shouldAddLines == null){
             shouldAddLines = lines;
-        } else{
+        } else if (shouldAddLines.length == MAX_ADDED_LINES){
+            return;
+        }
+        else if (shouldAddLines.length + lines.length >= MAX_ADDED_LINES) {
+            int[][] temp = new int[MAX_ADDED_LINES][16];
+            System.arraycopy(shouldAddLines, 0, temp, 0, shouldAddLines.length);
+            System.arraycopy(lines, 0, temp, shouldAddLines.length, MAX_ADDED_LINES - shouldAddLines.length);
+            shouldAddLines = temp;
+        } else {
             int[][] temp = new int[shouldAddLines.length + lines.length][16];
             System.arraycopy(shouldAddLines, 0, temp, 0, shouldAddLines.length);
             System.arraycopy(lines, 0, temp, shouldAddLines.length, lines.length);
@@ -519,21 +527,16 @@ public class BoardController {
 
     // 내 보드에 추가되어야 할 라인을 추가
     public void addLines() {
-        int linesToAdd = checkCanAddLines(shouldAddLines.length);
-        if (linesToAdd > 0) {
-            int startAddingFrom = shouldAddLines.length - linesToAdd;
+        for (int i = 3; i < HEIGHT + 3 - shouldAddLines.length; i++) {
+            System.arraycopy(grid.getBoard()[i + shouldAddLines.length], 3, grid.getBoard()[i], 3, WIDTH+1);
+        }
 
-            for (int i = 3; i < HEIGHT + 3 - linesToAdd; i++) {
-                System.arraycopy(grid.getBoard()[i + linesToAdd], 3, grid.getBoard()[i], 3, WIDTH+1);
-            }
-
-            for (int i = 0; i < linesToAdd; i++) {
-                for (int j = 3; j < WIDTH + 3; j++) {
-                    if(shouldAddLines[i][j] > 0) {
-                        grid.getBoard()[HEIGHT + 3 - linesToAdd + i][j] = 40;
-                    } else {
-                        grid.getBoard()[HEIGHT + 3 - linesToAdd + i][j] = 0;
-                    }
+        for (int i = 0; i < shouldAddLines.length; i++) {
+            for (int j = 3; j < WIDTH + 3; j++) {
+                if(shouldAddLines[i][j] > 0) {
+                    grid.getBoard()[HEIGHT + 3 - shouldAddLines.length + i][j] = 40;
+                } else {
+                    grid.getBoard()[HEIGHT + 3 - shouldAddLines.length+ i][j] = 0;
                 }
             }
         }
