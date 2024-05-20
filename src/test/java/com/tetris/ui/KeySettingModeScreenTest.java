@@ -48,9 +48,9 @@ public class KeySettingModeScreenTest {
         assertTrue(playerBKeySettingScreen.isVisible());
 
         // Simulate clicking the "Menu" button
-        ActionEvent menuEvent = new ActionEvent(screen.getBtnMultiB(), ActionEvent.ACTION_PERFORMED, "playerB");
+        ActionEvent menuEvent = new ActionEvent(screen.getBtnMenu(), ActionEvent.ACTION_PERFORMED, "menu");
         SettingScreen settingScreen = new SettingScreen();
-        screen.actionPerformed(playerAEvent);
+        screen.actionPerformed(menuEvent);
         assertFalse(screen.isVisible());
         assertTrue(settingScreen.isVisible());
     }
