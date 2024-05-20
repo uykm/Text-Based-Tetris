@@ -45,6 +45,9 @@ public class BoardController {
 
     private int placedBlockCount;
 
+    // 보드의 높이보다 높은 라인이 지워진 경우 추가되어야 할 라인을 저장
+    private final ArrayList<int[]> extraLines;
+
     public BoardController(GameController gameController, InGameScoreController inGameScoreController, Boolean isItemMode, Boolean isDualMode) {
         this.isDualmode = isDualMode;
         this.isItemMode = isItemMode;
@@ -60,6 +63,7 @@ public class BoardController {
         this.lastLineEraseTime = 0;
         this.erasedLineCount = 0;
         this.nextBlock = nextBlock.selectBlock(this, isItemMode, erasedLineCount);
+        this.extraLines = new ArrayList<>();
         initializeBoardState();
     }
 
@@ -163,6 +167,23 @@ public class BoardController {
             }
         }
         updateScoreByErasedLineCnt(lineCount);
+    }
+
+    private void restoreExtraLines(){
+        if(!extraLines.isEmpty()){
+            int[][] board;
+            board = returnBoardStateExcludingCurrentBlock();
+            int line = getHighestLine(board);
+            if(line > 3){
+                for(int i = line - 1; i >= 3; i --){
+                    System.arraycopy(extraLines.get(extraLines.size()-1), 0, grid.getBoard()[i], 0, 16);
+                    extraLines.remove(extraLines.size()-1);
+                    if(extraLines.isEmpty()){
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     private void updateScoreByErasedLineCnt(int lineCount) {
@@ -360,6 +381,7 @@ public class BoardController {
                 }
             }
         }
+        restoreExtraLines();
     }
 
     // 위에 있는 블록들을 내림
@@ -448,11 +470,15 @@ public class BoardController {
     }
 
     public void copyBoardStateExcludingCurrentBlock() {
+        previousBoardState = returnBoardStateExcludingCurrentBlock();
+    }
+
+    public int[][] returnBoardStateExcludingCurrentBlock() {
         int[][] source = new int[grid.getBoard().length][];
         for (int i = 0; i < grid.getBoard().length; i++) {
             source[i] = grid.getBoard()[i].clone();
         }
-        int[][] destination = previousBoardState;
+        int[][] destination = new int[26][16];
 
         // source 보드에서 현재 블록을 제거
         for (int i = 0; i < currentBlock.width(); i++) {
@@ -465,10 +491,12 @@ public class BoardController {
             }
         }
 
-        // board 상태를 previousBoardState에 복사
+        // board 상태를 destination에 복사
         for (int i = 0; i < source.length; i++) {
             System.arraycopy(source[i], 0, destination[i], 0, source[i].length);
         }
+
+        return destination;
     }
 
 
@@ -530,9 +558,11 @@ public class BoardController {
             shouldAddLines = temp;
         }
     }
-
     // 내 보드에 추가되어야 할 라인을 추가
     public void addLines() {
+        int[][] board;
+        board = returnBoardStateExcludingCurrentBlock();
+
         for (int i = 3; i < HEIGHT + 3 - shouldAddLines.length; i++) {
             System.arraycopy(grid.getBoard()[i + shouldAddLines.length], 3, grid.getBoard()[i], 3, WIDTH+1);
         }
@@ -546,6 +576,38 @@ public class BoardController {
                 }
             }
         }
+
+        int line = getHighestLine(board);
+        System.out.println("line: " + line);
+
+        if(line - shouldAddLines.length < 3){
+            for(int i = 3; i < line + shouldAddLines.length; i++){
+                int[] temp = new int[16];
+                System.arraycopy(previousBoardState[i], 0, temp, 0, 16);
+                extraLines.add(temp);
+            }
+        }
+
         shouldAddLines = new int[][]{};
     }
+
+    public int getHighestLine(int[][] board){
+        int line = 0;
+        for (int i = 3; i < HEIGHT + 3; i++) {
+            boolean isLineEmpty = true;
+            for (int j = 3; j < WIDTH + 3; j++) {
+                if (board[i][j] > 0) {
+                    isLineEmpty = false;
+                    break;
+                }
+            }
+            if (!isLineEmpty) {
+                line = i;
+                break;
+            }
+        }
+        return line;
+    }
 }
+
+
