@@ -203,6 +203,7 @@ public class GameController  {
             } else if (isBlinkCheckAgain) {
                 isBlinkCheckAgain = false;
                 boardController.blinkErase();
+                System.out.println("copyBoardStateExcludingCurrentBlock");
                 boardController.copyBoardStateExcludingCurrentBlock();
             }
         } else {
