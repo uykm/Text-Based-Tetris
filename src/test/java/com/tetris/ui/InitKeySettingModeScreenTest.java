@@ -52,7 +52,7 @@ public class InitKeySettingModeScreenTest {
         assertArrayEquals(new int[]{KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_DOWN, KeyEvent.VK_SHIFT}, settingController.getKeyCodes("playerB"), "Key codes should be reset to playerB");
 
         // Click Menu
-        ActionEvent menuEvent = new ActionEvent(screen.getBtnMultiB(), ActionEvent.ACTION_PERFORMED, "playerB");
+        ActionEvent menuEvent = new ActionEvent(screen.getBtnMenu(), ActionEvent.ACTION_PERFORMED, "menu");
         screen.actionPerformed(menuEvent);
         assertFalse(screen.isVisible());
         assertTrue(settingScreen.isVisible());
