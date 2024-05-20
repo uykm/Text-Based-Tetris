@@ -1,0 +1,91 @@
+package com.tetris.ui;
+
+import com.tetris.logic.SettingController;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class MultiGameModeScreenTest {
+
+    private MultiGameModeScreen screen;
+    private DifficultyScreen difficultyScreen;
+    private Robot robot;
+
+    @BeforeEach
+    void setUp() throws AWTException {
+        screen = new MultiGameModeScreen();
+        robot = new Robot();
+        robot.setAutoDelay(50);
+    }
+
+    @Test
+    // 마우스 조작
+    void actionPerformed() {
+
+        // Click Normal
+        ActionEvent normalEvent = new ActionEvent(screen.getBtnNormal(), ActionEvent.ACTION_PERFORMED, "normal");
+        difficultyScreen = new DifficultyScreen(false, true, false);
+        screen.actionPerformed(normalEvent);
+        assertFalse(screen.isVisible());
+        assertTrue(difficultyScreen.isVisible());
+
+        // Click Item
+        ActionEvent itemEvent = new ActionEvent(screen.getBtnItem(), ActionEvent.ACTION_PERFORMED, "item");
+        difficultyScreen = new DifficultyScreen(true, true, false);
+        screen.actionPerformed(itemEvent);
+        assertFalse(screen.isVisible());
+        assertTrue(difficultyScreen.isVisible());
+
+        // Click Time
+        ActionEvent timeEvent = new ActionEvent(screen.getBtnTime(), ActionEvent.ACTION_PERFORMED, "time");
+        difficultyScreen = new DifficultyScreen(false, true, true);
+        screen.actionPerformed(timeEvent);
+        assertFalse(screen.isVisible());
+        assertTrue(difficultyScreen.isVisible());
+
+        // Click Menu
+        ActionEvent menuEvent = new ActionEvent(screen.getBtnMenu(), ActionEvent.ACTION_PERFORMED, "menu");
+        MainMenuScreen mainMenuScreen = new MainMenuScreen();
+        screen.actionPerformed(menuEvent);
+        assertFalse(screen.isVisible());
+        assertTrue(mainMenuScreen.isVisible());
+    }
+
+    @Test
+    // 키보드 조작
+    void keyListenerTest() {
+
+        // Enter "Normal" button
+        KeyEvent normalEvent = new KeyEvent(screen.getBtnNormal(), KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, ' ');
+        difficultyScreen = new DifficultyScreen(false, true, false);
+        screen.getBtnNormal().dispatchEvent(normalEvent);
+        assertFalse(screen.isVisible());
+        assertTrue(difficultyScreen.isVisible());
+
+        // Enter "Item" button
+        KeyEvent itemEvent = new KeyEvent(screen.getBtnItem(), KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, ' ');
+        difficultyScreen = new DifficultyScreen(true, true, false);
+        screen.getBtnItem().dispatchEvent(itemEvent);
+        assertFalse(screen.isVisible());
+        assertTrue(difficultyScreen.isVisible());
+
+        // Enter "Time" button
+        KeyEvent timeEvent = new KeyEvent(screen.getBtnTime(), KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, ' ');
+        difficultyScreen = new DifficultyScreen(false, true, true);
+        screen.getBtnTime().dispatchEvent(timeEvent);
+        assertFalse(screen.isVisible());
+        assertTrue(difficultyScreen.isVisible());
+
+        // Enter "Menu" Button
+        KeyEvent menuEvent = new KeyEvent(screen.getBtnMenu(), KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, ' ');
+        MainMenuScreen mainMenuScreen = new MainMenuScreen();
+        screen.getBtnMenu().dispatchEvent(menuEvent);
+        assertFalse(screen.isVisible());
+        assertTrue(mainMenuScreen.isVisible());
+    }
+}
