@@ -2,9 +2,7 @@ package com.tetris.logic;
 
 import com.tetris.model.Direction;
 import com.tetris.ui.*;
-import org.w3c.dom.ls.LSOutput;
 
-import javax.crypto.spec.PSource;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,6 +38,7 @@ public class GameController  {
     private boolean isItem;
     private boolean isTimeAttack;
     private boolean isDualMode;
+    private boolean isBlinkCheckAgain;
 
     public void setStrPlayer(String _strPlayer) {
         this.strPlayer = _strPlayer;
@@ -47,7 +46,6 @@ public class GameController  {
     // 게임 컨트롤러 생성자
     public GameController(boolean isItem) {
         this(isItem, false, false);
-        System.out.println("SINGLE MODE GAMECONTROLLER CREATED");
     }
 
     public void setDualTetrisController(DualTetrisController dualTetrisController) {
@@ -59,7 +57,6 @@ public class GameController  {
     }
 
     public GameController(boolean isItem, boolean isDualMode, boolean isTimeAttack) {
-        System.out.println("GAMECONTROLLER CREATED");
         this.isItem = isItem;
         this.isTimeAttack = isTimeAttack;
         this.isDualMode = isDualMode;
@@ -129,7 +126,6 @@ public class GameController  {
                 boardController.moveBlock(Direction.SPACE);
             }
             case "PAUSE" -> {
-                System.out.println("PAUSE");
                 gameTimer.stop(); // Todo : 대전 모드 PAUSE 처리
                 if (isDualMode) {
                     opponent.gameTimer.stop();
@@ -138,11 +134,9 @@ public class GameController  {
                 pauseScreen.setGameController(this);
             }
             case "RESUME" -> {
-                System.out.println("RESUME");
                 gameTimer.start();
             }
             case "REPLAY" -> {
-                System.out.println("REPLAY");
                 if (isDualMode) {
                     dualTetrisController.getDualFrame().dispose();
                     new DualTetrisController(isItem, isTimeAttack);
@@ -152,7 +146,6 @@ public class GameController  {
                 }
             }
             case "MENU" -> {
-                System.out.println("MENU");
                 if (isDualMode) {
                     dualTetrisController.getDualFrame().dispose();
                     new MainMenuScreen();
@@ -198,20 +191,19 @@ public class GameController  {
         fastTimer.start();
     }
 
+    public void setBlinkCheckAgain(boolean blinkCheckAgain) {
+        isBlinkCheckAgain = blinkCheckAgain;
+    }
+
     private void gameLoop(boolean isDualMode, boolean isNotFastTimer) {
         if (isNotFastTimer) {
             boardController.moveBlock(Direction.DOWN);
-
-            while (boardController.blinkCheck()) {
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                    throw new RuntimeException(ex);
-                }
+            if (boardController.blinkCheck() && !isBlinkCheckAgain) {
+                isBlinkCheckAgain = true;
+            } else if (isBlinkCheckAgain) {
+                isBlinkCheckAgain = false;
                 boardController.blinkErase();
                 boardController.copyBoardStateExcludingCurrentBlock();
-                inGameScreen.updateBoard();
             }
         } else {
             boardController.placeBlock();
@@ -220,10 +212,10 @@ public class GameController  {
 
         // 게임 오버 체크
         if (boardController.checkGameOver()) {
-            System.out.println("boardController.checkGameOver()");
             endGame(isDualMode);
         }
     }
+
     private boolean winnerScreenAlreadyOccured = false;
     private void setWinnerScreenAlreadyOccured(boolean occured) {
         this.winnerScreenAlreadyOccured = occured;
