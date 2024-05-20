@@ -246,6 +246,7 @@ public class BoardController {
                 placeBlock();
             }
             case SPACE -> {
+                System.out.println("Space");
                 blinkErase(); // 스페이스바 누르면 줄 삭제 이벤트 바로 삭제
                 // space바 누르면 바로 터지게
                 if (currentBlock instanceof BombItemBlock) {
@@ -267,6 +268,11 @@ public class BoardController {
                 if (currentBlock instanceof WeightItemBlock) {
                     break;
                 }
+
+                // 줄 삭제 이벤트가 중첩되는 경우 넘어가야 할 줄이 정상적으로 저장되도록 함
+                copyBoardStateExcludingCurrentBlock();
+
+                System.out.println("currentBlockX: " + currentBlock.getX() + " currentBlockY: " + currentBlock.getY());
 
                 itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                 lineCheck();
