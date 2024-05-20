@@ -191,8 +191,8 @@ public class GameController  {
         fastTimer.start();
     }
 
-    public void setBlinkCheckAgain(boolean blinkCheckAgain) {
-        isBlinkCheckAgain = blinkCheckAgain;
+    public void triggerBlinkCheckAgain() {
+        isBlinkCheckAgain = true;
     }
 
     private void gameLoop(boolean isDualMode, boolean isNotFastTimer) {

@@ -251,7 +251,7 @@ public class BoardController {
                 if (currentBlock instanceof BombItemBlock) {
                     placeBlock();
                     itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
-                    gameController.setBlinkCheckAgain(true);
+                    gameController.triggerBlinkCheckAgain();
                     placeNewBlock();
                     break;
                 }
@@ -270,7 +270,7 @@ public class BoardController {
 
                 itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                 lineCheck();
-                gameController.setBlinkCheckAgain(true);
+                gameController.triggerBlinkCheckAgain();
                 placeNewBlock();
 
                 currentBlock.initializeLimitCount();
