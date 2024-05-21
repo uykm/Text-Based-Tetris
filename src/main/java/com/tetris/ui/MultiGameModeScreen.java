@@ -155,4 +155,18 @@ public class MultiGameModeScreen extends JFrame implements ActionListener {
             btnMenu.requestFocusInWindow();
         }
     }
+
+    // 테스트 코드를 위한 GETTER
+    public JButton getBtnNormal() {
+        return btnNormal;
+    }
+    public JButton getBtnItem() {
+        return btnItem;
+    }
+    public JButton getBtnTime() {
+        return btnTime;
+    }
+    public JButton getBtnMenu() {
+        return btnMenu;
+    }
 }

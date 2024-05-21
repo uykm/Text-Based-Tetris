@@ -160,4 +160,18 @@ public class InitKeySettingModeScreen extends JFrame implements ActionListener {
             btnMenu.requestFocusInWindow();
         }
     }
+
+    // 테스트 코드를 위한 GETTER
+    public JButton getBtnSingle() {
+        return btnSingle;
+    }
+    public JButton getBtnMultiA() {
+        return btnMultiA;
+    }
+    public JButton getBtnMultiB() {
+        return btnMultiB;
+    }
+    public JButton getBtnMenu() {
+        return btnMenu;
+    }
 }

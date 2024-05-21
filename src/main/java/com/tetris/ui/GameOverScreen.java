@@ -25,6 +25,7 @@ public class GameOverScreen extends JFrame implements ActionListener {
     private JButton btnReplay;
     private JButton btnMenu;
     private JButton btnExit;
+
     private boolean isItem;
 
     private final int titleSize;
@@ -182,5 +183,16 @@ public class GameOverScreen extends JFrame implements ActionListener {
         } else if (btnReplay.isFocusOwner()) {
             btnExit.requestFocusInWindow();
         }
+    }
+
+    // 테스트 코드를 위한 GETTER
+    public JButton getBtnReplay() {
+        return btnReplay;
+    }
+    public JButton getBtnMenu() {
+        return btnMenu;
+    }
+    public JButton getBtnExit() {
+        return btnExit;
     }
 }
