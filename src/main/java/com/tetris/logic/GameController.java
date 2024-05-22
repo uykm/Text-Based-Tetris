@@ -150,7 +150,9 @@ public class GameController  {
                     dualTetrisController.getDualFrame().dispose();
                     new MainMenuScreen();
                 }
-                frame.dispose();
+                else {
+                    frame.dispose();
+                }
                 new MainMenuScreen();
             }
         }
