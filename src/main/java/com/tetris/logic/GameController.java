@@ -17,7 +17,7 @@ public class GameController  {
     private InGameScreen inGameScreen;
     private InGameScoreController inGameScoreController;
     private RankScoreController rankScoreController;
-    private final SettingController settingController = new SettingController();
+    final SettingController settingController = new SettingController();
     private GameController opponent;
     private final int[] keyCodes = settingController.getKeyCodes("single");
     private int ROTATE = keyCodes[0];
@@ -157,7 +157,7 @@ public class GameController  {
         inGameScreen.updateBoard();
     }
 
-    private void startGame(boolean isDualMode) {
+    void startGame(boolean isDualMode) {
         currentSpeed = NORMAL_TICK;
         boardController.placeNewBlock();
         inGameScreen.updateBoard();
@@ -222,9 +222,9 @@ public class GameController  {
         this.winnerScreenAlreadyOccured = occured;
     }
 
-    private boolean gameEnded = false;
+    boolean gameEnded = false;
 
-    private void endGame(boolean isDualMode) {
+    void endGame(boolean isDualMode) {
         gameTimer.stop();
         if(!isDualMode){
             frame.dispose();
@@ -290,4 +290,23 @@ public class GameController  {
         endGame(true);
     }
 
+    public boolean isDualMode() {
+        return isDualMode;
+    }
+
+    public boolean isTimeAttack() {
+        return isTimeAttack;
+    }
+
+    public boolean isItem() {
+        return isItem;
+    }
+
+    public boolean isBlinkCheckAgain() {
+        return isBlinkCheckAgain;
+    }
+
+    public boolean winnerScreenAlreadyOccured() {
+        return winnerScreenAlreadyOccured;
+    }
 }

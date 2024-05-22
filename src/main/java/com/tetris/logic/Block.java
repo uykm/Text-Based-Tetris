@@ -48,7 +48,7 @@ public abstract class Block {
     public int moveDownNSpaces(int n) { return this.y += n; }
     public int moveRightNSpaces(int n) { return this.x += n; }
     public int moveLeftNSpaces(int n) { return this.x -= n; }
-    
+
     public int getShape(int x, int y) {
         return shape[y][x];
     }
@@ -180,14 +180,14 @@ public abstract class Block {
             int blockType = rwSelection.select();
             // 기본 블록 선택 로직
             return switch (blockType) {
-                case 0 -> new IBlock();
-                case 1 -> new JBlock();
-                case 2 -> new LBlock();
-                case 3 -> new OBlock();
-                case 4 -> new SBlock();
-                case 5 -> new TBlock();
-                case 6 -> new ZBlock();
-                default -> throw new IllegalArgumentException("Invalid block type.");
+//                case 0 -> new IBlock();
+//                case 1 -> new JBlock();
+//                case 2 -> new LBlock();
+//                case 3 -> new OBlock();
+//                case 4 -> new SBlock();
+//                case 5 -> new TBlock();
+//                case 6 -> new ZBlock();
+                default -> new IBlock();
             };
         }
     }

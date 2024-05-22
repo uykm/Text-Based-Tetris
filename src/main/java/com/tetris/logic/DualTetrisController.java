@@ -109,7 +109,7 @@ public class DualTetrisController {
         });
     }
 
-    private void initUI() {
+    void initUI() {
         SwingUtilities.invokeLater(() -> {
             frame = new JFrame("Dual Tetris Game");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -154,7 +154,7 @@ public class DualTetrisController {
         });
     }
 
-    private void updateTime(int remainingTimeInSeconds) {
+    void updateTime(int remainingTimeInSeconds) {
         int minutes = remainingTimeInSeconds / 60;
         int seconds = remainingTimeInSeconds % 60;
         SwingUtilities.invokeLater(() -> {
@@ -162,7 +162,7 @@ public class DualTetrisController {
         });
     }
 
-    private void timeController() {
+    void timeController() {
         limitTimer = new Timer();
         final int totalDuration = 180; // in seconds for easier countdown handling
         java.util.TimerTask countdownTask = new java.util.TimerTask() {
