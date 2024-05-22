@@ -45,6 +45,9 @@ public class BoardController {
 
     private int placedBlockCount;
 
+    // 보드의 높이보다 높은 라인이 지워진 경우 추가되어야 할 라인을 저장
+    private final ArrayList<int[]> extraLines;
+
     public BoardController(GameController gameController, InGameScoreController inGameScoreController, Boolean isItemMode, Boolean isDualMode) {
         this.isDualmode = isDualMode;
         this.isItemMode = isItemMode;
@@ -60,6 +63,7 @@ public class BoardController {
         this.lastLineEraseTime = 0;
         this.erasedLineCount = 0;
         this.nextBlock = nextBlock.selectBlock(this, isItemMode, erasedLineCount);
+        this.extraLines = new ArrayList<>();
         initializeBoardState();
     }
 
@@ -165,6 +169,23 @@ public class BoardController {
         updateScoreByErasedLineCnt(lineCount);
     }
 
+    private void restoreExtraLines(){
+        if(!extraLines.isEmpty()){
+            int[][] board;
+            board = returnBoardStateExcludingCurrentBlock();
+            int line = getHighestLine(board);
+            if(line > 3){
+                for(int i = line - 1; i >= 3; i --){
+                    System.arraycopy(extraLines.get(extraLines.size()-1), 0, grid.getBoard()[i], 0, 16);
+                    extraLines.remove(extraLines.size()-1);
+                    if(extraLines.isEmpty()){
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     private void updateScoreByErasedLineCnt(int lineCount) {
         if (lineCount > 0) {
             blockCountWithNoLineErase = 0;
@@ -246,6 +267,7 @@ public class BoardController {
                 placeBlock();
             }
             case SPACE -> {
+                System.out.println("Space");
                 blinkErase(); // 스페이스바 누르면 줄 삭제 이벤트 바로 삭제
                 // space바 누르면 바로 터지게
                 if (currentBlock instanceof BombItemBlock) {
@@ -267,6 +289,11 @@ public class BoardController {
                 if (currentBlock instanceof WeightItemBlock) {
                     break;
                 }
+
+                // 줄 삭제 이벤트가 중첩되는 경우 넘어가야 할 줄이 정상적으로 저장되도록 함
+                copyBoardStateExcludingCurrentBlock();
+
+                System.out.println("currentBlockX: " + currentBlock.getX() + " currentBlockY: " + currentBlock.getY());
 
                 itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                 lineCheck();
@@ -354,6 +381,7 @@ public class BoardController {
                 }
             }
         }
+        restoreExtraLines();
     }
 
     // 위에 있는 블록들을 내림
@@ -442,11 +470,15 @@ public class BoardController {
     }
 
     public void copyBoardStateExcludingCurrentBlock() {
+        previousBoardState = returnBoardStateExcludingCurrentBlock();
+    }
+
+    public int[][] returnBoardStateExcludingCurrentBlock() {
         int[][] source = new int[grid.getBoard().length][];
         for (int i = 0; i < grid.getBoard().length; i++) {
             source[i] = grid.getBoard()[i].clone();
         }
-        int[][] destination = previousBoardState;
+        int[][] destination = new int[26][16];
 
         // source 보드에서 현재 블록을 제거
         for (int i = 0; i < currentBlock.width(); i++) {
@@ -459,10 +491,12 @@ public class BoardController {
             }
         }
 
-        // board 상태를 previousBoardState에 복사
+        // board 상태를 destination에 복사
         for (int i = 0; i < source.length; i++) {
             System.arraycopy(source[i], 0, destination[i], 0, source[i].length);
         }
+
+        return destination;
     }
 
 
@@ -477,27 +511,27 @@ public class BoardController {
     }
 
     // 추가 될 수 있는 라인 판단
-    private int checkCanAddLines(int linesToAdd) {
-        int currentGrayLines = 0;
-        // Count current gray lines in the board
-        for (int i = HEIGHT + 3; i >= 3; i--) {
-            boolean isGrayLine = false;
-            for (int j = 3; j < WIDTH+3; j++) {
-                if (grid.getBoard()[i][j] == 40) {
-                    isGrayLine = true;
-                    break;
-                }
-            }
-            if (isGrayLine) {
-                currentGrayLines++;
-            }
-        }
-
-        if (currentGrayLines + linesToAdd > MAX_ADDED_LINES) {
-            return MAX_ADDED_LINES - currentGrayLines;
-        }
-        return linesToAdd;
-    }
+//    private int checkCanAddLines(int linesToAdd) {
+//        int currentGrayLines = 0;
+//        // Count current gray lines in the board
+//        for (int i = HEIGHT + 3; i >= 3; i--) {
+//            boolean isGrayLine = false;
+//            for (int j = 3; j < WIDTH+3; j++) {
+//                if (grid.getBoard()[i][j] == 40) {
+//                    isGrayLine = true;
+//                    break;
+//                }
+//            }
+//            if (isGrayLine) {
+//                currentGrayLines++;
+//            }
+//        }
+//
+//        if (currentGrayLines + linesToAdd > MAX_ADDED_LINES) {
+//            return MAX_ADDED_LINES - currentGrayLines;
+//        }
+//        return linesToAdd;
+//    }
 
     // 상대방에게 지워진 라인을 보냄
     public void sendLines(int[][] lines) {
@@ -509,34 +543,71 @@ public class BoardController {
     public void addLines(int[][] lines){
         if(shouldAddLines == null){
             shouldAddLines = lines;
-        } else{
+        } else if (shouldAddLines.length == MAX_ADDED_LINES){
+            return;
+        }
+        else if (shouldAddLines.length + lines.length >= MAX_ADDED_LINES) {
+            int[][] temp = new int[MAX_ADDED_LINES][16];
+            System.arraycopy(shouldAddLines, 0, temp, 0, shouldAddLines.length);
+            System.arraycopy(lines, 0, temp, shouldAddLines.length, MAX_ADDED_LINES - shouldAddLines.length);
+            shouldAddLines = temp;
+        } else {
             int[][] temp = new int[shouldAddLines.length + lines.length][16];
             System.arraycopy(shouldAddLines, 0, temp, 0, shouldAddLines.length);
             System.arraycopy(lines, 0, temp, shouldAddLines.length, lines.length);
             shouldAddLines = temp;
         }
     }
-
     // 내 보드에 추가되어야 할 라인을 추가
     public void addLines() {
-        int linesToAdd = checkCanAddLines(shouldAddLines.length);
-        if (linesToAdd > 0) {
-            int startAddingFrom = shouldAddLines.length - linesToAdd;
+        int[][] board;
+        board = returnBoardStateExcludingCurrentBlock();
 
-            for (int i = 3; i < HEIGHT + 3 - linesToAdd; i++) {
-                System.arraycopy(grid.getBoard()[i + linesToAdd], 3, grid.getBoard()[i], 3, WIDTH+1);
-            }
+        for (int i = 3; i < HEIGHT + 3 - shouldAddLines.length; i++) {
+            System.arraycopy(grid.getBoard()[i + shouldAddLines.length], 3, grid.getBoard()[i], 3, WIDTH+1);
+        }
 
-            for (int i = 0; i < linesToAdd; i++) {
-                for (int j = 3; j < WIDTH + 3; j++) {
-                    if(shouldAddLines[i][j] > 0) {
-                        grid.getBoard()[HEIGHT + 3 - linesToAdd + i][j] = 40;
-                    } else {
-                        grid.getBoard()[HEIGHT + 3 - linesToAdd + i][j] = 0;
-                    }
+        for (int i = 0; i < shouldAddLines.length; i++) {
+            for (int j = 3; j < WIDTH + 3; j++) {
+                if(shouldAddLines[i][j] > 0) {
+                    grid.getBoard()[HEIGHT + 3 - shouldAddLines.length + i][j] = 40;
+                } else {
+                    grid.getBoard()[HEIGHT + 3 - shouldAddLines.length+ i][j] = 0;
                 }
             }
         }
+
+        int line = getHighestLine(board);
+        System.out.println("line: " + line);
+
+        if(line - shouldAddLines.length < 3){
+            for(int i = 3; i < line + shouldAddLines.length; i++){
+                int[] temp = new int[16];
+                System.arraycopy(previousBoardState[i], 0, temp, 0, 16);
+                extraLines.add(temp);
+            }
+        }
+
         shouldAddLines = new int[][]{};
     }
+
+    public int getHighestLine(int[][] board){
+        int line = 0;
+        for (int i = 3; i < HEIGHT + 3; i++) {
+            boolean isLineEmpty = true;
+            for (int j = 3; j < WIDTH + 3; j++) {
+                if (board[i][j] > 0) {
+                    isLineEmpty = false;
+                    break;
+                }
+            }
+            if (!isLineEmpty) {
+                line = i;
+                break;
+            }
+        }
+        return line;
+    }
 }
+
+

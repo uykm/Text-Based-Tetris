@@ -1,68 +1,145 @@
-//package com.tetris.logic;
-//
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//
-//import javax.swing.*;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//
-//class GameControllerTest {
-//
-//    private GameController gameController;
-//    private SettingController settingController;
-//
-//    @BeforeEach
-//    void setUp() {
-//        gameController = new GameController(false); // 초기화
-//        settingController = new SettingController(); // 초기화
-//        gameController.frame = new JFrame("Test Frame"); // 프레임 초기화
-//    }
-//
-//    @Test
-//    void onResumeGame() {
-//        // Arrange
-//        gameController.gameTimer = new javax.swing.Timer(1000, e -> System.out.println("Timer executed"));
-//
-//        // Act
-//        gameController.onResumeGame(); // 게임 재개
-//
-//        // Assert
-//        assertTrue(gameController.gameTimer.isRunning(), "Timer should start when game is resumed"); // 타이머가 실행 중인지 확인
-//    }
-//
-//    @Test
-//    void onHideFrame() {
-//        // Act
-//        gameController.onHideFrame(); // 프레임 숨기기
-//
-//        // Assert
-//        assertFalse(gameController.frame.isVisible(), "Frame should be hidden after onHideFrame is called"); // 프레임이 숨겨졌는지 확인
-//    }
-//
-//    @Test
-//    void speedUp() {
-//        // Arrange
-//        gameController.currentSpeed = 1000; // 초기 속도
-//        gameController.gameTimer = new javax.swing.Timer(1000, e -> System.out.println("Timer executed"));
-//
-//        // Act
-//        gameController.speedUp(100); // 속도 올리기
-//
-//        switch (settingController.getDifficulty()){
-//            case 0:
-//                // Assert
-//                assertEquals(920, gameController.currentSpeed, "Current speed should decrease by the speed increment"); // 속도가 80만큼 감소했는지 확인
-//                assertEquals(920, gameController.gameTimer.getDelay(), "Timer delay should match the new speed"); // 타이머 지연 시간이 업데이트되었는지 확인
-//            case 1:
-//                // Assert
-//                assertEquals(900, gameController.currentSpeed, "Current speed should decrease by the speed increment"); // 속도가 100만큼 감소했는지 확인
-//                assertEquals(900, gameController.gameTimer.getDelay(), "Timer delay should match the new speed"); // 타이머 지연 시간이 업데이트되었는지 확인
-//            case 2:
-//                // Assert
-//                assertEquals(880, gameController.currentSpeed, "Current speed should decrease by the speed increment"); // 속도가 120만큼 감소했는지 확인
-//                assertEquals(880, gameController.gameTimer.getDelay(), "Timer delay should match the new speed"); // 타이머 지연 시간이 업데이트되었는지 확인
-//
-//        }
-//    }
-//}
+package com.tetris.logic;
+
+import com.tetris.ui.InGameScreen;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import javax.swing.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class GameControllerTest {
+
+    private GameController gameController;
+
+    @BeforeEach
+    public void setUp() {
+        gameController = new GameController(false);
+        gameController.setStrPlayer("TestPlayer");
+    }
+
+    @Test
+    public void testInitialSetup() {
+        assertNotNull(gameController.getInGameScreen());
+        assertEquals("TestPlayer", gameController.getStrPlayer());
+    }
+
+    @Test
+    public void testStartGame() throws Exception{
+        SwingUtilities.invokeAndWait(() -> gameController.startGame(false));
+        assertTrue(gameController.getInGameScreen().isShowing());
+    }
+
+    @Test
+    public void testControlGame() {
+        gameController.controlGame("LEFT");
+        // Verify the board state has been updated appropriately
+        // (This requires BoardController's state verification method)
+    }
+
+    @Test
+    public void testPauseAndResumeGame() {
+        gameController.controlGame("PAUSE");
+        assertFalse(gameController.gameTimer.isRunning());
+
+        gameController.controlGame("RESUME");
+        assertTrue(gameController.gameTimer.isRunning());
+    }
+
+    @Test
+    public void testEndGameSingleMode() throws Exception {
+        SwingUtilities.invokeLater(() -> gameController.endGame(false));
+        Thread.sleep(1000);
+        assertTrue(gameController.gameEnded);
+    }
+
+    @Test
+    public void testEndGameDualMode() {
+        GameController opponent = new GameController(false);
+        gameController.setOpponent(opponent);
+        gameController.endGame(true);
+        assertFalse(gameController.getOpponent().gameTimer.isRunning());
+    }
+
+    @Test
+    public void testSpeedUp() {
+        int initialSpeed = gameController.currentSpeed;
+        int speed=50;
+        gameController.speedUp(speed);
+        if (gameController.settingController.getDifficulty() == 0) {
+            speed = (int) (speed * 0.8);
+        } else if (gameController.settingController.getDifficulty() == 2) {
+            speed = (int) (speed * 1.2);
+        }
+        assertEquals(initialSpeed - speed, gameController.currentSpeed);
+    }
+
+    @Test
+    public void testAddLines() {
+        int[][] lines = {{1, 1, 1, 1}};
+        gameController.addLines(lines);
+        // Verify the board state has been updated (needs BoardController method)
+    }
+
+    @Test
+    public void testSendLines() {
+        GameController opponent = new GameController(false);
+        gameController.setOpponent(opponent);
+        int[][] lines = {{1, 1, 1, 1}};
+        gameController.sendLines(lines);
+        // Verify the opponent's board state has been updated
+    }
+
+    @Test
+    public void testGameOver() throws InterruptedException {
+        GameController opponent = new GameController(false);
+        gameController.setOpponent(opponent);
+
+        SwingUtilities.invokeLater(() -> gameController.gameOver());
+
+        Thread.sleep(1000);
+
+        assertTrue(gameController.winnerScreenAlreadyOccured());
+    }
+
+    @Test
+    public void testDualModeSetup() {
+        gameController = new GameController(false, true, false);
+        assertTrue(gameController.isDualMode());
+    }
+
+    @Test
+    public void testTimeAttackSetup() {
+        gameController = new GameController(false, false, true);
+        assertTrue(gameController.isTimeAttack());
+    }
+
+    @Test
+    public void testItemModeSetup() {
+        gameController = new GameController(true);
+        assertTrue(gameController.isItem());
+    }
+
+    @Test
+    public void testBlinkCheck() {
+        gameController = new GameController(false);
+        gameController.triggerBlinkCheckAgain();
+        assertTrue(gameController.isBlinkCheckAgain());
+    }
+
+    @Test
+    public void testGameOverDuringDualMode() {
+        GameController opponent = new GameController(false);
+        gameController = new GameController(false);
+        gameController.setOpponent(opponent);
+        gameController.endGame(true);
+        assertTrue(gameController.winnerScreenAlreadyOccured());
+    }
+
+    @Test
+    public void testFastDrop() {
+        gameController = new GameController(false);
+        gameController.resetTimer();
+        // Verifies that the timer delay was correctly set (needs internal state check)
+    }
+}
