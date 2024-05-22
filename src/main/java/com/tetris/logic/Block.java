@@ -48,7 +48,7 @@ public abstract class Block {
     public int moveDownNSpaces(int n) { return this.y += n; }
     public int moveRightNSpaces(int n) { return this.x += n; }
     public int moveLeftNSpaces(int n) { return this.x -= n; }
-    
+
     public int getShape(int x, int y) {
         return shape[y][x];
     }
@@ -187,7 +187,7 @@ public abstract class Block {
                 case 4 -> new SBlock();
                 case 5 -> new TBlock();
                 case 6 -> new ZBlock();
-                default -> throw new IllegalArgumentException("Invalid block type.");
+                default -> throw new IllegalStateException("Unexpected value: " + blockType);
             };
         }
     }
