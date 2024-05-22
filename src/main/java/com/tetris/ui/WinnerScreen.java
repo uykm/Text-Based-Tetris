@@ -22,6 +22,7 @@ public class WinnerScreen extends JFrame implements ActionListener {
     private DualTetrisController dualTetrisController;
 
     private JButton btnReplay;
+
     private JButton btnMenu;
     private JButton btnExit;
     private boolean isItem;
@@ -170,5 +171,16 @@ public class WinnerScreen extends JFrame implements ActionListener {
         } else if (btnReplay.isFocusOwner()) {
             btnExit.requestFocusInWindow();
         }
+    }
+
+    // 테스트 코드를 위한 GETTER
+    public JButton getBtnReplay() {
+        return btnReplay;
+    }
+    public JButton getBtnMenu() {
+        return btnMenu;
+    }
+    public JButton getBtnExit() {
+        return btnExit;
     }
 }
