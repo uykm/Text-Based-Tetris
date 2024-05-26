@@ -1,5 +1,6 @@
 package com.tetris.ui;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +21,13 @@ public class KeySettingModeScreenTest {
         screen = new KeySettingModeScreen();
         robot = new Robot();
         robot.setAutoDelay(100);
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        screen.setVisible(false);
+        screen.dispose();
+        EventQueue.invokeAndWait(() -> {}); // Ensure the event queue is empty
     }
 
     @Test
@@ -90,7 +98,7 @@ public class KeySettingModeScreenTest {
 
     @Test
     // 포커스 이동
-    void testFocusMovement() {
+    void testFocusMovement() throws InterruptedException {
 
         // Single -> playerA
         screen.getBtnSingle().requestFocusInWindow();

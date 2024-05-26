@@ -1,5 +1,6 @@
 package com.tetris.ui;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +22,13 @@ class MainMenuScreenTest {
         screen.setVisible(true);
         robot = new Robot();
         robot.setAutoDelay(100);
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        screen.setVisible(false);
+        screen.dispose();
+        EventQueue.invokeAndWait(() -> {}); // Ensure the event queue is empty
     }
 
     @Test
@@ -90,7 +98,7 @@ class MainMenuScreenTest {
     }
 
     @Test
-    void testFocusUp() {
+    void testFocusUp() throws InterruptedException {
 
         // Initial focus to Setting, test moving to Single
         screen.btnSetting.requestFocusInWindow();
@@ -114,7 +122,7 @@ class MainMenuScreenTest {
     }
 
     @Test
-    void testFocusDown() {
+    void testFocusDown() throws InterruptedException {
 
         // Initial focus to Single, test moving to Ranking
         screen.btnSingle.requestFocusInWindow();
@@ -131,7 +139,7 @@ class MainMenuScreenTest {
     }
 
     @Test
-    void testFocusLeft() {
+    void testFocusLeft() throws InterruptedException {
 
         // Initial focus to Multi, test moving to Single
         screen.btnMulti.requestFocusInWindow();
@@ -155,7 +163,7 @@ class MainMenuScreenTest {
     }
 
     @Test
-    void testFocusRight() {
+    void testFocusRight() throws InterruptedException {
 
         // Initial focus to Single, test moving to Multi
         screen.btnSingle.requestFocusInWindow();
