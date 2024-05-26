@@ -152,8 +152,8 @@ public class GameController  {
                 }
                 else {
                     frame.dispose();
+                    new MainMenuScreen();
                 }
-                new MainMenuScreen();
             }
         }
         inGameScreen.updateBoard();

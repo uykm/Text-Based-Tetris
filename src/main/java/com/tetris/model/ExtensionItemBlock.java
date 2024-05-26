@@ -5,6 +5,10 @@ import com.tetris.logic.Block;
 import java.awt.*;
 
 public class ExtensionItemBlock extends Block {
+
+    public BlockType getBlockType() {
+        return BlockType.ExtensionItemBlock;
+    }
     public ExtensionItemBlock() {
         super(new int[][] {
                 {0, 0, 0, 0},
