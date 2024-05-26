@@ -38,6 +38,7 @@ class PauseScreenTest {
 
     @Test
     void testFocusMovement() throws  InterruptedException {
+
         screen.btnBack.requestFocusInWindow();
         robot.keyPress(KeyEvent.VK_RIGHT);
         robot.keyRelease(KeyEvent.VK_RIGHT);

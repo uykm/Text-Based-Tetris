@@ -20,7 +20,7 @@ class MainMenuScreenTest {
         screen = new MainMenuScreen();
         screen.setVisible(true);
         robot = new Robot();
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
     }
 
     @Test
@@ -99,14 +99,14 @@ class MainMenuScreenTest {
         assertTrue(screen.btnSingle.isFocusOwner());
 
         // Initial focus to Ranking, test moving to Single
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         screen.btnRanking.requestFocusInWindow();
         robot.keyPress(KeyEvent.VK_UP);
         robot.keyRelease(KeyEvent.VK_UP);
         assertTrue(screen.btnSingle.isFocusOwner());
 
         // Initial focus to Exit, test moving to Single
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         screen.btnExit.requestFocusInWindow();
         robot.keyPress(KeyEvent.VK_UP);
         robot.keyRelease(KeyEvent.VK_UP);
@@ -123,7 +123,7 @@ class MainMenuScreenTest {
         assertTrue(screen.btnRanking.isFocusOwner());
 
         // Initial focus to Multi, test moving to Ranking
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         screen.btnMulti.requestFocusInWindow();
         robot.keyPress(KeyEvent.VK_DOWN);
         robot.keyRelease(KeyEvent.VK_DOWN);
@@ -140,14 +140,14 @@ class MainMenuScreenTest {
         assertTrue(screen.btnSingle.isFocusOwner());
 
         // Initial focus to Exit, test moving to Ranking
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         screen.btnExit.requestFocusInWindow();
         robot.keyPress(KeyEvent.VK_LEFT);
         robot.keyRelease(KeyEvent.VK_LEFT);
         assertTrue(screen.btnRanking.isFocusOwner());
 
         // Initial focus to Ranking, test moving to Setting
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         screen.btnRanking.requestFocusInWindow();
         robot.keyPress(KeyEvent.VK_LEFT);
         robot.keyRelease(KeyEvent.VK_LEFT);
@@ -164,14 +164,14 @@ class MainMenuScreenTest {
         assertTrue(screen.btnMulti.isFocusOwner());
 
         // Initial focus to Setting, test moving to Ranking
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         screen.btnSetting.requestFocusInWindow();
         robot.keyPress(KeyEvent.VK_RIGHT);
         robot.keyRelease(KeyEvent.VK_RIGHT);
         assertTrue(screen.btnRanking.isFocusOwner());
 
         // Initial focus to Ranking, test moving to Setting
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         screen.btnRanking.requestFocusInWindow();
         robot.keyPress(KeyEvent.VK_RIGHT);
         robot.keyRelease(KeyEvent.VK_RIGHT);

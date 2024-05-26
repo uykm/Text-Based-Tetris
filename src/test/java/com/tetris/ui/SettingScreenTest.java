@@ -21,7 +21,7 @@ class SettingScreenTest {
         settingScreen = new SettingScreen();
         settingController = settingScreen.getSettingController();
         robot = new Robot();
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
     }
 
     @Test
@@ -88,72 +88,72 @@ class SettingScreenTest {
         robot.keyRelease(KeyEvent.VK_RIGHT);
         assertTrue(settingScreen.btnSize2.isFocusOwner(), "Focus should move to the medium size button");
 
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_RIGHT);
         robot.keyRelease(KeyEvent.VK_RIGHT);
         assertTrue(settingScreen.btnSize3.isFocusOwner(), "Focus should move to the big size button");
 
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_DOWN);
         robot.keyRelease(KeyEvent.VK_DOWN);
         assertTrue(settingScreen.btnKeySetting.isFocusOwner(), "Focus should move to the key setting button");
 
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_RIGHT);
         robot.keyRelease(KeyEvent.VK_RIGHT);
         assertTrue(settingScreen.btnInitializeKeySetting.isFocusOwner(), "Focus should move to the initialize key setting button");
 
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_DOWN);
         robot.keyRelease(KeyEvent.VK_DOWN);
         assertTrue(settingScreen.btnInitializeNormalScore.isFocusOwner(), "Focus should move to the initialize normal score button");
 
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_RIGHT);
         robot.keyRelease(KeyEvent.VK_RIGHT);
         assertTrue(settingScreen.btnInitializeItemScore.isFocusOwner(), "Focus should move to the initialize item score button");
 
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_DOWN);
         robot.keyRelease(KeyEvent.VK_DOWN);
         assertTrue(settingScreen.btnColorBlind1.isFocusOwner(), "Focus should move to the colorblind - 1 button");
 
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_RIGHT);
         robot.keyRelease(KeyEvent.VK_RIGHT);
         assertTrue(settingScreen.btnColorBlind2.isFocusOwner(), "Focus should move to the colorblind - 2 button");
 
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_RIGHT);
         robot.keyRelease(KeyEvent.VK_RIGHT);
         assertTrue(settingScreen.btnColorBlind3.isFocusOwner(), "Focus should move to the colorblind - 3 button");
 
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_DOWN);
         robot.keyRelease(KeyEvent.VK_DOWN);
         assertTrue(settingScreen.btnInitializeSetting.isFocusOwner(), "Focus should move to the initialize setting button");
 
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_DOWN);
         robot.keyRelease(KeyEvent.VK_DOWN);
         assertTrue(settingScreen.btnMenu.isFocusOwner(), "Focus should move to the back to the menu button");
 
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_UP);
         robot.keyRelease(KeyEvent.VK_UP);
         assertTrue(settingScreen.btnInitializeSetting.isFocusOwner(), "Focus should move to the initialize setting button");
 
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_UP);
         robot.keyRelease(KeyEvent.VK_UP);
         assertTrue(settingScreen.btnColorBlind2.isFocusOwner(), "Focus should move to the colorblind - 2 button");
 
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_LEFT);
         robot.keyRelease(KeyEvent.VK_LEFT);
         assertTrue(settingScreen.btnColorBlind1.isFocusOwner(), "Focus should move to the colorblind - 1 button");
 
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_LEFT);
         robot.keyRelease(KeyEvent.VK_LEFT);
         assertTrue(settingScreen.btnColorBlind0.isFocusOwner(), "Focus should move to the colorblind - 0 button");

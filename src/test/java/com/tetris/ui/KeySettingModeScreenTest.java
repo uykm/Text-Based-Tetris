@@ -19,7 +19,7 @@ public class KeySettingModeScreenTest {
     void setUp() throws AWTException {
         screen = new KeySettingModeScreen();
         robot = new Robot();
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
     }
 
     @Test
@@ -99,19 +99,19 @@ public class KeySettingModeScreenTest {
         assertTrue(screen.getBtnMultiA().isFocusOwner());
 
         // playerA -> playerB
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_RIGHT);
         robot.keyRelease(KeyEvent.VK_RIGHT);
         assertTrue(screen.getBtnMultiB().isFocusOwner());
 
         // playerB -> playerA
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_LEFT);
         robot.keyRelease(KeyEvent.VK_LEFT);
         assertTrue(screen.getBtnMultiA().isFocusOwner());
 
         // playerA -> Single
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_LEFT);
         robot.keyRelease(KeyEvent.VK_LEFT);
         assertTrue(screen.getBtnSingle().isFocusOwner());
