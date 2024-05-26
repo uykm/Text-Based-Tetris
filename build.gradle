@@ -24,6 +24,11 @@ sourceSets {
     }
 }
 
+test {
+    useJUnitPlatform()
+}
+
+
 jlink {
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages', '--module-path', 'libs']
     launcher {
