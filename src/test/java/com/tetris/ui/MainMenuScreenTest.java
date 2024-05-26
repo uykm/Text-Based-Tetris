@@ -1,5 +1,6 @@
 package com.tetris.ui;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +21,14 @@ class MainMenuScreenTest {
         screen = new MainMenuScreen();
         screen.setVisible(true);
         robot = new Robot();
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        screen.setVisible(false);
+        screen.dispose();
+        EventQueue.invokeAndWait(() -> {}); // Ensure the event queue is empty
     }
 
     @Test
@@ -90,7 +98,7 @@ class MainMenuScreenTest {
     }
 
     @Test
-    void testFocusUp() {
+    void testFocusUp() throws InterruptedException {
 
         // Initial focus to Setting, test moving to Single
         screen.btnSetting.requestFocusInWindow();
@@ -99,14 +107,14 @@ class MainMenuScreenTest {
         assertTrue(screen.btnSingle.isFocusOwner());
 
         // Initial focus to Ranking, test moving to Single
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         screen.btnRanking.requestFocusInWindow();
         robot.keyPress(KeyEvent.VK_UP);
         robot.keyRelease(KeyEvent.VK_UP);
         assertTrue(screen.btnSingle.isFocusOwner());
 
         // Initial focus to Exit, test moving to Single
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         screen.btnExit.requestFocusInWindow();
         robot.keyPress(KeyEvent.VK_UP);
         robot.keyRelease(KeyEvent.VK_UP);
@@ -114,7 +122,7 @@ class MainMenuScreenTest {
     }
 
     @Test
-    void testFocusDown() {
+    void testFocusDown() throws InterruptedException {
 
         // Initial focus to Single, test moving to Ranking
         screen.btnSingle.requestFocusInWindow();
@@ -123,7 +131,7 @@ class MainMenuScreenTest {
         assertTrue(screen.btnRanking.isFocusOwner());
 
         // Initial focus to Multi, test moving to Ranking
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         screen.btnMulti.requestFocusInWindow();
         robot.keyPress(KeyEvent.VK_DOWN);
         robot.keyRelease(KeyEvent.VK_DOWN);
@@ -131,7 +139,7 @@ class MainMenuScreenTest {
     }
 
     @Test
-    void testFocusLeft() {
+    void testFocusLeft() throws InterruptedException {
 
         // Initial focus to Multi, test moving to Single
         screen.btnMulti.requestFocusInWindow();
@@ -140,14 +148,14 @@ class MainMenuScreenTest {
         assertTrue(screen.btnSingle.isFocusOwner());
 
         // Initial focus to Exit, test moving to Ranking
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         screen.btnExit.requestFocusInWindow();
         robot.keyPress(KeyEvent.VK_LEFT);
         robot.keyRelease(KeyEvent.VK_LEFT);
         assertTrue(screen.btnRanking.isFocusOwner());
 
         // Initial focus to Ranking, test moving to Setting
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         screen.btnRanking.requestFocusInWindow();
         robot.keyPress(KeyEvent.VK_LEFT);
         robot.keyRelease(KeyEvent.VK_LEFT);
@@ -155,7 +163,7 @@ class MainMenuScreenTest {
     }
 
     @Test
-    void testFocusRight() {
+    void testFocusRight() throws InterruptedException {
 
         // Initial focus to Single, test moving to Multi
         screen.btnSingle.requestFocusInWindow();
@@ -164,14 +172,14 @@ class MainMenuScreenTest {
         assertTrue(screen.btnMulti.isFocusOwner());
 
         // Initial focus to Setting, test moving to Ranking
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         screen.btnSetting.requestFocusInWindow();
         robot.keyPress(KeyEvent.VK_RIGHT);
         robot.keyRelease(KeyEvent.VK_RIGHT);
         assertTrue(screen.btnRanking.isFocusOwner());
 
         // Initial focus to Ranking, test moving to Setting
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         screen.btnRanking.requestFocusInWindow();
         robot.keyPress(KeyEvent.VK_RIGHT);
         robot.keyRelease(KeyEvent.VK_RIGHT);

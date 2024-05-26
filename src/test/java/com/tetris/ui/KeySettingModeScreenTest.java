@@ -1,5 +1,6 @@
 package com.tetris.ui;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,14 @@ public class KeySettingModeScreenTest {
     void setUp() throws AWTException {
         screen = new KeySettingModeScreen();
         robot = new Robot();
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        screen.setVisible(false);
+        screen.dispose();
+        EventQueue.invokeAndWait(() -> {}); // Ensure the event queue is empty
     }
 
     @Test
@@ -90,7 +98,7 @@ public class KeySettingModeScreenTest {
 
     @Test
     // 포커스 이동
-    void testFocusMovement() {
+    void testFocusMovement() throws InterruptedException {
 
         // Single -> playerA
         screen.getBtnSingle().requestFocusInWindow();
@@ -99,19 +107,19 @@ public class KeySettingModeScreenTest {
         assertTrue(screen.getBtnMultiA().isFocusOwner());
 
         // playerA -> playerB
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_RIGHT);
         robot.keyRelease(KeyEvent.VK_RIGHT);
         assertTrue(screen.getBtnMultiB().isFocusOwner());
 
         // playerB -> playerA
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_LEFT);
         robot.keyRelease(KeyEvent.VK_LEFT);
         assertTrue(screen.getBtnMultiA().isFocusOwner());
 
         // playerA -> Single
-        robot.setAutoDelay(50);
+        robot.setAutoDelay(100);
         robot.keyPress(KeyEvent.VK_LEFT);
         robot.keyRelease(KeyEvent.VK_LEFT);
         assertTrue(screen.getBtnSingle().isFocusOwner());
