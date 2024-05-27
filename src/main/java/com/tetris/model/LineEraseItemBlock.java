@@ -10,6 +10,10 @@ import java.util.Random;
 public class LineEraseItemBlock extends Block {
     private static Random random = new Random();
 
+    public BlockType getBlockType() {
+        return BlockType.LineEraseItemBlock;
+    }
+
     private LineEraseItemBlock(int[][] shape, Color[] colors) {
         super(shape, colors, BlockType.LineEraseItemBlock);
     }
@@ -24,7 +28,7 @@ public class LineEraseItemBlock extends Block {
         return new LineEraseItemBlock(shape, colors);
     }
 
-    private static void transformToLineEraseItem(int[][] shape) {
+    static void transformToLineEraseItem(int[][] shape) {
         ArrayList<Point> greaterThanZeroIndices = new ArrayList<>();
         for (int y = 0; y < shape.length; y++) {
             for (int x = 0; x < shape[y].length; x++) {

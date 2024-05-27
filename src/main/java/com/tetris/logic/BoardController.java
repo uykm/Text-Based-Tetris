@@ -244,6 +244,7 @@ public class BoardController {
                         itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                     } else {
                         // 무게추 블럭이 아닌 경우
+                        gameController.delayTimer();
                         currentBlock.increaseStopCount();
                         currentBlock.increaseLimitCount();
                     }

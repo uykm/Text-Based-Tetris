@@ -11,6 +11,9 @@ public class WaterItemBlock extends Block {
         super(shape, colors, BlockType.WaterItemBlock);
     }
 
+    public BlockType getBlockType() {
+        return BlockType.WaterItemBlock;
+    }
     public static WaterItemBlock create() {
         RWSelection rwSelection = new RWSelection(1);
         Block basicBlock = Block.getBlock(BlockType.getBlockTypeByIndex(rwSelection.select()));
@@ -19,7 +22,7 @@ public class WaterItemBlock extends Block {
         return new WaterItemBlock(transformedShape, colors);
     }
 
-    private static int[][] transformToWater(Block basicBlock) {
+    static int[][] transformToWater(Block basicBlock) {
         int[][] newShape = basicBlock.shapeCopy(); // Copy the shape to avoid modifying the original
         for (int y = 0; y < newShape.length; y++) {
             for (int x = 0; x < newShape[y].length; x++) {
