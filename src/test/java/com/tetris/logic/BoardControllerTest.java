@@ -18,9 +18,13 @@ class BoardControllerTest {
     private BoardController boardController;
     private GameController gameController;
     private InGameScoreController inGameScoreController;
+    private Board grid;
+    private final int WIDTH = 10;
+    private final int HEIGHT = 20;
 
     @BeforeEach
     void setUp() {
+        grid = new Board();
         gameController = new GameController(true);
         inGameScoreController = new InGameScoreController();
         boardController = new BoardController(gameController, inGameScoreController, true, false);
