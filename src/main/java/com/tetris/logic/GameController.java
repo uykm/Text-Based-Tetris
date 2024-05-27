@@ -193,6 +193,24 @@ public class GameController  {
         fastTimer.start();
     }
 
+    public void delayTimer() {
+        // 현재 설정된 타이머를 중지하고 빠르게 한 번 실행
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+        // 빠르게 실행할 타이머 설정
+        Timer oneSecTimer = new Timer(NORMAL_TICK, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // gameLoop를 한 번 실행
+                gameLoop(isDualMode, true);
+                // 빠르게 실행한 후에 원래 속도의 타이머로 다시 설정
+                setupTimer(currentSpeed);
+            }
+        });
+        oneSecTimer.setRepeats(false);  // 이 타이머는 한 번만 실행됩니다.
+        oneSecTimer.start();
+    }
+
     public void triggerBlinkCheckAgain() {
         isBlinkCheckAgain = true;
     }
