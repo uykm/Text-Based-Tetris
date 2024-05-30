@@ -244,6 +244,7 @@ public class BoardController {
                         itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                     } else {
                         // 무게추 블럭이 아닌 경우
+                        gameController.delayTimer();
                         currentBlock.increaseStopCount();
                         currentBlock.increaseLimitCount();
                     }
@@ -267,7 +268,6 @@ public class BoardController {
                 placeBlock();
             }
             case SPACE -> {
-                System.out.println("Space");
                 blinkErase(); // 스페이스바 누르면 줄 삭제 이벤트 바로 삭제
                 // space바 누르면 바로 터지게
                 if (currentBlock instanceof BombItemBlock) {
@@ -292,8 +292,6 @@ public class BoardController {
 
                 // 줄 삭제 이벤트가 중첩되는 경우 넘어가야 할 줄이 정상적으로 저장되도록 함
                 copyBoardStateExcludingCurrentBlock();
-
-                System.out.println("currentBlockX: " + currentBlock.getX() + " currentBlockY: " + currentBlock.getY());
 
                 itemBlockController.handleItemBlock(currentBlock, currentBlock.getX(), currentBlock.getY());
                 lineCheck();
@@ -454,7 +452,7 @@ public class BoardController {
 
     private int[][] shouldAddLines; // 내 보드에 추가 되어야 할 라인
     private int[][] previousBoardState; // 이전 게임 보드 상태(새로운 블록이 생성되기 전, 라인이 지워진 후 이전 상태 업데이트)
-    final private ArrayList<Integer> erasedLines = new ArrayList<>(); // 지워진 라인 (상대방에게 보내기 위해 저장)
+    final ArrayList<Integer> erasedLines = new ArrayList<>(); // 지워진 라인 (상대방에게 보내기 위해 저장)
 
     // 게임이 시작되면 이전 게임 보드 상태를 초기화
     public void initializeBoardState() {
@@ -578,7 +576,6 @@ public class BoardController {
         }
 
         int line = getHighestLine(board);
-        System.out.println("line: " + line);
 
         if(line - shouldAddLines.length < 3){
             for(int i = 3; i < line + shouldAddLines.length; i++){
