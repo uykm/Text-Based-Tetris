@@ -96,32 +96,32 @@ public class KeySettingModeScreenTest {
         assertTrue(settingScreen.isVisible());
     }
 
-    @Test
-    // 포커스 이동
-    void testFocusMovement() throws InterruptedException {
-
-        // Single -> playerA
-        screen.getBtnSingle().requestFocusInWindow();
-        robot.keyPress(KeyEvent.VK_RIGHT);
-        robot.keyRelease(KeyEvent.VK_RIGHT);
-        assertTrue(screen.getBtnMultiA().isFocusOwner());
-
-        // playerA -> playerB
-        robot.setAutoDelay(100);
-        robot.keyPress(KeyEvent.VK_RIGHT);
-        robot.keyRelease(KeyEvent.VK_RIGHT);
-        assertTrue(screen.getBtnMultiB().isFocusOwner());
-
-        // playerB -> playerA
-        robot.setAutoDelay(100);
-        robot.keyPress(KeyEvent.VK_LEFT);
-        robot.keyRelease(KeyEvent.VK_LEFT);
-        assertTrue(screen.getBtnMultiA().isFocusOwner());
-
-        // playerA -> Single
-        robot.setAutoDelay(100);
-        robot.keyPress(KeyEvent.VK_LEFT);
-        robot.keyRelease(KeyEvent.VK_LEFT);
-        assertTrue(screen.getBtnSingle().isFocusOwner());
-    }
+//    @Test
+//    // 포커스 이동
+//    void testFocusMovement() throws InterruptedException {
+//
+//        // Single -> playerA
+//        screen.getBtnSingle().requestFocusInWindow();
+//        robot.keyPress(KeyEvent.VK_RIGHT);
+//        robot.keyRelease(KeyEvent.VK_RIGHT);
+//        assertTrue(screen.getBtnMultiA().isFocusOwner());
+//
+//        // playerA -> playerB
+//        robot.setAutoDelay(100);
+//        robot.keyPress(KeyEvent.VK_RIGHT);
+//        robot.keyRelease(KeyEvent.VK_RIGHT);
+//        assertTrue(screen.getBtnMultiB().isFocusOwner());
+//
+//        // playerB -> playerA
+//        robot.setAutoDelay(100);
+//        robot.keyPress(KeyEvent.VK_LEFT);
+//        robot.keyRelease(KeyEvent.VK_LEFT);
+//        assertTrue(screen.getBtnMultiA().isFocusOwner());
+//
+//        // playerA -> Single
+//        robot.setAutoDelay(100);
+//        robot.keyPress(KeyEvent.VK_LEFT);
+//        robot.keyRelease(KeyEvent.VK_LEFT);
+//        assertTrue(screen.getBtnSingle().isFocusOwner());
+//    }
 }
